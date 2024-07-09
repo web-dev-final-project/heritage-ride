@@ -1,9 +1,21 @@
 interface Object {
-  checkString(): string;
-  checkObject(): object;
-  checkArray(): list;
+  checkString(): String;
+  checkObject(): Object;
+  checkArray(): Array;
   checkBoolean(): boolean;
-  checkEmpty(): any;
+  checkNull(): any
+}
+
+interface String {
+  checkEmail(): String;
+  checkUrl(): String;
+  checkEmpty(): String;
+}
+ 
+interface Array {
+  checkIsEmpty(): Array;
+  checkStringArray(): Array;
+  checkNumberArray(): Array
 }
 
 interface HttpResponse {

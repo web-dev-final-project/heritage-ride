@@ -11,6 +11,7 @@ class ValidationException extends Error {}
 class AuthenticationException extends Error {}
 class AccessException extends Error {}
 class NotFoundException extends Error {}
+class DataBaseException extends Error {}
 
 export {
   TypeException,
@@ -22,4 +23,5 @@ export {
   AuthenticationException,
   NotFoundException,
   AccessException,
+  DataBaseException
 };
