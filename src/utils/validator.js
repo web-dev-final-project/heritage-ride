@@ -1,19 +1,18 @@
-import { ObjectId } from "mongodb";
-import { InvalidInputException, InvalidValueException } from "./exceptions.js";
-import { Role } from "./extend.js";
+import { ObjectId } from 'mongodb'
+import { InvalidInputException, InvalidValueException } from './exceptions.js'
+import { Role } from './extend.js'
 
 class Validator {
   static validateListing(obj) {
-    return obj;
+    return obj
   }
 
   static validateCar(obj) {
-    return obj;
+    return obj
   }
 
   static validateUser(obj) {
-    if (!obj || obj === undefined)
-      throw new InvalidInputException("Input must not be empty");
+    if (!obj || obj === undefined) throw new InvalidInputException('Input must not be empty')
     let user = {
       ...obj,
       firstName: Validator.nullcheck(obj.firstName).checkString(),
@@ -23,34 +22,32 @@ class Validator {
       avatar: obj.avatar ? obj.avatar.checkString().checkUrl() : null,
       email: Validator.nullcheck(obj.email).checkString().checkEmail(),
       address: obj.address ? obj.address.checkString() : obj.address,
-    };
-    return user;
+    }
+    return user
   }
   static validateId(id) {
-    let str = id.checkNull().checkString();
+    let str = id.checkNull().checkString()
     if (!ObjectId.isValid(str)) {
-      throw new InvalidValueException("Invalid Id.");
+      throw new InvalidValueException('Invalid Id.')
     }
-    return str;
+    return str
   }
   static validateRole(role) {
-    const arr = role.checkNull().checkStringArray();
+    const arr = role.checkNull().checkStringArray()
     if (arr.some((item) => !Role.containsValue(item))) {
-      throw new InvalidValueException(
-        "Invalid role, role must be either user, expert or seller"
-      );
+      throw new InvalidValueException('Invalid role, role must be either user, expert or seller')
     }
-    return arr;
+    return arr
   }
 
   static validatePart(obj) {
-    return obj;
+    return obj
   }
 
   static nullcheck(obj) {
-    if (!obj) throw new InvalidInputException("Some inputs are missing");
-    return obj;
+    if (!obj) throw new InvalidInputException('Some inputs are missing')
+    return obj
   }
 }
 
-export default Validator;
+export default Validator
