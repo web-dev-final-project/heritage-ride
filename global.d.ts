@@ -3,7 +3,7 @@ interface Object {
   checkObject(): Object;
   checkArray(): Array;
   checkBoolean(): boolean;
-  checkNull(): any
+  checkNull(): any;
 }
 
 interface String {
@@ -11,11 +11,11 @@ interface String {
   checkUrl(): String;
   checkEmpty(): String;
 }
- 
+
 interface Array {
   checkIsEmpty(): Array;
   checkStringArray(): Array;
-  checkNumberArray(): Array
+  checkNumberArray(): Array;
 }
 
 interface HttpResponse {

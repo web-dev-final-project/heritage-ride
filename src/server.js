@@ -5,6 +5,7 @@ import { startLog, endLog } from "./utils/logger.js";
 import error from "./middleware/error.js";
 import "./utils/extend.js";
 import { SuccessResponse } from "./utils/utilClass.js";
+import initRouter from "./routes/index.js";
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -12,8 +13,10 @@ const port = process.env.PORT || 4000;
 app.listen(port, () => {
   logger.info(`Server has started on port ${port}...`);
 });
+app.use(express.json());
 app.use(startLog);
+initRouter(app);
 app.get("/health", (req, res) => {
-  res.send(new SuccessResponse("healthy"));
+  res.send("healthy");
 });
 app.use(error);
