@@ -6,6 +6,6 @@
     "**/*.js",
     "global.d.ts",
     "src/utils/validator.js",
-    "src/data/users.ts"
+    "src/data/users.js"
   ]
 }
