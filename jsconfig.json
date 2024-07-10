@@ -2,5 +2,10 @@
   "compilerOptions": {
     "checkJs": true
   },
-  "include": ["**/*.js", "global.d.ts", "src/utils/validator.js"]
+  "include": [
+    "**/*.js",
+    "global.d.ts",
+    "src/utils/validator.js",
+    "src/data/users.ts"
+  ]
 }

@@ -19,6 +19,8 @@
     "winston": "^3.13.0"
   },
   "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/mongodb": "^4.0.7",
     "jest": "^29.7.0"
   }
 }
