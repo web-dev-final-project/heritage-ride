@@ -4,7 +4,7 @@ interface Object {
   checkArray(): Array;
   checkBoolean(): boolean;
   checkNull(): any;
-  containsValue(str: string): boolean;
+  containsValue(str: string): boolean;;
 }
 
 interface String {
