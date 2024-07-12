@@ -1,0 +1,16 @@
+.signup-box {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: var(--border-p);
+}
+.signup-input {
+  flex-grow: 1;
+}
+
+@media (min-width: 577px) {
+  .signup-box {
+    flex-direction: column;
+    width: 700px;
+  }
+}

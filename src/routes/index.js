@@ -1,7 +1,22 @@
-import userRoute from "../routes/user.js";
+import userAPI from "./users/user.js";
+import userView from "./users/userView.js";
 
-const initRouter = (app) => {
-  app.use("/user", userRoute);
+const apiRouter = (app) => {
+  app.use("/user", userView);
 };
 
-export default initRouter;
+const uiRouter = (app) => {
+  app.use("/api/user", userAPI);
+};
+
+const getRoutes = (req) => {
+  const protocol = req.protocol;
+  const host = req.get("host");
+  const serverUrl = `${protocol}://${host}`;
+  return {
+    userLogin: `${serverUrl}/user/login`,
+    userSignup: `${serverUrl}/user/signup`,
+  };
+};
+
+export { apiRouter, uiRouter, getRoutes };

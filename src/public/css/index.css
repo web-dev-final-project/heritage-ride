@@ -4,3 +4,40 @@
 @import url("layouts/grid.css");
 @import url("layouts/flex.css");
 @import url("pages/home.css");
+@import url("pages/signup.css");
+:root {
+  --bs-primary: #fbb23b;
+  --bs-secondary: #e1dfae;
+  --bs-success: #88ff33;
+
+  --border-p: 8px;
+}
+
+.main {
+  display: flex;
+  justify-content: center;
+}
+
+body {
+  font-family: "Arial", sans-serif; /* Custom font family */
+  font-size: 16px; /* Custom font size */
+  line-height: 1.5; /* Custom line height */
+}
+
+var h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Helvetica Neue", sans-serif; /* Custom font for headings */
+  font-weight: bold; /* Custom font weight for headings */
+}
+
+.custom-font {
+  font-family: "Courier New", monospace; /* Example of a custom font for specific elements */
+}
+
+.input-group {
+  width: 100%;
+}

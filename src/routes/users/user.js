@@ -1,6 +1,6 @@
-import * as users from "../data/users.js";
+import * as users from "../../data/users.js";
 import { Router } from "express";
-import Validator from "../utils/validator.js";
+import Validator from "../../utils/validator.js";
 
 const router = Router();
 
