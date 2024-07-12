@@ -1,0 +1,9 @@
+<button id="{{id}}" class="btn btn-info" style="width: auto;">Upload files</button>
+
+<script type="text/javascript">
+  var myWidget = cloudinary.createUploadWidget({ cloudName: '{{cloudName}}',
+  uploadPreset: '{{uploadPreset}}', cropping: true }, (error, result) => { if
+  (!error && result && result.event === "success") { document.getElementById('{{uploadValue}}').value
+  = result.info.secure_url ; } }); document.getElementById('{{id}}').addEventListener("click",
+  function(){ myWidget.open(); }, false);
+</script>

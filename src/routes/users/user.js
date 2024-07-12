@@ -1,11 +1,11 @@
-import * as users from "../data/users.js";
+import * as users from "../../data/users.js";
 import { Router } from "express";
-import Validator from "../utils/validator.js";
+import Validator from "../../utils/validator.js";
 import {
   InvalidInputException,
   NotFoundException,
-} from "../utils/exceptions.js";
-import { Role } from "../utils/extend.js";
+} from "../../utils/exceptions.js";
+import { Role } from "../../utils/extend.js";
 
 const router = Router();
 
