@@ -1,11 +1,11 @@
 import userAPI from "./users/user.js";
 import userView from "./users/userView.js";
 
-const apiRouter = (app) => {
+const uiRouter = (app) => {
   app.use("/user", userView);
 };
 
-const uiRouter = (app) => {
+const apiRouter = (app) => {
   app.use("/api/user", userAPI);
 };
 

@@ -7,7 +7,7 @@ import {
 import logger from "../utils/logger.js";
 
 function error(err, req, res, next) {
-  logger.error(err.stack);
+  logger.error(`${err.name}: ${err.message}`);
   if (err instanceof ValidationException)
     return res.status(400).send(err.message);
   if (err instanceof AuthenticationException)
