@@ -1,0 +1,36 @@
+.custom-navbar {
+  display: flex;
+  background-color: var(--bs-primary);
+  padding: 0.5rem;
+}
+
+.nav-wrapper {
+}
+
+.nav-avatar-wrapper {
+}
+
+.nav-logo {
+  width: 50px;
+  aspect-ratio: 1/1;
+}
+
+.nav-name {
+  font: 1.6em sans-serif;
+  font-weight: 600;
+  margin: 0;
+  align-self: center;
+  padding-left: 8px;
+}
+
+.nav-menu {
+}
+
+.nav-menu-item {
+}
+
+.nav-user {
+}
+
+@media (min-width: 992px) {
+}
