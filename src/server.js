@@ -13,7 +13,7 @@ const port = process.env.PORT || 4000;
 
 app.engine("handlebars", handlebarsInstance.engine);
 app.set("view engine", "handlebars");
-app.set("view", path.join(path.resolve(), "src/views"));
+app.set("views", path.join(path.resolve(), "src/views"));
 
 app.listen(port, () => {
   logger.info(`Server has started on port ${port}...`);
@@ -24,7 +24,13 @@ app.use(express.json());
 app.use(startLog);
 initRouter(app);
 
+app.get("/", (req, res) => {
+  res.render("home");
+});
 app.get("/health", (req, res) => {
   res.send("healthy");
+});
+app.get("/*", (req, res) => {
+  res.render("404");
 });
 app.use(error);
