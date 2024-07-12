@@ -9,14 +9,14 @@ const uiRouter = (app) => {
   app.use("/api/user", userAPI);
 };
 
-const getRoutes = (req) => {
+const getApiRoutes = (req) => {
   const protocol = req.protocol;
   const host = req.get("host");
   const serverUrl = `${protocol}://${host}`;
   return {
-    userLogin: `${serverUrl}/user/login`,
-    userSignup: `${serverUrl}/user/signup`,
+    home: `${serverUrl}`,
+    userRoute: `${serverUrl}/api/user`,
   };
 };
 
-export { apiRouter, uiRouter, getRoutes };
+export { apiRouter, uiRouter, getApiRoutes };
