@@ -50,24 +50,15 @@ const findUser = async (id) => {
   return user;
 };
 
-const findUserByEmail = async (email) => {
-  let validEmail = email.checkString().checkEmail();
+const findUserByEmailOrUserName = async (username, userEmail) => {
+  let userName = username.checkString();
+  let email = userEmail.checkString();
   let user;
   try {
     const db = await users();
-    user = await db.findOne({ email: validEmail });
-  } catch (e) {
-    throw new DataBaseException(e);
-  }
-  return user;
-};
-
-const findUserByUserName = async (userName) => {
-  let validUserName = userName.checkString();
-  let user;
-  try {
-    const db = await users();
-    user = await db.findOne({ userName: validUserName });
+    user = await db.findOne({
+      $or: [{ userName: userName }, { email: email }],
+    });
   } catch (e) {
     throw new DataBaseException(e);
   }
@@ -89,11 +80,4 @@ const addRole = async (id, role) => {
 };
 const removeRole = async (id, role) => {};
 
-export {
-  createUser,
-  updateUser,
-  addRole,
-  findUser,
-  findUserByEmail,
-  findUserByUserName,
-};
+export { createUser, updateUser, addRole, findUser, findUserByEmailOrUserName };

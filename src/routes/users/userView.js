@@ -4,13 +4,14 @@ import * as users from "../../data/users.js";
 import { NotFoundException } from "../../utils/exceptions.js";
 import auth from "../../middleware/auth.js";
 import { getApiRoutes } from "../index.js";
+import logger from "../../utils/logger.js";
 
 const router = Router();
 
-router.post("/", auth, async (req, res, next) => {
+router.get("/", auth, async (req, res, next) => {
+  logger.info(`new request: (${req.method}) to ${req.url}.`);
   try {
-    let id = req.user.id;
-    id = Validator.validateId(id);
+    const id = Validator.validateId(req.user._id);
     const user = await users.findUser(id);
     if (!user) throw new NotFoundException(`user not found`);
     res.render("userProfile", user);

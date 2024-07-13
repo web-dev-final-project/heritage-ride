@@ -5,13 +5,13 @@ import { AuthenticationException } from "./exceptions.js";
 const JWT_SECRET = process.env.SERVER_SECRET;
 
 const generateToken = (user) => {
-  return jwt.sign(user, JWT_SECRET, {
+  return jwt.sign({ user: user }, JWT_SECRET, {
     expiresIn: "1d",
   });
 };
 
 const verifyToken = (token) => {
-  jwt.verify(token, JWT_SECRET, (err, decoded) => {
+  return jwt.verify(token, JWT_SECRET, (err, decoded) => {
     if (err) {
       throw new AuthenticationException("User is not logged in.");
     }

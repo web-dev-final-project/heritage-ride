@@ -7,14 +7,10 @@ import "./utils/extend.js";
 import { apiRouter, uiRouter } from "./routes/index.js";
 import path from "path";
 import { handlebarsInstance } from "./settings.js";
+import cookieParser from "cookie-parser";
 
 const app = express();
 const port = process.env.PORT || 4000;
-
-app.use(express.static(path.join(path.resolve(), "src/public")));
-app.engine("handlebars", handlebarsInstance.engine);
-app.set("view engine", "handlebars");
-app.set("views", path.join(path.resolve(), "src/views"));
 
 app.use(express.static(path.join(path.resolve(), "src/public")));
 app.engine("handlebars", handlebarsInstance.engine);
@@ -26,6 +22,7 @@ app.listen(port, async () => {
 });
 
 app.use(express.json());
+app.use(cookieParser());
 app.use(startLog);
 
 uiRouter(app);

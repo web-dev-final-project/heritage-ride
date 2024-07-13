@@ -1,6 +1,6 @@
 const clearInput = () => {
-  document.getElementById("login-message").innerHTML = "";
-  document.getElementById("password-login").innerHTML = "";
+  document.getElementById("username-login").value = "";
+  document.getElementById("password-login").value = "";
 };
 
 document
@@ -20,9 +20,9 @@ document
       body: JSON.stringify({ userName, password }),
     });
     if (!res.ok) {
-      document.getElementById("login-message").innerHTML = (
-        await res.json()
-      ).content;
+      const resp = await res.json();
+      console.log(resp.content);
+      document.getElementById("login-message").innerHTML = resp.content;
       clearInput();
     } else {
       token = (await res.json()).content;
@@ -33,7 +33,4 @@ document
   });
 document.getElementById("username-login").addEventListener("click", () => {
   document.getElementById("login-message").innerHTML = "";
-});
-document.getElementById("username-login").addEventListener("click", () => {
-  document.getElementById("password-login").innerHTML = "";
 });

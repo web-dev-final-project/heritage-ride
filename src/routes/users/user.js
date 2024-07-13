@@ -21,7 +21,10 @@ router.post("/signup", async (req, res, next) => {
     let user = req.body;
     user = Validator.validateUser(user);
     user.role = ["user"];
-    const exist = await users.findUserByEmail(user.email);
+    const exist = await users.findUserByEmailOrUserName(
+      user.email,
+      user.userName
+    );
     if (exist) throw new InvalidInputException("User has already exist");
 
     const hashedPassword = await hashPassword(user.password);
@@ -79,9 +82,7 @@ router.post("/login", async (req, res, next) => {
     let { userName, password } = req.body;
     password = password.checkString();
     let resp;
-    if (userName.includes("@")) {
-      resp = await users.findUserByEmail(userName);
-    } else resp = await users.findUserByUserName(userName);
+    resp = await users.findUserByEmailOrUserName(userName, userName);
     if (!resp) throw new NotFoundException(`Provided user not found`);
     const checkPass = await comparePassword(password, resp.password);
     if (!checkPass)
