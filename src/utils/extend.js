@@ -15,7 +15,9 @@ Object.prototype.checkNull = function () {
 Object.prototype.checkString = function () {
   if (typeof this !== "string") throw new TypeException();
   const st = this.trim();
-  return this.trim();
+  if (st.length === 0)
+    throw new InvalidValueException("Input can not be an empty string");
+  return st;
 };
 Object.prototype.checkBoolean = function () {
   if (typeof this !== "boolean") throw new TypeException();
@@ -41,6 +43,18 @@ String.prototype.checkEmpty = function () {
   }
   return this.trim();
 };
+String.prototype.checkUrl = function () {
+  try {
+    const str = this.valueOf();
+    let url = new URL(str);
+    if (url.protocol === "http:" || url.protocol === "https:") {
+      return str;
+    }
+    throw new InvalidValueException("Url must contain http or https");
+  } catch (e) {
+    throw new InvalidValueException(e.message);
+  }
+};
 String.prototype.checkEmail = function () {
   const re = new RegExp(
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -64,3 +78,14 @@ Array.prototype.checkStringArray = function () {
     throw new InvalidValueException("Array should only contains valid strings");
   return this;
 };
+Object.prototype.containsValue = function (val) {
+  if (!Object.values(this).includes(val)) return false;
+  return true;
+};
+const Role = {
+  seller: "seller",
+  expert: "expert",
+  user: "user",
+};
+
+export { Role };

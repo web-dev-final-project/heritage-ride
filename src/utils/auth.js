@@ -1,17 +1,17 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import { AuthenticationException } from "./exceptions";
+import { AuthenticationException } from "./exceptions.js";
 
 const JWT_SECRET = process.env.SERVER_SECRET;
 
 const generateToken = (user) => {
-  return jwt.sign({ id: user.id, username: user.username }, JWT_SECRET, {
+  return jwt.sign({ user: user }, JWT_SECRET, {
     expiresIn: "1d",
   });
 };
 
 const verifyToken = (token) => {
-  jwt.verify(token, JWT_SECRET, (err, decoded) => {
+  return jwt.verify(token, JWT_SECRET, (err, decoded) => {
     if (err) {
       throw new AuthenticationException("User is not logged in.");
     }
