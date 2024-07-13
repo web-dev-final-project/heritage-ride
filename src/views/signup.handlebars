@@ -13,41 +13,53 @@
   </div>
 
   <label>Last name</label>
-    <div class="input-group mb-3">
-      <span class="input-group-text" id="basic-addon1">@</span>
-      <input class="signup-input" type="text" id="last-name-upload" placeholder="last name" aria-label="Username" aria-describedby="basic-addon1">
-    </div>
+  <div class="input-group mb-3">
+    <span class="input-group-text" id="basic-addon1">@</span>
+    <input
+      class="signup-input"
+      type="text"
+      id="last-name-upload"
+      placeholder="last name"
+      aria-label="Username"
+      aria-describedby="basic-addon1"
+    />
+  </div>
 
-    <label>User name</label>
-    <div class="input-group mb-3">
-      <span class="input-group-text" id="basic-addon1">@</span>
-      <input class="signup-input" type="text" id="username-upload" placeholder="username" aria-label="Username" aria-describedby="basic-addon1">
-    </div>
+  <label>User name</label>
+  <div class="input-group mb-3">
+    <span class="input-group-text" id="basic-addon1">@</span>
+    <input
+      class="signup-input"
+      type="text"
+      id="username-upload"
+      placeholder="username"
+      aria-label="Username"
+      aria-describedby="basic-addon1"
+    />
+  </div>
 
-    <label>Password</label>
-    <input type="password" id="password-upload"/>
-    <label>Reenter password</label>
-    <input type="password" id="password-upload-2"/>
-    <label>Email</label>
-    <input type="email" id="email-upload"/>
-    <label>Address</label>
-    <input type="text" id="address-upload"/>
+  <label>Password</label>
+  <input type="password" id="password-upload" />
+  <label>Reenter password</label>
+  <input type="password" id="password-upload-2" />
+  <label>Email</label>
+  <input type="email" id="email-upload" />
+  <label>Address</label>
+  <input type="text" id="address-upload" />
 
-    <p>Upload your avatar</p>
-    <div>
+  <p>Upload your avatar</p>
+  <div>
     {{> uploadWidget id="upload-widget" cloudName=cloudinary.cloudName uploadPreset=cloudinary.presetName uploadValue="avatar-upload"}}
-    <input hidden="true" id="avatar-upload"/>
+    <input hidden="true" id="avatar-upload" />
 
-      <p class="text-danger" id="signup-message"></p>
-    </div>
-    <div class="display-flex-2">
-        <button type="submit" class="btn-primary">Submit</button>
-        <button type="button" class="btn btn-danger">Cancel</button>
-    </div>
-
+    <p class="text-danger" id="signup-message"></p>
+  </div>
+  <div class="display-flex-2">
+    <button type="submit" class="btn-primary">Submit</button>
+    <button type="button" class="btn btn-danger">Cancel</button>
+  </div>
 </form>
 <script>
-  window.appData = { signupUrl: '{{signUpUrl}}'} ;
+  window.appData = { signupUrl: '{{signUpUrl}}' }
 </script>
-<script src="/scripts/signup.js">
-</script>
+<script src="/scripts/signup.js"></script>
