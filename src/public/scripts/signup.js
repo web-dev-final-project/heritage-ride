@@ -11,6 +11,10 @@ document.getElementById("signup-form").addEventListener("submit", async (e) => {
   };
   const res = await fetch(window.appData.signupUrl, {
     method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify(obj),
   });
   if (!res.ok) {
@@ -18,6 +22,6 @@ document.getElementById("signup-form").addEventListener("submit", async (e) => {
       await res.json()
     ).content;
   } else {
-    console.log(res.json());
+    console.log(await res.json());
   }
 });

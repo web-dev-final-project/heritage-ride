@@ -35,7 +35,7 @@
 
     <p>Upload your avatar</p>
     <div>
-    {{> uploadWidget id="upload-widget" cloudName=cloudName uploadPreset=uploadPreset uploadValue="avatar-upload"}}
+    {{> uploadWidget id="upload-widget" cloudName=cloudinary.cloudName uploadPreset=cloudinary.presetName uploadValue="avatar-upload"}}
     <input hidden="true" id="avatar-upload"/>
 
       <p class="text-danger" id="signup-message"></p>
@@ -47,8 +47,7 @@
 
 </form>
 <script>
-  window.appData = { signupUrl: '{{signUpUrl}}' };
-  console.log(window.appData.signupUrl)
+  window.appData = { signupUrl: '{{signUpUrl}}'} ;
 </script>
 <script src="/scripts/signup.js">
 </script>

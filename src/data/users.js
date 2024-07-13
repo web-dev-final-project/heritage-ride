@@ -62,6 +62,18 @@ const findUserByEmail = async (email) => {
   return user;
 };
 
+const findUserByUserName = async (userName) => {
+  let validUserName = userName.checkString();
+  let user;
+  try {
+    const db = await users();
+    user = await db.findOne({ userName: validUserName });
+  } catch (e) {
+    throw new DataBaseException(e);
+  }
+  return user;
+};
+
 const addRole = async (id, role) => {
   const user = await findUser(id);
   if (!user) throw new NotFoundException("user not found in the database");
@@ -77,4 +89,11 @@ const addRole = async (id, role) => {
 };
 const removeRole = async (id, role) => {};
 
-export { createUser, updateUser, addRole, findUser, findUserByEmail };
+export {
+  createUser,
+  updateUser,
+  addRole,
+  findUser,
+  findUserByEmail,
+  findUserByUserName,
+};
