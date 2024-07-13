@@ -12,19 +12,17 @@ class Validator {
   }
 
   static validateUser(obj) {
-    if (!obj) throw new InvalidInputException("Input must not be empty");
-    let user = obj.checkNull();
-    user = {
+    if (!obj || obj === undefined)
+      throw new InvalidInputException("Input must not be empty");
+    let user = {
       ...obj,
-      firstName: obj.firstName.checkNull().checkString(),
-      lastName: obj.lastName.checkNull().checkString(),
-      userName: obj.userName.checkNull().checkString(),
-      password: obj.password.checkNull().checkString(),
+      firstName: Validator.nullcheck(obj.firstName).checkString(),
+      lastName: Validator.nullcheck(obj.lastName).checkString(),
+      userName: Validator.nullcheck(obj.userName).checkString(),
+      password: Validator.nullcheck(obj.password).checkString(),
       avatar: obj.avatar ? obj.avatar.checkString().checkUrl() : null,
-      email: obj.email.checkNull().checkString().checkEmail(),
-      address: obj.address
-        ? obj.address.checkNull().checkString()
-        : obj.address,
+      email: Validator.nullcheck(obj.email).checkString().checkEmail(),
+      address: obj.address ? obj.address.checkString() : obj.address,
     };
     return user;
   }
@@ -48,8 +46,11 @@ class Validator {
   static validatePart(obj) {
     return obj;
   }
-}
 
-export default Validator;
+  static nullcheck(obj) {
+    if (!obj) throw new InvalidInputException("Some inputs are missing");
+    return obj;
+  }
+}
 
 export default Validator;

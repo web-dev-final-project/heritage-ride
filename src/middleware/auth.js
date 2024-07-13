@@ -1,5 +1,5 @@
-const { AuthenticationException } = require("../utils/exceptions");
-import { verifyToken } from "../utils/auth";
+import { AuthenticationException } from "../utils/exceptions.js";
+import { verifyToken } from "../utils/auth.js";
 
 const auth = (req, res, next) => {
   const token = req.headers["authorization"];

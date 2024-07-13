@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import { AuthenticationException } from "./exceptions";
+import { AuthenticationException } from "./exceptions.js";
 
 const JWT_SECRET = process.env.SERVER_SECRET;
 

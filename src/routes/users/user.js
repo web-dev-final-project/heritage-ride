@@ -6,18 +6,19 @@ import {
   NotFoundException,
 } from "../../utils/exceptions.js";
 import { Role } from "../../utils/extend.js";
+import { HttpResponse } from "../../utils/class.js";
 
 const router = Router();
 
-router.post("/", async (req, res, next) => {
+router.post("/signup", async (req, res, next) => {
   try {
     let user = req.body;
     user = Validator.validateUser(user);
     user.role = ["user"];
     const exist = await users.findUserByEmail(user.email);
-    if (exist) throw new InvalidInputException("User has already exist");
-    const resp = await users.createUser(user);
-    res.status(201).send(resp);
+    // if (exist) throw new InvalidInputException("User has already exist");
+    // const resp = await users.createUser(user);
+    res.status(201).send(new HttpResponse(user));
   } catch (e) {
     next(e);
   }
