@@ -6,7 +6,13 @@ const auth = (req, res, next) => {
   if (!token) {
     throw new AuthenticationException("User has not yet logged in.");
   }
-  req.user = verifyToken(token).user;
+  const decode = verifyToken(token);
+  // @ts-ignore
+  if (!decode) {
+    throw new AuthenticationException("Invalid Token.");
+  }
+  // @ts-ignore
+  req.user = decode.user;
   next();
 };
 

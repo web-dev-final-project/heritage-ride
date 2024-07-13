@@ -22,6 +22,7 @@ app.listen(port, async () => {
 });
 
 app.use(express.json());
+// @ts-ignore
 app.use(cookieParser());
 app.use(startLog);
 
