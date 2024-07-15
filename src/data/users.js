@@ -18,4 +18,25 @@ const createUser = async (user) => {
   }
 };
 
-export { createUser };
+const getAllExperts = async () => {
+  try {
+    const db = await users();
+    const experts = await db.find({ role: 'expert' }).toArray();
+    return experts;
+  } catch (e) {
+    throw new DataBaseException(e);
+  }
+};
+
+const getExpertById = async (userId) => {
+  try {
+    const db = await users();
+    const expert = await db.findOne({ _id: userId, role: 'expert' });
+    if (!expert) throw new DataBaseException(`Expert with ID ${userId} not found`);
+    return expert;
+  } catch (e) {
+    throw new DataBaseException(e);
+  }
+};
+
+export { createUser , getAllExperts, getExpertById  };
