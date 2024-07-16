@@ -11,6 +11,7 @@ interface String {
   checkEmail(): String;
   checkUrl(): String;
   checkEmpty(): String;
+  checkPassword(): String;
 }
 
 interface Array {
