@@ -55,6 +55,7 @@ String.prototype.checkUrl = function () {
     throw new InvalidValueException(e.message);
   }
 };
+
 String.prototype.checkEmail = function () {
   const re = new RegExp(
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -62,6 +63,25 @@ String.prototype.checkEmail = function () {
   if (!re.test(this.valueOf()))
     throw new InvalidValueException("Email is not valid.");
   return this;
+};
+String.prototype.checkPassword = function () {
+  const pass = this.valueOf();
+  if (pass.includes(" "))
+    throw new InvalidValueException("Password cannot contains spaces.");
+  if (pass.length < 8)
+    throw new InvalidValueException("Password must be at least 8 charactors.");
+  if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/.test(pass)) {
+    throw new InvalidValueException(
+      "Password must contains at least a lower case, upper case and numbers."
+    );
+  }
+  const xssFree = /^[a-zA-Z0-9 _\-@#$%^&*!]+$/;
+  if (!xssFree.test(pass)) {
+    throw new InvalidValueException(
+      "Password can only contains special characters such as _-@#$%^&*!"
+    );
+  }
+  return pass;
 };
 Array.prototype.checkIsEmpty = function () {
   if (this.length === 0)
