@@ -1,4 +1,5 @@
 import userAPI from "./users/user.js";
+import listingsAPI from "./listings/listings.js";
 import userView from "./users/userView.js";
 
 const uiRouter = (app) => {
@@ -8,6 +9,7 @@ const uiRouter = (app) => {
 
 const apiRouter = (app) => {
   // add your backends routes here, prefix with /api/
+  app.use("/api/listings", listingsAPI)
   app.use("/api/user", userAPI);
 };
 
