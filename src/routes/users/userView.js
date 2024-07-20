@@ -2,7 +2,7 @@ import { Router } from "express";
 import Validator from "../../utils/validator.js";
 import * as users from "../../data/users.js";
 import { NotFoundException } from "../../utils/exceptions.js";
-import auth from "../../middleware/auth.js";
+import auth, { authSafe } from "../../middleware/auth.js";
 import { getApiRoutes } from "../index.js";
 import logger from "../../utils/logger.js";
 
@@ -33,12 +33,16 @@ const cloudinary = {
   presetName: process.env.CLOUDINARY_PRESET,
 };
 
-router.get("/signup", (req, res, next) => {
+router.get("/signup", authSafe, (req, res, next) => {
   try {
-    res.render("signup", {
-      signUpUrl: getApiRoutes(req).userRoute + "/signup",
-      cloudinary: cloudinary,
-    });
+    if (req.user) {
+      res.redirect(`${req.protocol}://${req.get("host")}`);
+    } else {
+      res.render("signup", {
+        signUpUrl: getApiRoutes(req).userRoute + "/signup",
+        cloudinary: cloudinary,
+      });
+    }
   } catch (e) {
     next(e);
   }

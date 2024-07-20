@@ -1,5 +1,22 @@
+import { authSafe } from "../middleware/auth.js";
 import userAPI from "./users/user.js";
 import userView from "./users/userView.js";
+
+import { Router } from "express";
+const router = Router();
+
+router.get("/", authSafe, (req, res) => {
+  console.log(req.user);
+  res.render("home", { user: req.user });
+});
+router.get("/health", (req, res) => {
+  res.send("healthy");
+});
+router.get("/*", (req, res) => {
+  res.render("404");
+});
+
+export default router;
 
 const uiRouter = (app) => {
   // add your frontend routes here

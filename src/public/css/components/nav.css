@@ -2,12 +2,11 @@
   display: flex;
   background-color: var(--bs-primary);
   padding: 0.5rem;
+  justify-content: space-between;
 }
 
-.nav-wrapper {
-}
-
-.nav-avatar-wrapper {
+.nav-title-wrapper {
+  display: flex;
 }
 
 .nav-logo {
@@ -30,6 +29,25 @@
 }
 
 .nav-user {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.nav-user-avatar-wrapper {
+  border-radius: 100px;
+  overflow: hidden;
+  width: 50px;
+}
+.nav-user-avatar {
+  width: 100%;
+}
+.nav-user-name {
+  display: flex;
+  align-items: center;
+  margin: 0 0.5rem;
+}
+.nav-user-name-text {
+  margin: 0;
 }
 
 @media (min-width: 992px) {

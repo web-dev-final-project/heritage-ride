@@ -1,10 +1,14 @@
 <div class="custom-navbar">
-  <img class="nav-logo" src="/images/logo-black.svg" alt="" />
-  <h1 class="nav-name">HerritageRide</h1>
-  <div id="nav-menu" class="nav-menu">
-
+  <div class="nav-title-wrapper">  
+    <img class="nav-logo" src="/images/logo-black.svg" alt="" />
+    <h1 class="nav-name">HerritageRide</h1>
   </div>
-  <div id="nav-user" class="nav-user">
 
+  <div id="nav-menu" hidden class="nav-menu"></div>
+  <div class="nav-user" {{#unless user._id}}hidden{{/unless}} id="nav-user">
+    <div class="nav-user-avatar-wrapper">
+      <img src="{{ user.avatar }}" alt="" class="nav-user-avatar"/>
+    </div>
+    <div class="nav-user-name"><p class="nav-user-name-text">{{user.firstName}}</p></div>
   </div>
 </div>
