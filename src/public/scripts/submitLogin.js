@@ -1,11 +1,11 @@
-const userName = document.getElementById("username-login");
-const password = document.getElementById("password-login");
+const userNameLogin = document.getElementById("username-login");
+const passwordLogin = document.getElementById("password-login");
 const button = document.getElementById("login-submit-btn");
 const loginMessage = document.getElementById("login-message");
 
 const clearInput = () => {
-  userName.value = "";
-  password.value = "";
+  userNameLogin.value = "";
+  passwordLogin.value = "";
 };
 
 const validateInput = (str) => {
@@ -25,8 +25,8 @@ document
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userName: userName.value,
-        password: password.value,
+        userName: userNameLogin.value,
+        password: passwordLogin.value,
       }),
     });
     if (!res.ok) {
@@ -44,15 +44,18 @@ document
       else history.back();
     }
   });
-userName.addEventListener("click", () => {
+userNameLogin.addEventListener("click", () => {
   loginMessage.innerHTML = "";
 });
-userName.addEventListener("input", () => {
-  console.log(validateInput(userName.value), validateInput(password.value));
-  if (validateInput(userName.value) && validateInput(password.value))
+userNameLogin.addEventListener("input", () => {
+  console.log(
+    validateInput(userNameLogin.value),
+    validateInput(passwordLogin.value)
+  );
+  if (validateInput(userNameLogin.value) && validateInput(passwordLogin.value))
     button.disabled = false;
 });
-password.addEventListener("input", () => {
-  if (validateInput(userName.value) && validateInput(password.value))
+passwordLogin.addEventListener("input", () => {
+  if (validateInput(userNameLogin.value) && validateInput(passwordLogin.value))
     button.disabled = false;
 });
