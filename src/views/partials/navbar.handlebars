@@ -4,11 +4,34 @@
     <h1 class="nav-name">HerritageRide</h1>
   </div>
 
-  <div id="nav-menu" hidden class="nav-menu"></div>
+  <button id="login-button" class="btn btn-lg btn-primary" style="display: {{#if user}}none{{else}}block{{/if}}">Login</button>
+
   <div class="nav-user" {{#unless user._id}}hidden{{/unless}} id="nav-user">
     <div class="nav-user-avatar-wrapper">
       <img src="{{ user.avatar }}" alt="" class="nav-user-avatar"/>
     </div>
     <div class="nav-user-name"><p class="nav-user-name-text">{{user.firstName}}</p></div>
   </div>
+
+  <div id="nav-menu" hidden class="nav-menu">
+    <ul class="nav-menu-dropdown">
+      <li>
+        <a id="nav-user-detail" class="link">Manage account</a>
+      </li>
+      <hr>
+      <li>
+        <a id="nav-user-seller" class="link">Seller's central</a>
+      </li>
+      <li>
+        <a id="nav-user-expert" class="link">Expert's central</a>
+      </li>
+      <hr>
+      <li>
+        <a id="nav-logout" class="link">Log out</a>
+      </li>
+    </ul>
+  </div>
 </div>
+<script src="/scripts/navbar.js">
+</script>
+

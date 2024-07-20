@@ -18,7 +18,6 @@ const auth = (req, res, next) => {
 
 const authSafe = (req, res, next) => {
   const token = req.cookies?.token;
-  console.log(token);
   let decode;
   if (token) {
     decode = verifyToken(token);

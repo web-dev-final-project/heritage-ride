@@ -10,7 +10,7 @@ import logger from "../utils/logger.js";
 function error(err, req, res, next) {
   logger.error(err.stack);
   if (err instanceof AuthenticationException)
-    return res.status(401).render("login");
+    return res.redirect("/user/login");
   if (err instanceof ValidationException)
     return res
       .status(400)

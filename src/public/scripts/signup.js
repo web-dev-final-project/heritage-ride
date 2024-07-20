@@ -7,6 +7,7 @@ const email = document.getElementById("email-upload");
 const address = document.getElementById("address-upload");
 const avatar = document.getElementById("avatar-upload");
 const signup = document.getElementById("signup-button");
+const signupCancel = document.getElementById("signup-cancel-button");
 
 document.addEventListener("DOMContentLoaded", () => {
   document
@@ -22,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
         address: address.value,
         avatar: avatar.value,
       };
-      const res = await fetch(window.appData.signupUrl, {
+      const res = await fetch(getCurrentRoute() + "/user/signup", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -35,7 +36,6 @@ document.addEventListener("DOMContentLoaded", () => {
           await res.json()
         ).content;
       } else {
-        console.log(await res.json());
         document.getElementById("signup-button").disabled = true;
         document.location.replace(document.location.host + "/user/login");
       }
@@ -51,14 +51,6 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const handleInputChange = () => {
-    console.log(
-      validation[firstName.id],
-      validation[lastName.id],
-      validation[userName.id],
-      validation[password.id],
-      validation[passwordReenter.id],
-      validation[email.id]
-    );
     if (
       validation[firstName.id] &&
       validation[lastName.id] &&
@@ -79,6 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
         validation[element.id] = true;
       } else {
         element.style.outlineColor = "rgb(237, 229, 66)";
+        validation[element.id] = false;
       }
       handleInputChange();
     });
@@ -121,5 +114,8 @@ document.addEventListener("DOMContentLoaded", () => {
   email.addEventListener("blur", () => {
     if (email.value.trim().length < 6 && email.value.includes("@"))
       email.style.borderColor = "red";
+  });
+  signupCancel.addEventListener("click", () => {
+    window.location.href = getCurrentRoute();
   });
 });

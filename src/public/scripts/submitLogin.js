@@ -2,6 +2,9 @@ const userNameLogin = document.getElementById("username-login");
 const passwordLogin = document.getElementById("password-login");
 const button = document.getElementById("login-submit-btn");
 const loginMessage = document.getElementById("login-message");
+const signupLink = document.getElementById("signup-link");
+
+signupLink.href = getCurrentRoute() + "/user/signup";
 
 const clearInput = () => {
   userNameLogin.value = "";
@@ -18,7 +21,7 @@ document
     e.preventDefault();
 
     let token;
-    const res = await fetch(window.appData.loginUrl, {
+    const res = await fetch(getCurrentRoute() + "/api/user/login", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -31,7 +34,6 @@ document
     });
     if (!res.ok) {
       const resp = await res.json();
-      console.log(resp.content);
       loginMessage.innerHTML = resp.content;
       clearInput();
       button.disabled = true;
@@ -44,14 +46,12 @@ userNameLogin.addEventListener("click", () => {
   loginMessage.innerHTML = "";
 });
 userNameLogin.addEventListener("input", () => {
-  console.log(
-    validateInput(userNameLogin.value),
-    validateInput(passwordLogin.value)
-  );
   if (validateInput(userNameLogin.value) && validateInput(passwordLogin.value))
     button.disabled = false;
+  else button.disabled = true;
 });
 passwordLogin.addEventListener("input", () => {
   if (validateInput(userNameLogin.value) && validateInput(passwordLogin.value))
     button.disabled = false;
+  else button.disabled = true;
 });

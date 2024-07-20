@@ -4,6 +4,7 @@
 @import url("layouts/grid.css");
 @import url("layouts/flex.css");
 @import url("pages/home.css");
+@import url("pages/login.css");
 @import url("pages/signup.css");
 :root {
   --bs-primary: #fbb23b;
@@ -38,6 +39,12 @@ h6 {
   font-family: "Helvetica Neue", sans-serif; /* Custom font for headings */
   font-weight: bold; /* Custom font weight for headings */
 }
+ul {
+  list-style-type: none;
+}
+hr {
+  margin: 0;
+}
 
 .custom-font {
   font-family: "Courier New", monospace; /* Example of a custom font for specific elements */
@@ -45,4 +52,9 @@ h6 {
 
 .input-group {
   width: 100%;
+}
+
+.link {
+  text-decoration: none;
+  color: black;
 }

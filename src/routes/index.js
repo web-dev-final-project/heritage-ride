@@ -6,14 +6,13 @@ import { Router } from "express";
 const router = Router();
 
 router.get("/", authSafe, (req, res) => {
-  console.log(req.user);
   res.render("home", { user: req.user });
 });
 router.get("/health", (req, res) => {
   res.send("healthy");
 });
-router.get("/*", (req, res) => {
-  res.render("404");
+router.get("/*", authSafe, (req, res) => {
+  res.render("404", { user: req.user });
 });
 
 export default router;

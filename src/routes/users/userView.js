@@ -14,7 +14,7 @@ router.get("/", auth, async (req, res, next) => {
     const id = Validator.validateId(req.user._id);
     const user = await users.findUser(id);
     if (!user) throw new NotFoundException(`user not found`);
-    res.render("userProfile", user);
+    res.render("userProfile", { user: req.user });
   } catch (e) {
     next(e);
   }
@@ -22,7 +22,10 @@ router.get("/", auth, async (req, res, next) => {
 
 router.get("/login", (req, res, next) => {
   try {
-    res.render("login", { url: getApiRoutes(req).userRoute + "/login" });
+    res.render("login", {
+      url: getApiRoutes(req).userRoute + "/login",
+      user: req.user,
+    });
   } catch (e) {
     next(e);
   }
@@ -46,6 +49,16 @@ router.get("/signup", authSafe, (req, res, next) => {
   } catch (e) {
     next(e);
   }
+});
+
+router.get("/logout", authSafe, (req, res, next) => {
+  res.cookie("token", "", {
+    expires: new Date(0),
+    httpOnly: true,
+    secure: false,
+    sameSite: "lax",
+  });
+  res.redirect(`${req.protocol}://${req.get("host")}`);
 });
 
 export default router;
