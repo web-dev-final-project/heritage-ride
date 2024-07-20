@@ -6,3 +6,10 @@
     {{ user._id }}
   </p>
 </div>
+
+{{!-- should add this script to all pages except login and signup --}}
+<script>
+  if (window.location.pathname !== "/user/login") {
+    localStorage.setItem("lastVisitedUrl", window.location.href);
+  }
+</script>

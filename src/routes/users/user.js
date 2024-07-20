@@ -13,6 +13,7 @@ import {
   generateToken,
   hashPassword,
 } from "../../utils/auth.js";
+import { getApiRoutes } from "../index.js";
 
 const router = Router();
 
@@ -79,7 +80,7 @@ router.post("/role/:id", async (req, res, next) => {
 });
 router.post("/login", async (req, res, next) => {
   try {
-    let { userName, password } = req.body;
+    let { userName, password, lastVisitedUrl } = req.body;
     password = password.checkString();
     let resp;
     resp = await users.findUserByEmailOrUserName(userName, userName);
@@ -89,7 +90,16 @@ router.post("/login", async (req, res, next) => {
       throw new AuthenticationException("Invalid username or password.");
     delete resp.password;
     const token = generateToken(resp);
-    res.status(200).send(new HttpResponse(token));
+    res.cookie("token", token, {
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+    });
+    const originalUrl = lastVisitedUrl || "/";
+    res
+      .status(200)
+      .send(new HttpResponse(getApiRoutes(req).home + originalUrl));
   } catch (e) {
     next(e);
   }

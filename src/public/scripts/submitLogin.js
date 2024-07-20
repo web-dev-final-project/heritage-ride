@@ -36,12 +36,8 @@ document
       clearInput();
       button.disabled = true;
     } else {
-      token = (await res.json()).content;
-      document.cookie = "token=" + token + "; path=/";
-
-      if (history.length === 1)
-        document.location.replace(document.location.host);
-      else history.back();
+      const url = (await res.json()).content;
+      document.location.replace(url);
     }
   });
 userNameLogin.addEventListener("click", () => {
