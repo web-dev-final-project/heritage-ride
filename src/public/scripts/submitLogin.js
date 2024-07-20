@@ -1,15 +1,22 @@
+const userName = document.getElementById("username-login")
+const password = document.getElementById("password-login")
+const button = document.getElementById("login-submit-btn")
+const loginMessage = document.getElementById("login-message")
+
 const clearInput = () => {
-  document.getElementById("username-login").value = "";
-  document.getElementById("password-login").value = "";
+  userName.value = "";
+  password.value = "";
 };
+
+const validateInput = (str) => {
+  return !(!str || str.trim().length < 8)
+}
 
 document
   .getElementById("login-submit")
   .addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const userName = document.getElementById("username-login").value;
-    const password = document.getElementById("password-login").value;
     let token;
     const res = await fetch(window.appData.loginUrl, {
       method: "POST",
@@ -17,20 +24,33 @@ document
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ userName, password }),
+      body: JSON.stringify({ userName: userName.value, password: password.value }),
     });
     if (!res.ok) {
       const resp = await res.json();
       console.log(resp.content);
-      document.getElementById("login-message").innerHTML = resp.content;
+      loginMessage.innerHTML = resp.content;
       clearInput();
+      button.disabled = true
     } else {
       token = (await res.json()).content;
       document.cookie = "token=" + token;
       const decodedToken = jwt_decode(token);
       console.log(decodedToken);
+      if (history.length === 1) 
+        document.location.replace(document.location.host)
+      else
+        history.back()
     }
   });
-document.getElementById("username-login").addEventListener("click", () => {
-  document.getElementById("login-message").innerHTML = "";
+userName.addEventListener("click", () => {
+  loginMessage.innerHTML = "";
 });
+userName.addEventListener("change", () => {
+  if (validateInput(userName.value) && validateInput(password.value)) 
+    button.disabled = false
+})
+password.addEventListener("change", () => {
+  if (validateInput(userName.value) && validateInput(password.value)) 
+    button.disabled = false
+})
