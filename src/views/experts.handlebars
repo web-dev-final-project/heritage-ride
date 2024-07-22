@@ -1,0 +1,45 @@
+<div class="expert-box">
+  <h1>Experts</h1>
+
+  <div class="display-flex-2">
+    <button id="show-all-experts" class="btn btn-primary">Show All Experts</button>
+  </div>
+
+  <div class="search-expert">
+    <label for="expert-name">Search Expert by Name</label>
+    <div class="input-group mb-3">
+      <span class="input-group-text" id="basic-addon1">@</span>
+      <input class="search-input" type="text" id="expert-name" placeholder="Enter name" aria-label="ExpertName" aria-describedby="basic-addon1">
+    </div>
+    <div class="display-flex-2">
+      <button id="search-expert" class="btn btn-secondary">Search</button>
+    </div>
+  </div>
+
+  <div id="experts-list">
+    {{#if experts}}
+      {{#each experts}}
+        <div class="expert">
+          <p><strong>Name:</strong> {{this.firstName}} {{this.lastName}}</p>
+          <p><strong>Username:</strong> {{this.userName}}</p>
+          <p><strong>Email:</strong> {{this.email}}</p>
+          <p><strong>Address:</strong> {{this.address}}</p>
+          <img src="{{this.avatar}}" alt="{{this.userName}}" />
+        </div>
+      {{/each}}
+    {{else}}
+      <p>No experts found.</p>
+    {{/if}}
+  </div>
+
+  <script>
+    document.getElementById("show-all-experts").addEventListener("click", function() {
+      window.location.href = "/user/experts/all";
+    });
+
+    document.getElementById("search-expert").addEventListener("click", function() {
+      const name = document.getElementById("expert-name").value;
+      window.location.href = "/user/experts/search?name=" + name;
+    });
+  </script>
+</div>

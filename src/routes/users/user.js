@@ -46,4 +46,14 @@ router.post("/login", async (req, res, next) => {
 
 });
 
+router.get("/search", async (req, res, next) => {
+  try {
+    const { name } = req.query;
+    const experts = await users.searchExpertsByName(name);
+    res.status(200).send(experts);
+  } catch (e) {
+    next(e);
+  }
+});
+
 export default router;

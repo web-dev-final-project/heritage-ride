@@ -16,6 +16,7 @@ const getRoutes = (req) => {
   return {
     userLogin: `${serverUrl}/user/login`,
     userSignup: `${serverUrl}/user/signup`,
+    userExperts: `${serverUrl}/user/experts`,
   };
 };
 

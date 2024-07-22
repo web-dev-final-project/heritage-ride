@@ -1,6 +1,7 @@
 import { DataBaseException } from "../utils/exceptions.js";
 import Validator from "../utils/validator.js";
 import { users } from "../data/init.js";
+import { ObjectId } from "mongodb";
 
 const createUser = async (user) => {
   try {
@@ -31,7 +32,7 @@ const getAllExperts = async () => {
 const getExpertById = async (userId) => {
   try {
     const db = await users();
-    const expert = await db.findOne({ _id: userId, role: 'expert' });
+    const expert = await db.findOne({ _id: new ObjectId(userId), role: 'expert' });
     if (!expert) throw new DataBaseException(`Expert with ID ${userId} not found`);
     return expert;
   } catch (e) {
@@ -39,4 +40,20 @@ const getExpertById = async (userId) => {
   }
 };
 
-export { createUser , getAllExperts, getExpertById  };
+const searchExpertsByName = async (name) => {
+  try {
+    const db = await users();
+    const experts = await db.find({
+      $or: [
+        { firstName: { $regex: name, $options: 'i' } },
+        { lastName: { $regex: name, $options: 'i' } }
+      ],
+      role: { $in: ['expert'] }
+    }).toArray();
+    return experts;
+  } catch (e) {
+    throw new DataBaseException(e);
+  }
+};
+
+export { createUser , getAllExperts, getExpertById,searchExpertsByName  };
