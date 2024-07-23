@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
         lastName: lastName.value,
         userName: userName.value,
         password: password.value,
-        email: email.value,
+        email: email.value.toLowerCase(),
         address: address.value,
         avatar: avatar.value,
       };

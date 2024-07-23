@@ -1,7 +1,7 @@
 import { Router } from "express";
 import Validator from "../../utils/validator.js";
 import * as users from "../../data/users.js";
-import { NotFoundException } from "../../utils/exceptions.js";
+import { AuthenticationException, InvalidInputException, NotFoundException } from "../../utils/exceptions.js";
 import auth, { authSafe } from "../../middleware/auth.js";
 import { getApiRoutes } from "../index.js";
 import logger from "../../utils/logger.js";
@@ -13,7 +13,7 @@ router.get("/", auth, async (req, res, next) => {
   try {
     const id = Validator.validateId(req.user._id);
     const user = await users.findUser(id);
-    if (!user) throw new NotFoundException(`user not found`);
+    if (!user) throw new AuthenticationException(`user not found`);
     res.render("userProfile", { user: req.user });
   } catch (e) {
     next(e);
