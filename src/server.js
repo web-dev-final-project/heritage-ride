@@ -7,6 +7,7 @@ import "./utils/extend.js";
 import { apiRouter, uiRouter } from "./routes/index.js";
 import path from "path";
 import { handlebarsInstance } from "./settings.js";
+import cookieParser from "cookie-parser";
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -16,11 +17,13 @@ app.engine("handlebars", handlebarsInstance.engine);
 app.set("view engine", "handlebars");
 app.set("views", path.join(path.resolve(), "src/views"));
 
-app.listen(port, () => {
+app.listen(port, async () => {
   logger.info(`Server has started on port ${port}...`);
 });
 
 app.use(express.json());
+// @ts-ignore
+app.use(cookieParser());
 app.use(startLog);
 
 uiRouter(app);

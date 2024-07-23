@@ -17,12 +17,17 @@
 .main {
   display: flex;
   justify-content: center;
+  height: 100%;
+  flex-grow: 1;
 }
 
 body {
   font-family: "Arial", sans-serif; /* Custom font family */
   font-size: 16px; /* Custom font size */
   line-height: 1.5; /* Custom line height */
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 var h1,

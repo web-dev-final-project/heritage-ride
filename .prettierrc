@@ -1,0 +1,12 @@
+{
+  "semi": true,
+  "singleQuote": false,
+  "overrides": [
+    {
+      "files": "**/*.handlebars",
+      "options": {
+        "parser": "angular"
+      }
+    }
+  ]
+}
