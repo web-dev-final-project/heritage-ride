@@ -93,9 +93,10 @@ const getAllExperts = async () => {
 
 const getExpertById = async (userId) => {
   try {
+    let validId = Validator.validateId(userId);
     const db = await users();
-    const expert = await db.findOne({ _id: new ObjectId(userId), role: 'expert' });
-    if (!expert) throw new DataBaseException(`Expert with ID ${userId} not found`);
+    const expert = await db.findOne({ _id: new ObjectId(validId), role: 'expert' });
+    if (!expert) throw new DataBaseException(`Expert with ID ${validId} not found`);
     return expert;
   } catch (e) {
     throw new DataBaseException(e);

@@ -65,7 +65,9 @@ router.get("/experts/all", async (req, res, next) => {
 router.get("/experts/search", async (req, res, next) => {
   try {
     const name = req.query.name;
-    const experts = await users.searchExpertsByName(name);
+    let name1 =Validator.nullcheck(name);
+    name1=name1.checkString();
+    const experts = await users.searchExpertsByName(name1);
     res.render("experts", { experts });
   } catch (e) {
     next(e);
