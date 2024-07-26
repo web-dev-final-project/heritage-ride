@@ -16,21 +16,25 @@
     </div>
   </div>
 
-  <div id="experts-list">
-    {{#if experts}}
-      {{#each experts}}
-        <div class="expert">
-          <p><strong>Name:</strong> {{this.firstName}} {{this.lastName}}</p>
-          <p><strong>Username:</strong> {{this.userName}}</p>
-          <p><strong>Email:</strong> {{this.email}}</p>
-          <p><strong>Address:</strong> {{this.address}}</p>
-          <img src="{{this.avatar}}" alt="{{this.userName}}" />
-        </div>
-      {{/each}}
-    {{else}}
-      <p>No experts found.</p>
-    {{/if}}
-  </div>
+  {{#if error}}
+    <p class="error-message">{{error}}</p>
+  {{else}}
+    <div id="experts-list">
+      {{#if experts}}
+        {{#each experts}}
+          <div class="expert">
+            <p><strong>Name:</strong> {{this.firstName}} {{this.lastName}}</p>
+            <p><strong>Username:</strong> {{this.userName}}</p>
+            <p><strong>Email:</strong> {{this.email}}</p>
+            <p><strong>Address:</strong> {{this.address}}</p>
+            <img src="{{this.avatar}}" alt="{{this.userName}}" />
+          </div>
+        {{/each}}
+      {{else}}
+        <p>No experts found.</p>
+      {{/if}}
+    </div>
+  {{/if}}
 
   <script>
     document.getElementById("show-all-experts").addEventListener("click", function() {

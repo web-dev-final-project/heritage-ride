@@ -119,7 +119,7 @@ router.post("/login", async (req, res, next) => {
 
 });
 
-router.get("/search", async (req, res, next) => {
+router.get("/experts/search", async (req, res, next) => {
   try {
     const { name } = req.query;
     let name1 =Validator.nullcheck(name);
