@@ -20,7 +20,7 @@ const router = Router();
 router.post("/signup", async (req, res, next) => {
   try {
     let user = req.body;
-    if (!user) throw new InvalidInputException("User can't be null.")
+    if (!user) throw new InvalidInputException("User can't be null.");
     user = Validator.validateUser(user);
     user.role = ["user"];
     const exist = await users.findUserByEmailOrUserName(
@@ -42,7 +42,7 @@ router.put("/:id", async (req, res, next) => {
   try {
     let user = req.body;
     let id = req.params.id;
-    if (!id) throw new InvalidInputException("Id can't be null.")
+    if (!id) throw new InvalidInputException("Id can't be null.");
     user = Validator.validateUser(user);
     id = Validator.validateId(id);
     const resp = await users.updateUser({ ...user, id });
@@ -56,7 +56,7 @@ router.put("/:id", async (req, res, next) => {
 router.get("/:id", async (req, res, next) => {
   try {
     let id = req.params.id;
-    if (!id) throw new InvalidInputException("Id can't be null.")
+    if (!id) throw new InvalidInputException("Id can't be null.");
     id = Validator.validateId(id);
     const resp = await users.findUser(id);
     if (!resp) throw new NotFoundException(`user not found`);
@@ -70,7 +70,7 @@ router.post("/role/:id", async (req, res, next) => {
   try {
     let role = req.body;
     let id = req.params.id;
-    if (!id) throw new InvalidInputException("Id can't be null.")
+    if (!id) throw new InvalidInputException("Id can't be null.");
     id = Validator.validateId(id);
     role.role = role.checkObject().role.checkString();
     if (!Role.containsValue(role.role))
@@ -93,7 +93,7 @@ router.post("/login", async (req, res, next) => {
     let resp;
     resp = await users.findUserByEmailOrUserName(userName, userName);
     if (!resp) throw new NotFoundException(`Provided user not found`);
-  
+
     const checkPass = await comparePassword(password, resp.password);
     if (!checkPass)
       throw new AuthenticationException("Invalid username or password.");
@@ -110,43 +110,6 @@ router.post("/login", async (req, res, next) => {
     res
       .status(200)
       .send(new HttpResponse(getApiRoutes(req).home + originalUrl));
-  } catch (e) {
-    next(e);
-  }
-});
-
-  router.get("/experts", async (req, res, next) => {
-    try {
-      const experts = await users.getAllExperts();
-      res.status(200).send(experts);
-    } catch (e) {
-      next(e);
-    }
-  });
-  
-  router.get("/experts/:userId", async (req, res, next) => {
-    try {
-      
-    
-      const userId = req.params.userId;
-      let Valid_id = Validator.validateId(userId);
-      const expert = await users.getExpertById(Valid_id);
-      res.status(200).send(expert);
-    } catch (e) {
-      next(e);
-    }
-  
-
-});
-
-router.get("/experts/search", async (req, res, next) => {
-  try {
-    const { name } = req.query;
-    let name1 =Validator.nullcheck(name);
-    name1=name1.checkString();
-    
-    const experts = await users.searchExpertsByName(name1);
-    res.status(200).send(experts);
   } catch (e) {
     next(e);
   }

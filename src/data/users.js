@@ -5,7 +5,7 @@ import { ObjectId } from "mongodb";
 
 const createUser = async (user) => {
   const valUser = Validator.validateUser(user);
-  valUser.email = valUser.email.toLowerCase()
+  valUser.email = valUser.email.toLowerCase();
   try {
     const db = await users();
     const res = await db.insertOne({
@@ -85,7 +85,7 @@ const removeRole = async (id, role) => {};
 const getAllExperts = async () => {
   try {
     const db = await users();
-    const experts = await db.find({ role: 'expert' }).toArray();
+    const experts = await db.find({ role: "expert" }).toArray();
     return experts;
   } catch (e) {
     throw new DataBaseException(e);
@@ -96,8 +96,12 @@ const getExpertById = async (userId) => {
   try {
     let validId = Validator.validateId(userId);
     const db = await users();
-    const expert = await db.findOne({ _id: new ObjectId(validId), role: 'expert' });
-    if (!expert) throw new DataBaseException(`Expert with ID ${validId} not found`);
+    const expert = await db.findOne({
+      _id: new ObjectId(validId),
+      role: "expert",
+    });
+    if (!expert)
+      throw new DataBaseException(`Expert with ID ${validId} not found`);
     return expert;
   } catch (e) {
     throw new DataBaseException(e);
@@ -107,17 +111,19 @@ const getExpertById = async (userId) => {
 const searchExpertsByName = async (name) => {
   try {
     const db = await users();
-    const experts = await db.find({
-      $or: [
-        { firstName: { $regex: name, $options: 'i' } },
-        { lastName: { $regex: name, $options: 'i' } }
-      ],
-      role: { $in: ['expert'] }
-    }).toArray();
+    const experts = await db
+      .find({
+        $or: [
+          { firstName: { $regex: name, $options: "i" } },
+          { lastName: { $regex: name, $options: "i" } },
+        ],
+        role: { $in: ["expert"] },
+      })
+      .toArray();
     return experts;
   } catch (e) {
     throw new DataBaseException(e);
   }
 };
 
-export { createUser, updateUser, addRole, findUser, findUserByEmailOrUserName, getAllExperts, getExpertById, searchExpertsByName };
+export { createUser, updateUser, addRole, findUser, findUserByEmailOrUserName };
