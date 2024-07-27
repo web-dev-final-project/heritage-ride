@@ -5,6 +5,7 @@
 @import url("layouts/flex.css");
 @import url("pages/home.css");
 @import url("pages/signup.css");
+@import url('pages/experts.css');
 :root {
   --bs-primary: #fbb23b;
   --bs-secondary: #e1dfae;

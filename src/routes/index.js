@@ -18,6 +18,9 @@ const getApiRoutes = (req) => {
   return {
     home: `${serverUrl}`,
     userRoute: `${serverUrl}/api/user`,
+    userLogin: `${serverUrl}/user/login`,
+    userSignup: `${serverUrl}/user/signup`,
+    userExperts: `${serverUrl}/user/experts`,
   };
 };
 
