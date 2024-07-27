@@ -13,12 +13,14 @@ import {
   generateToken,
   hashPassword,
 } from "../../utils/auth.js";
+import { getApiRoutes } from "../index.js";
 
 const router = Router();
 
 router.post("/signup", async (req, res, next) => {
   try {
     let user = req.body;
+    if (!user) throw new InvalidInputException("User can't be null.")
     user = Validator.validateUser(user);
     user.role = ["user"];
     const exist = await users.findUserByEmailOrUserName(
@@ -40,6 +42,7 @@ router.put("/:id", async (req, res, next) => {
   try {
     let user = req.body;
     let id = req.params.id;
+    if (!id) throw new InvalidInputException("Id can't be null.")
     user = Validator.validateUser(user);
     id = Validator.validateId(id);
     const resp = await users.updateUser({ ...user, id });
@@ -53,6 +56,7 @@ router.put("/:id", async (req, res, next) => {
 router.get("/:id", async (req, res, next) => {
   try {
     let id = req.params.id;
+    if (!id) throw new InvalidInputException("Id can't be null.")
     id = Validator.validateId(id);
     const resp = await users.findUser(id);
     if (!resp) throw new NotFoundException(`user not found`);
@@ -66,6 +70,7 @@ router.post("/role/:id", async (req, res, next) => {
   try {
     let role = req.body;
     let id = req.params.id;
+    if (!id) throw new InvalidInputException("Id can't be null.")
     id = Validator.validateId(id);
     role.role = role.checkObject().role.checkString();
     if (!Role.containsValue(role.role))
@@ -79,17 +84,32 @@ router.post("/role/:id", async (req, res, next) => {
 });
 router.post("/login", async (req, res, next) => {
   try {
-    let { userName, password } = req.body;
+    let { userName, password, lastVisitedUrl } = req.body;
+    if (!userName) throw new InvalidInputException("Username can't be null.");
+    if (!password) throw new InvalidInputException("Password can't be null.");
+    userName = userName.checkString();
     password = password.checkString();
+
     let resp;
     resp = await users.findUserByEmailOrUserName(userName, userName);
     if (!resp) throw new NotFoundException(`Provided user not found`);
+  
     const checkPass = await comparePassword(password, resp.password);
     if (!checkPass)
       throw new AuthenticationException("Invalid username or password.");
+
     delete resp.password;
     const token = generateToken(resp);
-    res.status(200).send(new HttpResponse(token));
+    res.cookie("token", token, {
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+    });
+    const originalUrl = lastVisitedUrl || "/";
+    res
+      .status(200)
+      .send(new HttpResponse(getApiRoutes(req).home + originalUrl));
   } catch (e) {
     next(e);
   }

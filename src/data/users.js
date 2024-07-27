@@ -5,6 +5,7 @@ import { ObjectId } from "mongodb";
 
 const createUser = async (user) => {
   const valUser = Validator.validateUser(user);
+  valUser.email = valUser.email.toLowerCase()
   try {
     const db = await users();
     const res = await db.insertOne({
@@ -52,7 +53,7 @@ const findUser = async (id) => {
 
 const findUserByEmailOrUserName = async (username, userEmail) => {
   let userName = username.checkString();
-  let email = userEmail.checkString();
+  let email = userEmail.checkString().toLowerCase();
   let user;
   try {
     const db = await users();
