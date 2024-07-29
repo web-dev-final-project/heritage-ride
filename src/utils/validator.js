@@ -4,7 +4,17 @@ import { Role } from "./extend.js";
 
 class Validator {
   static validateListing(obj) {
-    return obj;
+    if (!obj || typeof obj !== 'object') {
+      throw new InvalidInputException("Listing object must be provided and must be an object.");
+    }
+    let listing = {
+      ...obj,
+      title: Validator.nullcheck(obj.title).checkString(),
+      description: Validator.nullcheck(obj.description).checkString(),
+      price: Validator.nullcheck(obj.price).checkNumber(),
+      category: Validator.nullcheck(obj.category).checkString(),
+    };
+    return listing;
   }
 
   static validateCar(obj) {
