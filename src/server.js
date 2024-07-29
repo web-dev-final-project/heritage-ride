@@ -4,7 +4,7 @@ import express from "express";
 import { startLog, endLog } from "./utils/logger.js";
 import error from "./middleware/error.js";
 import "./utils/extend.js";
-import { apiRouter, uiRouter } from "./routes/index.js";
+import router, { apiRouter, uiRouter } from "./routes/index.js";
 import path from "path";
 import { handlebarsInstance } from "./settings.js";
 import cookieParser from "cookie-parser";
@@ -28,14 +28,6 @@ app.use(startLog);
 
 uiRouter(app);
 apiRouter(app);
+app.use(router);
 
-app.get("/", (req, res) => {
-  res.render("home");
-});
-app.get("/health", (req, res) => {
-  res.send("healthy");
-});
-app.get("/*", (req, res) => {
-  res.render("404");
-});
 app.use(error);

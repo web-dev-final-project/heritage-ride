@@ -23,3 +23,18 @@ interface Array {
 interface HttpResponse {
   trace;
 }
+
+namespace Express {
+  interface Request {
+    user?: {
+      _id: string;
+      firstName: string;
+      lastName: string;
+      userName: string;
+      password: string;
+      avatar: string | undefined | null;
+      email: string;
+      address: string | undefined | null;
+    };
+  }
+}

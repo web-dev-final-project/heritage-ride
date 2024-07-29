@@ -1,0 +1,25 @@
+.signup-link {
+  text-decoration: underline;
+  color: blue;
+  font-weight: 500;
+}
+.login-input {
+  display: flex;
+  border: 1px solid rgb(182, 182, 182);
+  border-radius: 8px;
+  overflow: hidden;
+  height: 43px;
+  width: 100%;
+}
+.input-badge {
+  display: flex;
+  background-color: rgb(219, 218, 218);
+  width: 43px;
+  align-items: center;
+  justify-content: center;
+}
+.input-no-border {
+  outline: none;
+  border: none;
+  padding: 0 10px;
+}
