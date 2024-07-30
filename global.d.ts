@@ -12,6 +12,7 @@ interface String {
   checkUrl(): String;
   checkEmpty(): String;
   checkPassword(): String;
+  checkObjectId(): String;
 }
 
 interface Array {
