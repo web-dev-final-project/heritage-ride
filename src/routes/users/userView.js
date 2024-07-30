@@ -55,6 +55,14 @@ router.get("/signup", authSafe, (req, res, next) => {
   }
 });
 
+router.get("/edit", auth, (req, res, next) => {
+  res.render("signup", {
+    signUpUrl: getApiRoutes(req).userRoute + "/edit",
+    cloudinary: cloudinary,
+    user: req.user,
+  });
+});
+
 router.get("/logout", authSafe, (req, res, next) => {
   res.cookie("token", "", {
     expires: new Date(0),

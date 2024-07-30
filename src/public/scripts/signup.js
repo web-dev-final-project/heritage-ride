@@ -9,7 +9,31 @@ const avatar = document.getElementById("avatar-upload");
 const signup = document.getElementById("signup-button");
 const signupCancel = document.getElementById("signup-cancel-button");
 
+const validation = {
+  [firstName.id]: false,
+  [lastName.id]: false,
+  [userName.id]: false,
+  [password.id]: false,
+  [passwordReenter.id]: false,
+  [email.id]: false,
+};
+
+if (window.location.pathname === "/user/edit" && user) {
+  firstName.value = user.firstName;
+  lastName.value = user.lastName;
+  userName.value = user.userName;
+  email.value = user.email.toLowerCase();
+  address.value = user.address;
+  avatar.value = user.avatar;
+  validation[firstName.id] = true;
+  validation[lastName.id] = true;
+  validation[userName.id] = true;
+  validation[email.id] = true;
+  document.getElementById("signup-title").innerHTML = "Edit Profile";
+} else document.getElementById("signup-title").innerHTML = "Sign Up";
+
 document.addEventListener("DOMContentLoaded", () => {
+  const isEditing = window.location.pathname === "/user/edit";
   document
     .getElementById("signup-form")
     .addEventListener("submit", async (e) => {
@@ -21,10 +45,13 @@ document.addEventListener("DOMContentLoaded", () => {
         password: password.value,
         email: email.value.toLowerCase(),
         address: address.value,
-        avatar: avatar.value,
+        avatar:
+          avatar.value.trim() ||
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/2048px-User-avatar.svg.png",
       };
-      const res = await fetch(getCurrentRoute() + "/user/signup", {
-        method: "POST",
+      const url = isEditing ? `/api/user/${user._id}` : "/api/user/signup";
+      const res = await fetch(getCurrentRoute() + url, {
+        method: isEditing ? "PUT" : "POST",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
@@ -37,18 +64,9 @@ document.addEventListener("DOMContentLoaded", () => {
         ).content;
       } else {
         document.getElementById("signup-button").disabled = true;
-        document.location.replace(document.location.host + "/user/login");
+        document.location.href = "/user";
       }
     });
-
-  const validation = {
-    [firstName.id]: false,
-    [lastName.id]: false,
-    [userName.id]: false,
-    [password.id]: false,
-    [passwordReenter.id]: false,
-    [email.id]: false,
-  };
 
   const handleInputChange = () => {
     if (

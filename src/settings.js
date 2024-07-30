@@ -19,5 +19,8 @@ export const handlebarsInstance = exphbs.create({
         return new Handlebars.SafeString(JSON.stringify(obj, null, spacing));
       return new Handlebars.SafeString(JSON.stringify(obj));
     },
+    json: function (context) {
+      return JSON.stringify(context);
+    },
   },
 });

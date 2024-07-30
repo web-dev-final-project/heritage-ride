@@ -24,8 +24,8 @@ router.post("/signup", async (req, res, next) => {
     user = Validator.validateUser(user);
     user.role = ["user"];
     const exist = await users.findUserByEmailOrUserName(
-      user.email,
-      user.userName
+      user.userName,
+      user.email
     );
     if (exist) throw new InvalidInputException("User has already exist");
 
@@ -47,7 +47,14 @@ router.put("/:id", async (req, res, next) => {
     id = Validator.validateId(id);
     const resp = await users.updateUser({ ...user, id });
     if (!resp) throw new NotFoundException(`Provided user not found`);
-    res.status(200).send(resp);
+    const token = generateToken(resp);
+    res.cookie("token", token, {
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+    });
+    res.status(200).send(new HttpResponse(resp));
   } catch (e) {
     next(e);
   }
@@ -77,7 +84,7 @@ router.post("/role/:id", async (req, res, next) => {
       throw new InvalidInputException("Role must be seller or expert");
     const resp = await users.addRole(id, role.role);
     if (!resp) throw new NotFoundException(`Provided user not found`);
-    res.status(200).send(resp);
+    res.status(200).send(new HttpResponse(resp));
   } catch (e) {
     next(e);
   }
