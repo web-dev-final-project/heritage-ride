@@ -1,0 +1,26 @@
+.user-image {
+  width: 100%;
+}
+.user-image-wrapper {
+  width: 16rem;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.avatar-edit {
+  font-size: 30px;
+}
+.user-personal-info {
+  margin: 30px 0;
+}
+.user-badge {
+  height: 50px;
+}
+.user-page {
+  display: flex;
+  column-gap: 1.5rem;
+  margin: 1rem;
+}
+.user-space {
+  padding: 2.6rem;
+  min-width: 800px;
+}

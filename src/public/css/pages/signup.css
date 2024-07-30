@@ -3,7 +3,6 @@
   flex-direction: column;
   width: 100%;
   padding: var(--border-p);
-  
 }
 .signup-input {
   padding: 4px 8px;
@@ -12,7 +11,7 @@
   height: auto;
   margin: 10px 0;
   /* outline-color: rgb(81, 225, 49) */
-  outline-color: rgb(237, 229, 66),
+  outline-color: rgb(237, 229, 66);
 }
 
 @media (min-width: 577px) {
