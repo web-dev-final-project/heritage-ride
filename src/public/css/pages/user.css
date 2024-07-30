@@ -24,3 +24,12 @@
   padding: 2.6rem;
   min-width: 800px;
 }
+.user-tab-item {
+  font-size: 1.6rem;
+  font-weight: 400;
+  margin: 1rem;
+  cursor: pointer;
+}
+.select-tab {
+  border: 1px solid black;
+}
