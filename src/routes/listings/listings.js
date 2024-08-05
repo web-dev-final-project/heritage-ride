@@ -6,7 +6,7 @@ import Validator from "../../utils/validator.js";
 
 const router = Router();
 
-router.get('/search', authSafe, async (req, res) => { // car listings search, displays cars
+router.get('/search', authSafe, async (req, res, next) => { // car listings search, displays cars
     const query = req.query
     // Error check
     const errors = Validator.validateQuery(query);
@@ -21,9 +21,8 @@ router.get('/search', authSafe, async (req, res) => { // car listings search, di
       const result = await getAll(query);
       if (!result) throw new NotFoundException(`listing not found`);
       res.render('carSearch', {results: result})
-    } catch (error) {
-      res.status(500).json({ error: 'Failed to fetch search results' });
-      // OR next(e);
+    } catch (e) {
+      next(e)
     }
   });
 
