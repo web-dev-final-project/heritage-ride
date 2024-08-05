@@ -1,4 +1,4 @@
-import { DataBaseException } from "../utils/exceptions.js";
+import { DataBaseException, NotFoundException } from "../utils/exceptions.js";
 import Validator from "../utils/validator.js";
 import { users, experts } from "./init.js";
 import { ObjectId } from "mongodb";
@@ -16,16 +16,22 @@ const getAllExperts = async () => {
 };
 
 const getExpertById = async (userId) => {
-  let validId = Validator.validateId(userId);
-  const expertDb = await experts();
-  const expert = expertDb.findOne({
-  userId: new ObjectId(validId),
-    role: "expert",
-  })
-  if (!expert)
-    throw new DataBaseException(`Expert with ID ${validId} not found`);
-
-  return expert;
+  try {
+    let validId = Validator.validateId(userId);
+    const expertDb = await experts();
+    const userDb = await users();
+    const expert = await expertDb.findOne({
+      userId: new ObjectId(validId),
+      role: "expert",
+    });
+    if (!expert)
+      throw new NotFoundException(`Expert with ID ${validId} not found`);
+    const user = await userDb.findOne({ _id: new ObjectId(expert.userId) }, {});
+    delete user.password;
+    return { ...expert, user };
+  } catch (e) {
+    databaseExceptionHandler(e);
+  }
 };
 
 const searchExpertsByName = async (name) => {
@@ -49,27 +55,25 @@ const searchExpertsByName = async (name) => {
 const createExpert = async (expert) => {
   try {
     const db = await experts();
-    const validatedExpert = Validator.validateExpert(expert)
-    validatedExpert.reviews = []
-    validatedExpert.requests = []
-    await addRole(expert.userId, "expert")
-    const res = await db.insertOne(
-      {
-        ...validatedExpert,
-        createdAt: new Date().toUTCString(),
-        updatedAt: new Date().toUTCString(),
-      }
-    )
+    const validatedExpert = Validator.validateExpert(expert);
+    validatedExpert.reviews = [];
+    validatedExpert.requests = [];
+    validatedExpert.carReviewed = 0;
+    await addRole(expert.userId, "expert");
+    const res = await db.insertOne({
+      ...validatedExpert,
+      createdAt: new Date().toUTCString(),
+      updatedAt: new Date().toUTCString(),
+    });
     if (!res || !res.acknowledged || !res.insertedId)
       new DataBaseException("failed to insert expert.");
     return {
       ...validatedExpert,
       _id: res.insertedId,
     };
-
   } catch (e) {
-    throw new DataBaseException(e);
+    databaseExceptionHandler(e);
   }
-}
- 
+};
+
 export { getAllExperts, getExpertById, searchExpertsByName, createExpert };

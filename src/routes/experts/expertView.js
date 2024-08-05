@@ -44,4 +44,22 @@ router.get("/search", authSafe, async (req, res, next) => {
   }
 });
 
+router.get("/create", auth, async (req, res, next) => {
+  try {
+    res.render("expertSignUp", { user: req.user });
+  } catch (e) {
+    next(e);
+  }
+});
+
+router.get("/:id", auth, async (req, res, next) => {
+  try {
+    const validId = Validator.validateId(req.params.id);
+    const exp = await expert.getExpertById(validId);
+    res.render("expertPage", { expert: exp, user: req.user });
+  } catch (e) {
+    next(e);
+  }
+});
+
 export default router;

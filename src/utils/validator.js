@@ -27,7 +27,7 @@ class Validator {
     return user;
   }
   static validateId(id) {
-    let str = id.checkNull().checkString();
+    let str = this.nullcheck(id).checkString();
     if (!ObjectId.isValid(str)) {
       throw new InvalidValueException("Invalid Id.");
     }
@@ -61,9 +61,9 @@ class Validator {
       bio: Validator.nullcheck(obj.bio).checkString(),
       skills: Validator.nullcheck(obj.skills).checkStringArray(),
       location: Validator.nullcheck(obj.location).checkString(),
-      images: Validator.nullcheck(obj.images).checkStringArray()
-    }
-    return expert
+      images: Validator.nullcheck(obj.images).checkStringArray(),
+    };
+    return expert;
   }
 
   static validateReview(obj) {
@@ -76,8 +76,8 @@ class Validator {
       // estimateValue: Validator.nullcheck(obj.estimateValue).checkString(),
       // reviewMessage: Validator.nullcheck(obj.reviewMessage).checkString(),
       // reviewDate: Validator.nullcheck(obj.reviewDate).checkDate()
-    }
-    return expert
+    };
+    return expert;
   }
 }
 

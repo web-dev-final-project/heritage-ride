@@ -66,3 +66,12 @@ hr {
 .badge-icon {
   height: 100%;
 }
+
+.err-message {
+  color: rgb(255, 54, 54);
+  display: none;
+}
+
+.text-cap {
+  text-transform: capitalize;
+}

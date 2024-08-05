@@ -1,0 +1,24 @@
+<div>
+  <div class="expert-avatar-wrapper">
+    <img id="expert-avatar" src="{{ expert.user.avatar }}" />
+  </div>
+
+  <h1 id="expert-name">
+    {{ expert.user.firstName }} {{ expert.user.lastName }}
+  </h1>
+  <p>Email: {{ expert.user.email }}</p>
+  <p>Member since: {{ expert.createdAt }}</p>
+  <p>Total service: {{ expert.carReviewed }}</p>
+  <p>Rating:</p>
+  <div id="expert-bio">{{ expert.bio }}</div>
+  <ul id="expert-skills">
+    {{#each expert.skills}}
+    <li class="skill-badge">{{this}}</li>
+    {{/each}}
+  </ul>
+  <ul id="expert-images">
+    {{#each expert.images}}
+    <img src="{{this}}" class=""></li>
+    {{/each}}
+  </ul>
+</div>

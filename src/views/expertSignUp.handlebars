@@ -1,0 +1,30 @@
+<form>
+  <div class="mb-3 w-100">
+    <label for="expert-bio"></label>
+    <textarea
+      class="w-100"
+      id="expert-bio"
+      name="expert-bio"
+      placeholder="enter your bio"
+    ></textarea>
+  </div>
+  <div class="d-flex gap-2">
+    <label for="expert-skill-input" class="align-self-center">Skill: </label>
+    <input
+      class="signup-input"
+      type="text"
+      id="expert-skill-input"
+      name="expert-skill-input"
+      placeholder="new skill"
+    />
+    <i
+      class="fa-regular fa-square-plus fs-1 align-self-center"
+      id="expert-add-skill"
+    ></i>
+  </div>
+  <ul class="text-cap p-2 d-flex gap-3 flex-wrap" id="skill-badges"></ul>
+
+  <ul class="text-cap p-2 d-flex gap-3 flex-wrap" id="expert-images"></ul>
+</form>
+<p id="expert-sign-up-err" class="err-message"></p>
+<script src="/scripts/expert.js"></script>
