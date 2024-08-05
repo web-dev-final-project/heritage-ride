@@ -11,10 +11,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const navUserDetail = document.getElementById("nav-user-detail");
     const navUserSeller = document.getElementById("nav-user-seller");
     const navUserExpert = document.getElementById("nav-user-expert");
+    const navUserEdit = document.getElementById("nav-user-edit");
     const navLogout = document.getElementById("nav-logout");
+
     navUserDetail.href = getCurrentRoute() + "/user";
     navUserSeller.href = getCurrentRoute() + "/seller";
     navUserExpert.href = getCurrentRoute() + "/expert";
+    navUserEdit.href = getCurrentRoute() + "/user/edit";
     navLogout.href = getCurrentRoute() + "/user/logout";
 
     document.addEventListener("click", (event) => {

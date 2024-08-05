@@ -1,9 +1,12 @@
 .custom-navbar {
   display: flex;
-  position: relative;
+  position: fixed;
   background-color: var(--bs-primary);
   padding: 0.5rem;
   justify-content: space-between;
+  width: 100%;
+  z-index: 5;
+  height: 4rem;
 }
 
 .nav-title-wrapper {
@@ -24,6 +27,7 @@
 }
 
 .nav-menu {
+  z-index: 10;
 }
 
 .nav-menu-item {

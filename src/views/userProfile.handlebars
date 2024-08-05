@@ -1,10 +1,51 @@
-<div>
-  <p>
-    {{ user.userName }}
-  </p>
-  <p>
-    {{ user._id }}
-  </p>
+<div class="user-page">
+  <div class="card p-5 shadow user-profile">
+    <div class="user-image-wrapper">
+      <img src="{{ user.avatar }}" alt="user's avatar" class="user-image" />
+    </div>
+    <div class="user-personal-info">
+      <h3>{{ user.userName }}</h3>
+      <div class="user-badge">
+        <img
+          src="/images/expert_badge.png"
+          alt="expert badge"
+          class="badge-icon"
+        />
+      </div>
+    </div>
+    <div class="user-panel-tab"></div>
+  </div>
+  <div class="card shadow user-space">
+    <div class="d-flex justify-content-between">
+      <h2>Welcome back, {{ user.firstName }}</h2>
+      <div>
+        Edit
+        <i class="fa-solid fa-pen-to-square avatar-edit" id="edit-user"></i>
+      </div>
+    </div>
+
+    <hr />
+    <div class="d-flex justify-content-between">
+      <p>User name:</p>
+      <p>{{ user.userName }}</p>
+    </div>
+    <div class="d-flex justify-content-between">
+      <p>First name:</p>
+      <p>{{ user.firstName }}</p>
+    </div>
+    <div class="d-flex justify-content-between">
+      <p>Last name:</p>
+      <p>{{ user.lastName }}</p>
+    </div>
+    <div class="d-flex justify-content-between">
+      <p>Email:</p>
+      <p>{{ user.email }}</p>
+    </div>
+    <div class="d-flex justify-content-between">
+      <p>Role:</p>
+      <p>{{ user.role }}</p>
+    </div>
+  </div>
 </div>
 
 {{!-- should add this script to all pages except login and signup --}}
@@ -12,4 +53,14 @@
   if (window.location.pathname !== "/user/login") {
     localStorage.setItem("lastVisitedUrl", window.location.href);
   }
+  const user = {{{json user}}};
+  const badgeIcon = document.querySelector(".badge-icon");
+  if (user && user.role && user.role.includes("expert")) {
+    badgeIcon.style.display = "block";
+  } else {
+    badgeIcon.style.display = "none";
+  }
+  document.getElementById("edit-user").addEventListener("click", () => {
+    window.location.href = "/user/edit"
+  })
 </script>

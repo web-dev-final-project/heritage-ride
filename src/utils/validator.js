@@ -40,7 +40,7 @@ class Validator {
       lastName: Validator.nullcheck(obj.lastName).checkString(),
       userName: Validator.nullcheck(obj.userName).checkString(),
       password: Validator.nullcheck(obj.password).checkString(),
-      avatar: obj.avatar ? obj.avatar.checkString().checkUrl() : null,
+      avatar: Validator.nullcheck(obj.avatar).checkString().checkUrl(),
       email: Validator.nullcheck(obj.email).checkString().checkEmail(),
       address: obj.address ? obj.address.checkString() : obj.address,
     };
