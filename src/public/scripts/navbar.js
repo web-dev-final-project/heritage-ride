@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const navDropdown = document.getElementById("nav-menu");
   const loginButton = document.getElementById("login-button");
   loginButton.addEventListener("click", (e) => {
-    e.preventDefault();
     window.location.href = getCurrentRoute() + "/user/login";
   });
 

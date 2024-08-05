@@ -37,5 +37,6 @@ namespace Express {
       email: string;
       address: string | undefined | null;
     };
+    refreshToken: (user: any | null) => void;
   }
 }

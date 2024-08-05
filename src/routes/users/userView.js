@@ -9,6 +9,7 @@ import {
 import auth, { authSafe } from "../../middleware/auth.js";
 import { getApiRoutes } from "../index.js";
 import logger from "../../utils/logger.js";
+import { cloudinary } from "../../utils/class.js";
 
 const router = Router();
 
@@ -34,11 +35,6 @@ router.get("/login", (req, res, next) => {
     next(e);
   }
 });
-
-const cloudinary = {
-  cloudName: process.env.CLOUDINARY_NAME,
-  presetName: process.env.CLOUDINARY_PRESET,
-};
 
 router.get("/signup", authSafe, (req, res, next) => {
   try {

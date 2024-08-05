@@ -19,16 +19,12 @@ const getExpertById = async (userId) => {
   try {
     let validId = Validator.validateId(userId);
     const expertDb = await experts();
-    const userDb = await users();
     const expert = await expertDb.findOne({
       userId: new ObjectId(validId),
-      role: "expert",
     });
     if (!expert)
       throw new NotFoundException(`Expert with ID ${validId} not found`);
-    const user = await userDb.findOne({ _id: new ObjectId(expert.userId) }, {});
-    delete user.password;
-    return { ...expert, user };
+    return { ...expert };
   } catch (e) {
     databaseExceptionHandler(e);
   }
@@ -59,6 +55,7 @@ const createExpert = async (expert) => {
     validatedExpert.reviews = [];
     validatedExpert.requests = [];
     validatedExpert.carReviewed = 0;
+    validatedExpert.userId = new ObjectId(validatedExpert.userId);
     await addRole(expert.userId, "expert");
     const res = await db.insertOne({
       ...validatedExpert,

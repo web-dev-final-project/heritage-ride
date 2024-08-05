@@ -1,0 +1,25 @@
+<div>
+  <div class="container">
+    <h1>Expert Central</h1>
+  </div>
+
+  <section class="container my-2">
+    <div class="card shadow p-3 d-flex">
+      <div>
+        <div class="expert-avatar-wrapper">
+          <img src="{{ user.avatar }}" alt="user's avatar" class="user-image" />
+        </div>
+        <h3 class="m-auto">{{ user.firstName }} {{ user.lastName }}</h3>
+      </div>
+    </div>
+  </section>
+  <section>
+    <ul class="container">
+      {{#each expert.images}}
+      <li class="w-100">
+        <img src="{{ this }}" alt="" class="w-100" />
+      </li>
+      {{/each}}
+    </ul>
+  </section>
+</div>
