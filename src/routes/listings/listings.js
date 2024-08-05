@@ -2,17 +2,25 @@ import { Router } from "express";
 import { getAll } from "../../data/listings.js";
 import { NotFoundException } from "../../utils/exceptions.js";
 import { authSafe } from "../../middleware/auth.js";
+import Validator from "../../utils/validator.js";
 
 const router = Router();
 
 router.get('/search', authSafe, async (req, res) => { // car listings search, displays cars
     const query = req.query
-    // should I validate all query fields?
+    // Error check
+    const errors = Validator.validateQuery(query);
+    if (errors.length > 0) {
+        return res.status(400).render('carSearch', {
+            error: 'Invalid search criteria: ' + errors.join(', '),
+            results: [] // Ensure no results are shown if there's an error
+        });
+    }
+
     try {
       const result = await getAll(query);
       if (!result) throw new NotFoundException(`listing not found`);
-      console.log(result)
-      res.render('carSearch', {results: result, user: req.user})
+      res.render('carSearch', {results: result})
     } catch (error) {
       res.status(500).json({ error: 'Failed to fetch search results' });
       // OR next(e);

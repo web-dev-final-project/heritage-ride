@@ -3,6 +3,26 @@ import { InvalidInputException, InvalidValueException } from "./exceptions.js";
 import { Role } from "./extend.js";
 
 class Validator {
+  static validateQuery(query) {
+    const { make, model, year, category } = query;
+    const errors = [];
+    // Validate make
+    if (make && typeof make !== 'string') {
+        errors.push('Make must be a string');
+    }
+    // Validate model
+    if (model && typeof model !== 'string') {
+        errors.push('Model must be a string');
+    }
+    // Validate year
+    if (year) {
+        const yearNum = parseInt(year, 10);
+        if (isNaN(yearNum) || yearNum > new Date().getFullYear()) {
+            errors.push('Year must be a valid number less than the current year');
+        }
+    }
+    return errors;
+}
   static validateListing(obj) {
     return obj;
   }

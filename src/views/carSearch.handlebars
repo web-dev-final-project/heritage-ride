@@ -9,7 +9,14 @@
 
 <body>
     <div class="container mt-4">
+
+        {{> searchBar}}
+
         <h1>Car Search Results</h1>
+
+        {{#if error}}
+            <p style="color: red;">{{error}}</p>
+        {{/if}}
 
         {{#if results.length}}
             <ul class="list-group">
