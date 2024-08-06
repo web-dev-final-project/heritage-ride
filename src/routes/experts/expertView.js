@@ -13,11 +13,10 @@ router.get("/", auth, async (req, res, next) => {
     if (!req.user.role.includes("expert")) {
       res.redirect("/expert/create");
     }
-    const exp = await expert.getExpertById(req.user._id);
+    const exp = await expert.getExpertByUserId(req.user._id);
     if (!exp) {
       throw new AccessException("User are not registered as expert.");
     }
-    req.refreshToken();
     res.render("expert", { expert: exp, user: req.user });
   } catch (e) {
     next(e);
@@ -66,7 +65,7 @@ router.get("/:id", auth, async (req, res, next) => {
   try {
     const validId = Validator.validateId(req.params.id);
     const exp = await expert.getExpertById(validId);
-    res.render("expertPage", { expert: exp, user: req.user });
+    res.render("expert", { expert: exp, user: req.user });
   } catch (e) {
     next(e);
   }

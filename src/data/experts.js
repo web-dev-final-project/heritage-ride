@@ -7,15 +7,49 @@ import { databaseExceptionHandler } from "../utils/exceptions.js";
 
 const getAllExperts = async () => {
   try {
-    const db = await users();
-    const experts = await db.find({ role: "expert" }).toArray();
-    return experts;
+    const expertDb = await experts();
+    const aggregation = [
+      {
+        $lookup: {
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $addFields: {
+          user: { $arrayElemAt: ["$user", 0] },
+        },
+      },
+    ];
+
+    const results = await expertDb.aggregate(aggregation).toArray();
+    return results;
   } catch (e) {
     throw new DataBaseException(e);
   }
 };
 
-const getExpertById = async (userId) => {
+const getExpertById = async (expertId) => {
+  try {
+    let validId = Validator.validateId(expertId);
+    const expertDb = await experts();
+    const userDb = await users();
+    const expert = await expertDb.findOne({
+      _id: new ObjectId(validId),
+    });
+    if (!expert)
+      throw new NotFoundException(`Expert with ID ${validId} not found`);
+    const user = await userDb.findOne({ _id: new ObjectId(expert.userId) });
+    delete user.password;
+    return { ...expert, user };
+  } catch (e) {
+    databaseExceptionHandler(e);
+  }
+};
+
+const getExpertByUserId = async (userId) => {
   try {
     let validId = Validator.validateId(userId);
     const expertDb = await experts();
@@ -73,4 +107,10 @@ const createExpert = async (expert) => {
   }
 };
 
-export { getAllExperts, getExpertById, searchExpertsByName, createExpert };
+export {
+  getAllExperts,
+  getExpertById,
+  searchExpertsByName,
+  createExpert,
+  getExpertByUserId,
+};

@@ -28,35 +28,28 @@
   {{#if error}}
   <p class="error-message">{{ error }}</p>
   {{else}}
-  <div id="experts-list">
+  <ul id="experts-list" class="p-0 d-flex gap-3">
     {{#if experts}}
     {{#each experts}}
-    <div class="expert">
-      <p><strong>Name:</strong> {{ this.firstName }} {{ this.lastName }}</p>
-      <p><strong>Username:</strong> {{ this.userName }}</p>
-      <p><strong>Email:</strong> {{ this.email }}</p>
-      <p><strong>Address:</strong> {{ this.address }}</p>
-      <img src="{{ this.avatar }}" alt="{{ this.userName }}" />
-    </div>
+    <li class="expert card shadow p-4" id="{{ this._id }}">
+      <p>
+        <strong>Name:</strong> {{ this.user.firstName }}
+        {{ this.user.lastName }}
+      </p>
+      <p><strong>Username:</strong> {{ this.user.userName }}</p>
+      <p><strong>Email:</strong> {{ this.user.email }}</p>
+      <p><strong>Address:</strong> {{ this.user.address }}</p>
+      <img src="{{ this.user.avatar }}" alt="{{ this.user.userName }}" />
+    </li>
     {{/each}}
     {{else}}
     <p>No experts found.</p>
     {{/if}}
-  </div>
+  </ul>
   {{/if}}
 
   <script>
-    document
-      .getElementById("show-all-experts")
-      .addEventListener("click", function () {
-        window.location.href = "/expert/all";
-      });
-
-    document
-      .getElementById("search-expert")
-      .addEventListener("click", function () {
-        const name = document.getElementById("expert-name").value;
-        window.location.href = "/expert/search?name=" + name;
-      });
+    const experts = {{{json experts}}}
   </script>
+  <script src="/scripts/expertSearch.js"></script>
 </div>
