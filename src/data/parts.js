@@ -50,7 +50,10 @@ const searchPartsByName = async (searchQuery) => {
     searchQuery = Validator.validateString(searchQuery, 'Search Query');
     try {
         const partsCollection = await parts();
-        const parts = await partsCollection.find({ name: { $regex: searchQuery, $options: 'i' } }).toArray();
+        const parts = await partsCollection.find(
+            { name: { $regex: searchQuery, $options: 'i' } },
+            { projection: { name: 1, price: 1, manufacturer: 1, specifications: 1, dateAdded: 1 } } 
+        ).toArray();
         return parts;
     } catch (e) {
         throw new DataBaseException(e.message);
