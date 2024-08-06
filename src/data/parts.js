@@ -4,7 +4,6 @@ import Validator from "../utils/validator.js";
 import { DataBaseException, NotFoundException } from "../utils/exceptions.js";
 
 const createPart = async (name, price, manufacturer, sellerId, carIds) => {
-    // Validate all arguments using the Validator class
     const partData = Validator.validatePart({
         name,
         price,
