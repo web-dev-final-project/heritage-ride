@@ -4,6 +4,7 @@ import listingsAPI from "./listings/listings.js";
 import userView from "./users/userView.js";
 import expertsAPI from "./experts/expert.js";
 import expertsView from "./experts/expertView.js";
+import partsRouter from "./parts/partsRoutes.js";
 
 import { Router } from "express";
 const router = Router();
@@ -31,6 +32,7 @@ const apiRouter = (app) => {
   app.use("/api/listings", listingsAPI)
   app.use("/api/user", userAPI);
   app.use("api/expert", expertsAPI);
+  app.use("/api/parts", partsRouter);
 };
 
 const getApiRoutes = (req) => {
