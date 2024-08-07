@@ -15,7 +15,6 @@ router.get("/search", authSafe, async (req, res, next) => {
     return res.status(400).render("carSearch", {
       error: "Invalid search criteria: " + errors.join(", "),
       results: [], // Ensure no results are shown if there's an error
-      user: req.user,
     });
   }
 
