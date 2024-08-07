@@ -15,13 +15,14 @@ router.get("/search", authSafe, async (req, res, next) => {
     return res.status(400).render("carSearch", {
       error: "Invalid search criteria: " + errors.join(", "),
       results: [], // Ensure no results are shown if there's an error
+      user: req.user,
     });
   }
 
   try {
     const result = await getAll(query);
     if (!result) throw new NotFoundException(`listing not found`);
-    res.render("carSearch", { results: result });
+    res.render("carSearch", { results: result, user: req.user });
   } catch (e) {
     next(e);
   }
