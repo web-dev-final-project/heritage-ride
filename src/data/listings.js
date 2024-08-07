@@ -1,32 +1,51 @@
-import { cars, listings } from "./init.js"
 import { ObjectId } from "mongodb";
+import { DataBaseException, NotFoundException, InvalidInputException } from "../utils/exceptions.js";
 import Validator from "../utils/validator.js";
+import { cars, listings } from "./init.js"
 import { getCarById } from "./cars.js";
-import { DataBaseException, NotFoundException } from "../utils/exceptions.js";
 
-const createListing = async (itemId, price, seller, description) => {
-    // add: validate all args
-    let newListing = {
-        itemId: itemId,
-        price: price,
-        seller: seller,
-        description: description,
-        mechanicReview: "empty",
-        status: "open",
-        listedTime: new Date()
-    }
+const getListingByUser = async (userId) => {
+    const validId = Validator.validateId(userId);
+
+    let db;
+    let result;
     try {
-        const listingsCollection = await listings()
-        const insertInfo = await listingsCollection.insertOne(newListing)
-        if (!insertInfo.acknowledged || !insertInfo.insertedId) {
-        throw 'Could not add listing'
+        db = await listings();
+        result = await db.find({ sellerId: new ObjectId(validId) }).toArray();
+    } catch (e) {
+    throw new DataBaseException('Error fetching listings');
     }
-    const newId = insertInfo.insertedId;
-    return await getCarById(newId.toString()); // should be add getListing by id?
+    
+if (!result || result.length === 0) {
+    throw new NotFoundException(`Listings not found for user.`);
 }
-  catch (e) {
-    throw new DataBaseException(e);
-}
+
+return result;
+};
+
+const createListing = async (sellerId, item) => {
+    const validSellerId = Validator.validateId(sellerId);
+    const validItem = Validator.validateListing(item);
+
+    try {
+    const db = await listings();
+    const res = await db.insertOne({
+        ...validItem,
+        sellerId: new ObjectId(validSellerId),
+        createdAt: new Date().toUTCString(),
+        updatedAt: new Date().toUTCString(),
+    });
+
+    if (!res || !res.acknowledged || !res.insertedId) {
+        throw new DataBaseException('Insert listing failed');
+    }
+        return {
+            ...item,
+            _id: res.insertedId,
+            sellerId: validSellerId,
+        };
+    } catch (e) {
+    throw new DataBaseException(e.message);
 }
 
 const getAll = async (query) => { // this will fire after a user enters search terms and clicks search
@@ -71,3 +90,4 @@ const getAll = async (query) => { // this will fire after a user enters search t
 }
 
 export { createListing, getAll };
+
