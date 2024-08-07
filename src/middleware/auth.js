@@ -16,4 +16,19 @@ const auth = (req, res, next) => {
   next();
 };
 
+const authSafe = (req, res, next) => {
+  const token = req.cookies?.token;
+  let decode;
+  if (token) {
+    decode = verifyToken(token);
+    // @ts-ignore
+    if (decode) {
+      // @ts-ignore
+      req.user = decode.user;
+    }
+  }
+  next();
+};
+
 export default auth;
+export { authSafe };

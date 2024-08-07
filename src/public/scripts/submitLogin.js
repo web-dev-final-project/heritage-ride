@@ -1,6 +1,18 @@
+const userNameLogin = document.getElementById("username-login");
+const passwordLogin = document.getElementById("password-login");
+const button = document.getElementById("login-submit-btn");
+const loginMessage = document.getElementById("login-message");
+const signupLink = document.getElementById("signup-link");
+
+signupLink.href = getCurrentRoute() + "/user/signup";
+
 const clearInput = () => {
-  document.getElementById("username-login").value = "";
-  document.getElementById("password-login").value = "";
+  userNameLogin.value = "";
+  passwordLogin.value = "";
+};
+
+const validateInput = (str) => {
+  return !(!str || str.trim().length < 4);
 };
 
 document
@@ -8,29 +20,38 @@ document
   .addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const userName = document.getElementById("username-login").value;
-    const password = document.getElementById("password-login").value;
     let token;
-    const res = await fetch(window.appData.loginUrl, {
+    const res = await fetch(getCurrentRoute() + "/api/user/login", {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ userName, password }),
+      body: JSON.stringify({
+        userName: userNameLogin.value,
+        password: passwordLogin.value,
+      }),
     });
     if (!res.ok) {
       const resp = await res.json();
-      console.log(resp.content);
-      document.getElementById("login-message").innerHTML = resp.content;
+      loginMessage.innerHTML = resp.content;
       clearInput();
+      button.disabled = true;
     } else {
-      token = (await res.json()).content;
-      document.cookie = "token=" + token;
-      const decodedToken = jwt_decode(token);
-      console.log(decodedToken);
+      const url = (await res.json()).content;
+      document.location.replace(url);
     }
   });
-document.getElementById("username-login").addEventListener("click", () => {
-  document.getElementById("login-message").innerHTML = "";
+userNameLogin.addEventListener("click", () => {
+  loginMessage.innerHTML = "";
+});
+userNameLogin.addEventListener("input", () => {
+  if (validateInput(userNameLogin.value) && validateInput(passwordLogin.value))
+    button.disabled = false;
+  else button.disabled = true;
+});
+passwordLogin.addEventListener("input", () => {
+  if (validateInput(userNameLogin.value) && validateInput(passwordLogin.value))
+    button.disabled = false;
+  else button.disabled = true;
 });

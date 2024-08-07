@@ -1,13 +1,16 @@
 .custom-navbar {
   display: flex;
+  position: fixed;
   background-color: var(--bs-primary);
   padding: 0.5rem;
+  justify-content: space-between;
+  width: 100%;
+  z-index: 5;
+  height: 4rem;
 }
 
-.nav-wrapper {
-}
-
-.nav-avatar-wrapper {
+.nav-title-wrapper {
+  display: flex;
 }
 
 .nav-logo {
@@ -24,12 +27,58 @@
 }
 
 .nav-menu {
+  z-index: 10;
 }
 
 .nav-menu-item {
 }
 
+.login-button {
+}
+
 .nav-user {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.nav-user:hover {
+  cursor: pointer;
+  color: greenyellow;
+}
+.nav-user-avatar-wrapper {
+  border-radius: 100px;
+  overflow: hidden;
+  width: 50px;
+}
+.nav-user-avatar {
+  width: 100%;
+}
+.nav-user-name {
+  display: flex;
+  align-items: center;
+  margin: 0 0.5rem;
+}
+.nav-user-name-text {
+  margin: 0;
+  font-size: 1.3rem;
+}
+.nav-menu {
+  border: 1px;
+  box-shadow: 0 5px 8px 3px rgb(153, 153, 153);
+  margin: 0 8px;
+  border-radius: 10px;
+  width: 320px;
+  position: absolute;
+  top: 67px;
+  right: 0;
+  background-color: rgb(254, 254, 254);
+}
+.nav-menu-dropdown {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  margin: 0;
 }
 
 @media (min-width: 992px) {
