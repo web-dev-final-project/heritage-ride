@@ -1,4 +1,4 @@
-import express from 'express';
+import { Router } from "express";
 import { 
   createPart, getPartById, searchPartsByName, getCarsByPartId 
 } from '../data/parts.js';
