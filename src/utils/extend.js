@@ -102,6 +102,14 @@ Object.prototype.containsValue = function (val) {
   if (!Object.values(this).includes(val)) return false;
   return true;
 };
+
+Object.prototype.checkNumber = function () {
+  if (typeof this !== "number") {
+    throw new TypeException("Input type must be number.");
+  }
+  return this;
+};
+
 const Role = {
   seller: "seller",
   expert: "expert",
