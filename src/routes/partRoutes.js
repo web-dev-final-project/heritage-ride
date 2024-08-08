@@ -7,7 +7,15 @@ import { error } from '../middleware/error.js';
 
 const router = express.Router();
 
-router.post('/', auth, async (req, res, next) => {
+router.get("/", async (req, res, next) => {
+  try {
+    const experts = await expertDb.getAllParts();
+    res.status(200).send(experts);
+  } catch (e) {
+    next(e);
+  }
+})
+  .post('/', auth, async (req, res, next) => {
     try {
         const { name, price, manufacturer, sellerId, carIds } = req.body;
         const newPart = await createPart(name, price, manufacturer, sellerId, carIds);
@@ -15,6 +23,15 @@ router.post('/', auth, async (req, res, next) => {
     } catch (e) {
         next(e);
     }
+});
+
+router.get("/", async (req, res, next) => {
+  try {
+    const experts = await expertDb.getAllExperts();
+    res.status(200).send(experts);
+  } catch (e) {
+    next(e);
+  }
 });
 
 router.get('/:partId', auth, async (req, res, next) => {
