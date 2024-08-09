@@ -27,6 +27,17 @@ router.post("/", auth, async (req, res, next) => {
   }
 });
 
+router.put("/", auth, async (req, res, next) => {
+  try {
+    const expr = req.body;
+    const validExpr = Validator.validateExpert(expr);
+    const ex = await expertDb.updateExpert(validExpr, req.user._id);
+    res.status(201).send(new HttpResponse(ex, HttpStatus.SUCCESS));
+  } catch (e) {
+    next(e);
+  }
+});
+
 router.get("/:userId", async (req, res, next) => {
   try {
     const userId = req.params.userId;

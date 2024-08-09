@@ -1,4 +1,4 @@
-<h1>New Expert</h1>
+<h1 class="pt-3">{{#if isEdit}}Edit Profile{{else}}New Expert{{/if}}</h1>
 
 <form id="expert-form" class="expert-form">
   <div class="mb-3 w-100">
@@ -58,5 +58,7 @@
 </form>
 <script>
   const user = {{{json user}}}
+  const isEdit = {{{json isEdit}}}
+  const currentExpert = {{{json expert}}}
 </script>
 <script src="/scripts/expertSignUp.js"></script>

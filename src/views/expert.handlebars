@@ -6,14 +6,14 @@
   <section class="container my-2 d-flex gap-3 h-auto">
     <div class="card shadow p-3 d-flex expert-left-card">
       <div>
-        <div class="expert-avatar-wrapper">
+        <div class="expert-avatar-wrapper m-auto">
           <img
             src="{{ expert.user.avatar }}"
             alt="user's avatar"
             class="user-image"
           />
         </div>
-        <h3 class="m-auto">
+        <h3 class="text-center m-3">
           {{ expert.user.firstName }} {{ expert.user.lastName }}
         </h3>
         <p>
@@ -22,10 +22,12 @@
         <p>Contract fufilled: {{ expert.carReviewed }}</p>
 
         <p>Shop address: {{ expert.location }}</p>
-        <button id="expert-Hire-btn" class="btn btn-primary">Book Me</button>
-        <button id="expert-edit-btn" class="btn btn-danger d-none">
-          Edit My Profile
-        </button>
+        <div class="d-flex justify-content-center m-4">
+          <button id="expert-Hire-btn" class="btn btn-primary">Book Me</button>
+          <button id="expert-edit-btn" class="btn btn-danger d-none">
+            Edit My Profile
+          </button>
+        </div>
       </div>
     </div>
     <div class="card shadow p-5">
@@ -43,10 +45,15 @@
   </section>
   <section>
     <h3 class="m-2 fs-4 p-1">Gallery</h3>
-    <ul class="container">
+    <ul class="container gallery gap-2">
       {{#each expert.images}}
-      <li class="w-100">
-        <img src="{{ this }}" alt="" class="w-100" />
+      <li class="w-100 gallery-container">
+        <img
+          src="{{ this }}"
+          alt=""
+          class="gallery-item"
+          onclick="showImage(this.src)"
+        />
       </li>
       {{/each}}
     </ul>
@@ -69,6 +76,11 @@
     </ul>
   </section>
 </div>
+
+<div id="overlay" class="overlay" onclick="closeImage()">
+  <img id="fullImage" src="" alt="Full Size Image" />
+</div>
+
 <script>
   const expert = {{{json expert}}}
   const user = {{{json user}}}

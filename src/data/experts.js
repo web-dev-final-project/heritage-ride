@@ -1,9 +1,14 @@
-import { DataBaseException, NotFoundException } from "../utils/exceptions.js";
+import {
+  DataBaseException,
+  NotFoundException,
+  ValidationException,
+} from "../utils/exceptions.js";
 import Validator from "../utils/validator.js";
 import { users, experts } from "./init.js";
 import { ObjectId } from "mongodb";
 import { addRole } from "./users.js";
 import { databaseExceptionHandler } from "../utils/exceptions.js";
+import { handleAddError, handleUpdateError } from "../utils/databaseUtil.js";
 
 const getAllExperts = async () => {
   try {
@@ -90,18 +95,41 @@ const createExpert = async (expert) => {
     validatedExpert.requests = [];
     validatedExpert.carReviewed = 0;
     validatedExpert.userId = new ObjectId(validatedExpert.userId);
+    if (expert.role.includes("expert"))
+      throw new ValidationException("User is already an expert");
     await addRole(expert.userId, "expert");
     const res = await db.insertOne({
       ...validatedExpert,
       createdAt: new Date().toUTCString(),
       updatedAt: new Date().toUTCString(),
     });
-    if (!res || !res.acknowledged || !res.insertedId)
-      new DataBaseException("failed to insert expert.");
+    handleAddError(res);
     return {
       ...validatedExpert,
       _id: res.insertedId,
     };
+  } catch (e) {
+    databaseExceptionHandler(e);
+  }
+};
+
+const updateExpert = async (expert, userId) => {
+  try {
+    const db = await experts();
+    const validatedExpert = Validator.validateExpert(expert);
+    const validatedId = Validator.validateId(userId);
+    const res = await db.updateOne(
+      { userId: new ObjectId(validatedId) },
+      {
+        $set: {
+          ...validatedExpert,
+          userId: new ObjectId(userId),
+          updatedAt: new Date().toUTCString(),
+        },
+      }
+    );
+    handleUpdateError(res);
+    return res;
   } catch (e) {
     databaseExceptionHandler(e);
   }
@@ -113,4 +141,5 @@ export {
   searchExpertsByName,
   createExpert,
   getExpertByUserId,
+  updateExpert,
 };

@@ -79,6 +79,21 @@ router.get("/hire", auth, async (req, res, next) => {
   }
 });
 
+router.get("/edit/:id", auth, async (req, res, next) => {
+  try {
+    const validId = Validator.validateId(req.params.id);
+    const exp = await expert.getExpertById(validId);
+    res.render("expertSignUp", {
+      expert: exp,
+      user: req.user,
+      isEdit: true,
+      cloudinary: cloudinary,
+    });
+  } catch (e) {
+    next(e);
+  }
+});
+
 router.get("/:id", auth, async (req, res, next) => {
   try {
     const validId = Validator.validateId(req.params.id);
