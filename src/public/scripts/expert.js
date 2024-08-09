@@ -1,11 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const expertBookButton = document.getElementById("expert-book-btn");
+  const expertHireButton = document.getElementById("expert-Hire-btn");
   const expertEditButton = document.getElementById("expert-edit-btn");
   if (expert.userId === user._id) {
-    expertBookButton.classList.add("d-none");
+    expertHireButton.classList.add("d-none");
     expertEditButton.classList.remove("d-none");
   }
-  expertBookButton.addEventListener("click", () => {});
+  expertHireButton.addEventListener("click", () => {
+    window.location.href = `/expert/hire?id=${expert._id}`;
+  });
 
   expertEditButton.addEventListener("click", () => {});
 });

@@ -1,0 +1,39 @@
+<div>
+  <button class="btn btn-danger m-3" id="return-button">Back</button>
+  <div id="add-seller" class="page-redirect d-none">
+    <h2>You are not a seller, please register and list your car.</h2>
+    <div class="mx-4">
+      <button class="btn btn-lg btn-primary m-3">Become a seller</button>
+    </div>
+  </div>
+  <div id="add-car" class="page-redirect d-none">
+    <h2>You don't have any listing for sale</h2>
+    <button class="btn btn-lg btn-primary">Add my car</button>
+  </div>
+  <ul id="seller-listings">
+    {{#each listings}}
+    <li></li>
+    {{/each}}
+  </ul>
+</div>
+<script>
+  const user = {{{json user}}}
+  const listings = {{{json listings}}}
+  const expertId = {{{json expertId}}}
+  if (!user.role.includes("seller")) {
+    document.getElementById("add-seller").classList.remove("d-none")
+    document.getElementById("add-seller").addEventListener("click", () => {
+      document.location.href = `http://localhost:4000/seller/register`
+    })
+  }
+  else if (listings.length === 0) {
+    document.getElementById("add-car").classList.remove("d-none")
+    document.getElementById("add-car").addEventListener("click", () => {
+      document.location.href = `http://localhost:4000/listings/add`
+    })
+  }
+
+  document.getElementById("return-button").addEventListener("click", () => {
+    document.location.href = `http://localhost:4000/expert/${expertId}`
+  })
+</script>

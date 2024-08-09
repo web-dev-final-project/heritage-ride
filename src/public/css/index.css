@@ -75,3 +75,9 @@ hr {
 .text-cap {
   text-transform: capitalize;
 }
+
+.page-redirect {
+  margin: auto;
+  text-align: center;
+  margin-top: 4rem;
+}
