@@ -6,6 +6,9 @@ import auth, { authSafe } from "../../middleware/auth.js";
 import { cloudinary } from "../../utils/class.js";
 import { AccessException } from "../../utils/exceptions.js";
 import { getListingByUser } from "../../data/listings.js";
+import { cloudinary } from "../../utils/class.js";
+import { AccessException } from "../../utils/exceptions.js";
+import { getListingByUser } from "../../data/listings.js";
 
 const router = Router();
 
@@ -73,6 +76,21 @@ router.get("/hire", auth, async (req, res, next) => {
       expertId: validId,
       listings: listings,
       user: req.user,
+    });
+  } catch (e) {
+    next(e);
+  }
+});
+
+router.get("/edit/:id", auth, async (req, res, next) => {
+  try {
+    const validId = Validator.validateId(req.params.id);
+    const exp = await expert.getExpertById(validId);
+    res.render("expertSignUp", {
+      expert: exp,
+      user: req.user,
+      isEdit: true,
+      cloudinary: cloudinary,
     });
   } catch (e) {
     next(e);

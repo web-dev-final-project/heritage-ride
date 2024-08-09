@@ -18,12 +18,6 @@ const expert = {
   images: [],
 };
 
-expertBio.addEventListener("input", () => {
-  expert.bio = expertBio.value.trim();
-  expertSignUpError.style.display = "none";
-  textCount.innerHTML = `${expertBio.value.length}/500`;
-});
-
 const newSkillBadge = (skill) => {
   const item = document.createElement("li");
   item.innerHTML = skill;
@@ -43,6 +37,7 @@ const newSkillBadge = (skill) => {
   });
   return item;
 };
+
 const newExpertImage = (url) => {
   const item = document.createElement("li");
   const img = document.createElement("img");
@@ -52,6 +47,30 @@ const newExpertImage = (url) => {
   item.classList.add("expert-image-preview-wrapper");
   return item;
 };
+
+if (isEdit && currentExpert) {
+  expert.userId = user._id;
+  expertBio.value = currentExpert.bio;
+  expert.bio = currentExpert.bio;
+  expertAdress.value = currentExpert.location;
+  expert.location = currentExpert.location;
+  for (let url of currentExpert.images) {
+    expertImages.appendChild(newExpertImage(url));
+    expert.images.push(url);
+  }
+  for (let skill of currentExpert.skills) {
+    expert.skills.push(skill);
+    skillsBadges.appendChild(newSkillBadge(skill));
+  }
+
+  textCount.innerHTML = `${expertBio.value.length}/500`;
+}
+
+expertBio.addEventListener("input", () => {
+  expert.bio = expertBio.value.trim();
+  expertSignUpError.style.display = "none";
+  textCount.innerHTML = `${expertBio.value.length}/500`;
+});
 
 skillInput.addEventListener("focus", () => {
   expertSignUpError.style.display = "none";
@@ -93,8 +112,9 @@ expertAdress.addEventListener("input", () => {
   expert.location = expertAdress.value.trim();
 });
 
-expertForm.addEventListener("submit", (e) => {
+expertForm.addEventListener("submit", async (e) => {
   e.preventDefault();
+
   expert.userId = user._id;
 
   try {
@@ -115,16 +135,38 @@ expertForm.addEventListener("submit", (e) => {
     if (expert.userId.length === 0) {
       window.location.replace("/user/login");
     }
-    fetch(getCurrentRoute() + "/api/expert", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(expert),
-    }).then((res) => {
-      // window.location.reload();
-    });
+
+    if (isEdit) {
+      const res = await fetch("/api/expert", {
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(expert),
+      });
+      if (res.ok) {
+        document.location.replace("/expert");
+      } else {
+        const json = await res.json();
+        throw new Error(json.content || "An error occurred");
+      }
+    } else {
+      const res = await fetch("/api/expert", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(expert),
+      });
+      if (res.ok) {
+        document.location.replace("/expert");
+      } else {
+        const json = await res.json();
+        throw new Error(json.content || "An error occurred");
+      }
+    }
   } catch (e) {
     expertSignUpError.innerHTML = e.message;
     expertSignUpError.style.display = "block";
