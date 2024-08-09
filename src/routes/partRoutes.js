@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.get("/", async (req, res, next) => {
   try {
-    const experts = await expertDb.getAllParts();
+    const experts = await expertDb.getAllExperts();
     res.status(200).send(experts);
   } catch (e) {
     next(e);
@@ -25,14 +25,6 @@ router.get("/", async (req, res, next) => {
     }
 });
 
-router.get("/", async (req, res, next) => {
-  try {
-    const experts = await expertDb.getAllExperts();
-    res.status(200).send(experts);
-  } catch (e) {
-    next(e);
-  }
-});
 
 router.get('/:partId', auth, async (req, res, next) => {
     try {
