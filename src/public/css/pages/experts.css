@@ -1,20 +1,58 @@
 .expert-box {
-    padding: 20px;
+  padding: 20px;
+}
+
+.search-expert {
+  margin-bottom: 20px;
+}
+
+.expert {
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.expert:hover {
+  background-color: #ece9e9;
+  border-color: #ffffff;
+}
+
+.expert img {
+  max-width: 100px;
+  border-radius: 50%;
+}
+.expert-image-preview-wrapper {
+  width: 300px;
+}
+.expert-image-preview {
+  width: 100%;
+}
+.expert-avatar-wrapper {
+  width: 200px;
+  border-radius: 100px;
+  overflow: hidden;
+}
+.expert-form {
+  width: 700px;
+}
+.expert-left-card {
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.expert-skill-item {
+  background-color: rgb(30, 198, 30);
+  font: 1.4em sans-serif;
+  border-radius: 16px;
+  font-weight: 500;
+  padding: 8px 20px;
+  color: #ffffff;
+}
+
+@media screen and (max-width: 576px) {
+  .expert-form {
+    width: 100%;
   }
-  
-  .search-expert {
-    margin-bottom: 20px;
-  }
-  
-  .expert {
-    margin-bottom: 20px;
-    border: 1px solid #ddd;
-    padding: 10px;
-    border-radius: 5px;
-  }
-  
-  .expert img {
-    max-width: 100px;
-    border-radius: 50%;
-  }
-  
+}

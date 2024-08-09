@@ -1,0 +1,62 @@
+<h1>New Expert</h1>
+
+<form id="expert-form" class="expert-form">
+  <div class="mb-3 w-100">
+    <label for="expert-bio" class="fs-5 d-block">Tell us about yourself</label>
+    <textarea
+      class="w-100"
+      id="expert-bio"
+      name="expert-bio"
+      placeholder="enter your bio"
+      rows="8"
+      maxlength="500"
+    ></textarea>
+    <p id="text-area-count">0/500</p>
+  </div>
+  <div>
+    <label for="expert-skill-input" class="align-self-center fs-5 d-block"
+      >Add your shop address</label
+    >
+    <input
+      class="signup-input w-100"
+      type="text"
+      id="expert-adress-input"
+      name="expert-adress-input"
+      placeholder="Adress"
+    />
+  </div>
+
+  <div>
+    <label for="expert-skill-input" class="align-self-center fs-5 d-block"
+      >Add your skills (click badge to remove)</label
+    >
+    <div class="d-flex gap-2">
+      <input
+        class="signup-input"
+        type="text"
+        id="expert-skill-input"
+        name="expert-skill-input"
+        placeholder="new skill"
+      />
+      <i
+        class="fa-regular fa-square-plus fs-1 align-self-center"
+        id="expert-add-skill"
+      ></i>
+    </div>
+  </div>
+  <p id="expert-skill-err" class="err-message"></p>
+  <ul class="text-cap d-flex gap-3 p-0 flex-wrap" id="skill-badges"></ul>
+
+  <div>
+    <label class="fs-5 d-block">Add images</label>
+    <ul class="text-cap d-flex gap-3 flex-wrap p-0" id="expert-images"></ul>
+    {{> uploadWidget id="upload-widget" cloudName=cloudinary.cloudName uploadPreset=cloudinary.presetName uploadValue="expert-upload"}}
+    <input hidden="true" id="expert-upload" name="expert-upload" />
+  </div>
+  <p id="expert-sign-up-err" class="err-message"></p>
+  <button class="btn btn-primary mt-4" type="submit">Submit</button>
+</form>
+<script>
+  const user = {{{json user}}}
+</script>
+<script src="/scripts/expertSignUp.js"></script>

@@ -19,11 +19,6 @@ const getListingByUser = async (userId) => {
   } catch (e) {
     throw new DataBaseException("Error fetching listings");
   }
-
-  if (!result || result.length === 0) {
-    throw new NotFoundException(`Listings not found for user.`);
-  }
-
   return result;
 };
 

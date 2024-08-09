@@ -13,6 +13,7 @@ interface String {
   checkUrl(): String;
   checkEmpty(): String;
   checkPassword(): String;
+  checkObjectId(): String;
 }
 
 interface Array {
@@ -37,5 +38,6 @@ namespace Express {
       email: string;
       address: string | undefined | null;
     };
+    refreshToken: (user: any | null) => void;
   }
 }

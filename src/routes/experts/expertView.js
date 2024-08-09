@@ -3,12 +3,25 @@ import Validator from "../../utils/validator.js";
 import * as expert from "../../data/experts.js";
 import logger from "../../utils/logger.js";
 import auth, { authSafe } from "../../middleware/auth.js";
+import { cloudinary } from "../../utils/class.js";
+import { AccessException } from "../../utils/exceptions.js";
+import { getListingByUser } from "../../data/listings.js";
 
 const router = Router();
 
-router.get("/", authSafe, (req, res, next) => {
+router.get("/", auth, async (req, res, next) => {
   try {
-    res.render("experts", { user: req.user });
+    if (!req.user.role.includes("expert")) {
+      res.redirect("/expert/create");
+    }
+    const exp = await expert.getExpertByUserId(req.user._id);
+    if (!exp) {
+      throw new AccessException("User are not registered as expert.");
+    }
+    res.render("expert", {
+      expert: { ...exp, user: req.user },
+      user: req.user,
+    });
   } catch (e) {
     next(e);
   }
@@ -39,6 +52,38 @@ router.get("/search", authSafe, async (req, res, next) => {
     name1 = name1.checkString();
     const experts = await expert.searchExpertsByName(name1);
     res.render("experts", { experts, user: req.user });
+  } catch (e) {
+    next(e);
+  }
+});
+
+router.get("/create", auth, async (req, res, next) => {
+  try {
+    res.render("expertSignUp", { user: req.user, cloudinary: cloudinary });
+  } catch (e) {
+    next(e);
+  }
+});
+
+router.get("/hire", auth, async (req, res, next) => {
+  try {
+    const validId = Validator.validateId(req.query.id);
+    const listings = await getListingByUser(req.user._id);
+    res.render("hireExpert", {
+      expertId: validId,
+      listings: listings,
+      user: req.user,
+    });
+  } catch (e) {
+    next(e);
+  }
+});
+
+router.get("/:id", auth, async (req, res, next) => {
+  try {
+    const validId = Validator.validateId(req.params.id);
+    const exp = await expert.getExpertById(validId);
+    res.render("expert", { expert: exp, user: req.user });
   } catch (e) {
     next(e);
   }

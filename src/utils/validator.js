@@ -70,7 +70,7 @@ class Validator {
     return user;
   }
   static validateId(id) {
-    let str = id.checkNull().checkString();
+    let str = this.nullcheck(id).checkString();
     if (!ObjectId.isValid(str)) {
       throw new InvalidValueException("Invalid Id.");
     }
@@ -93,6 +93,34 @@ class Validator {
   static nullcheck(obj) {
     if (!obj) throw new InvalidInputException("Some inputs are missing");
     return obj;
+  }
+
+  static validateExpert(obj) {
+    if (!obj || obj === undefined)
+      throw new InvalidInputException("Input must not be empty");
+    let expert = {
+      ...obj,
+      userId: Validator.nullcheck(obj.userId).checkString().checkObjectId(),
+      bio: Validator.nullcheck(obj.bio).checkString(),
+      skills: Validator.nullcheck(obj.skills).checkStringArray(),
+      location: Validator.nullcheck(obj.location).checkString(),
+      images: Validator.nullcheck(obj.images).checkStringArray(),
+    };
+    return expert;
+  }
+
+  static validateReview(obj) {
+    if (!obj || obj === undefined)
+      throw new InvalidInputException("Input must not be empty");
+    let expert = {
+      // ...obj,
+      // condition: Validator.nullcheck(obj.condition).checkString(),
+      // stars: Validator.nullcheck(obj.stars).checkNumber(),
+      // estimateValue: Validator.nullcheck(obj.estimateValue).checkString(),
+      // reviewMessage: Validator.nullcheck(obj.reviewMessage).checkString(),
+      // reviewDate: Validator.nullcheck(obj.reviewDate).checkDate()
+    };
+    return expert;
   }
 }
 
