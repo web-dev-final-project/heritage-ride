@@ -4,6 +4,7 @@ interface Object {
   checkArray(): Array;
   checkBoolean(): boolean;
   checkNull(): any;
+  checkNumber(): number;
   containsValue(str: string): boolean;
 }
 

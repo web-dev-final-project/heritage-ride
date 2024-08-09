@@ -1,0 +1,16 @@
+.search-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.5rem;
+}
+.search-bar-wrapper {
+  position: fixed;
+  z-index: 2;
+  background-color: white;
+  height: 4rem;
+  width: 100%;
+  padding: 0.8rem;
+}
+.search-main {
+  margin-top: 5rem;
+}

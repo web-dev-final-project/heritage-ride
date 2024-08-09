@@ -10,7 +10,6 @@ document.getElementById("search-expert").addEventListener("click", function () {
 });
 
 experts.forEach((expert) => {
-  console.log(expert);
   document.getElementById(expert._id).addEventListener("click", async () => {
     window.location.href = getCurrentRoute() + `/expert/${expert._id}`;
   });

@@ -7,24 +7,47 @@ class Validator {
     const { make, model, year, category } = query;
     const errors = [];
     // Validate make
-    if (make && typeof make !== 'string') {
-        errors.push('Make must be a string');
+    if (make && typeof make !== "string") {
+      errors.push("Make must be a string");
     }
     // Validate model
-    if (model && typeof model !== 'string') {
-        errors.push('Model must be a string');
+    if (model && typeof model !== "string") {
+      errors.push("Model must be a string");
     }
     // Validate year
     if (year) {
-        const yearNum = parseInt(year, 10);
-        if (isNaN(yearNum) || yearNum > new Date().getFullYear()) {
-            errors.push('Year must be a valid number less than the current year');
-        }
+      const yearNum = parseInt(year, 10);
+      if (isNaN(yearNum) || yearNum > new Date().getFullYear()) {
+        errors.push("Year must be a valid number less than the current year");
+      }
     }
     return errors;
-}
+  }
   static validateListing(obj) {
-    return obj;
+    if (!obj || typeof obj !== "object") {
+      throw new InvalidInputException(
+        "Listing object must be provided and must be an object."
+      );
+    }
+    let listing = {
+      ...obj,
+      itemId: this.validateId(this.nullcheck(obj.itemId)),
+      title: this.nullcheck(obj.title).checkString(),
+      description: this.nullcheck(obj.description).checkString(),
+      price: this.nullcheck(obj.price).checkNumber(),
+      category: (() => {
+        let cat = this.nullcheck(obj.category)
+          .checkString()
+          .toLowerCase()
+          .trim();
+        if (cat === "car" || cat === "part") return cat;
+        else
+          throw new InvalidInputException(
+            "Category must be either car or part."
+          );
+      })(),
+    };
+    return listing;
   }
 
   static validateCar(obj) {
@@ -36,12 +59,12 @@ class Validator {
       throw new InvalidInputException("Input must not be empty");
     let user = {
       ...obj,
-      firstName: Validator.nullcheck(obj.firstName).checkString(),
-      lastName: Validator.nullcheck(obj.lastName).checkString(),
-      userName: Validator.nullcheck(obj.userName).checkString(),
-      password: Validator.nullcheck(obj.password).checkString(),
-      avatar: Validator.nullcheck(obj.avatar).checkString().checkUrl(),
-      email: Validator.nullcheck(obj.email).checkString().checkEmail(),
+      firstName: this.nullcheck(obj.firstName).checkString(),
+      lastName: this.nullcheck(obj.lastName).checkString(),
+      userName: this.nullcheck(obj.userName).checkString(),
+      password: this.nullcheck(obj.password).checkString(),
+      avatar: this.nullcheck(obj.avatar).checkString().checkUrl(),
+      email: this.nullcheck(obj.email).checkString().checkEmail(),
       address: obj.address ? obj.address.checkString() : obj.address,
     };
     return user;

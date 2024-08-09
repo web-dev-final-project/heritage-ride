@@ -1,73 +1,102 @@
-import { cars, listings } from "./init.js"
 import { ObjectId } from "mongodb";
+import {
+  DataBaseException,
+  NotFoundException,
+  InvalidInputException,
+} from "../utils/exceptions.js";
 import Validator from "../utils/validator.js";
+import { cars, listings } from "./init.js";
 import { getCarById } from "./cars.js";
-import { DataBaseException, NotFoundException } from "../utils/exceptions.js";
 
-const createListing = async (itemId, price, seller, description) => {
-    // add: validate all args
-    let newListing = {
-        itemId: itemId,
-        price: price,
-        seller: seller,
-        description: description,
-        mechanicReview: "empty",
-        status: "open",
-        listedTime: new Date()
-    }
-    try {
-        const listingsCollection = await listings()
-        const insertInfo = await listingsCollection.insertOne(newListing)
-        if (!insertInfo.acknowledged || !insertInfo.insertedId) {
-        throw 'Could not add listing'
-    }
-    const newId = insertInfo.insertedId;
-    return await getCarById(newId.toString()); // should be add getListing by id?
-}
-  catch (e) {
-    throw new DataBaseException(e);
-}
-}
+const getListingByUser = async (userId) => {
+  const validId = Validator.validateId(userId);
 
-const getAll = async (query) => { // this will fire after a user enters search terms and clicks search
-    // Add: validate each query field
-    try {
-      const carsCollection = await cars();
-      // Build the query object
-      const matchConditions = {};
-
-      if (query.make) matchConditions.make = query.make;
-      if (query.model) matchConditions.model = query.model;
-      if (query.year) matchConditions.year = query.year;
-      if (query.category) matchConditions.category = query.category;
-
-      // Perform the aggregation with OR conditions
-      const result = await carsCollection.aggregate([
-          {
-              $match: matchConditions // Match based on the provided query object
-          },
-          {
-              $lookup: {
-                  from: 'listings',
-                  localField: '_id',
-                  foreignField: 'itemId',
-                  as: 'listings'
-              }
-          },
-          {
-              $project: {
-                  make: 1,
-                  model: 1,
-                  year: 1,
-                  price: '$listings.price' // Use the price from listings if available
-              }
-          }
-      ]).toArray();
-
-      return result;
+  let db;
+  let result;
+  try {
+    db = await listings();
+    result = await db.find({ sellerId: new ObjectId(validId) }).toArray();
   } catch (e) {
-      throw new DataBaseException(e);
+    throw new DataBaseException("Error fetching listings");
   }
-}
 
-export { createListing, getAll };
+  if (!result || result.length === 0) {
+    throw new NotFoundException(`Listings not found for user.`);
+  }
+
+  return result;
+};
+
+const createListing = async (sellerId, item) => {
+  const validSellerId = Validator.validateId(sellerId);
+  const validItem = Validator.validateListing(item);
+
+  try {
+    const db = await listings();
+    const res = await db.insertOne({
+      ...validItem,
+      status: "open",
+      itemId: new ObjectId(validItem.itemId),
+      sellerId: new ObjectId(validSellerId),
+      mechanicReviews: [],
+      createdAt: new Date().toUTCString(),
+      updatedAt: new Date().toUTCString(),
+    });
+
+    if (!res || !res.acknowledged || !res.insertedId) {
+      throw new DataBaseException("Insert listing failed");
+    }
+    return {
+      ...item,
+      _id: res.insertedId,
+    };
+  } catch (e) {
+    throw new DataBaseException(e.message);
+  }
+};
+
+const getAll = async (query) => {
+  // this will fire after a user enters search terms and clicks search
+  // Add: validate each query field
+  try {
+    const listingCollection = await listings();
+    // Build the query object
+    const matchConditions = {};
+
+    if (query.make)
+      matchConditions["car.make"] = { $regex: new RegExp(query.make, "i") };
+    if (query.model)
+      matchConditions["car.model"] = { $regex: new RegExp(query.model, "i") };
+    if (query.year) matchConditions["car.year"] = query.year;
+    if (query.category)
+      matchConditions["car.category"] = {
+        $regex: new RegExp(query.category, "i"),
+      };
+
+    const aggregation = [
+      {
+        $lookup: {
+          from: "cars",
+          localField: "itemId",
+          foreignField: "_id",
+          as: "car",
+        },
+      },
+      {
+        $addFields: { car: { $arrayElemAt: ["$car", 0] } },
+      },
+      {
+        $match: matchConditions, // Match based on the provided query object
+      },
+    ];
+
+    const listingsWithCars = await listingCollection
+      .aggregate(aggregation)
+      .toArray();
+    return listingsWithCars;
+  } catch (e) {
+    throw new DataBaseException(e);
+  }
+};
+
+export { createListing, getAll, getListingByUser };
