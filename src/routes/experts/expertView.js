@@ -6,9 +6,6 @@ import auth, { authSafe } from "../../middleware/auth.js";
 import { cloudinary } from "../../utils/class.js";
 import { AccessException } from "../../utils/exceptions.js";
 import { getListingByUser } from "../../data/listings.js";
-import { cloudinary } from "../../utils/class.js";
-import { AccessException } from "../../utils/exceptions.js";
-import { getListingByUser } from "../../data/listings.js";
 
 const router = Router();
 

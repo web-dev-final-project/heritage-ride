@@ -3,8 +3,6 @@ import * as expertDb from "../../data/experts.js";
 import Validator from "../../utils/validator.js";
 import auth from "../../middleware/auth.js";
 import { HttpResponse, HttpStatus } from "../../utils/class.js";
-import auth from "../../middleware/auth.js";
-import { HttpResponse, HttpStatus } from "../../utils/class.js";
 
 const router = Router();
 
