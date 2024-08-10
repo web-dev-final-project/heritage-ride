@@ -1,3 +1,4 @@
+import { generateToken } from "../utils/auth.js";
 import { DataBaseException, NotFoundException } from "../utils/exceptions.js";
 import Validator from "../utils/validator.js";
 import { users } from "./init.js";

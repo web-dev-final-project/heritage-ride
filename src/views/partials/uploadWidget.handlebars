@@ -1,20 +1,32 @@
-<button id="{{ id }}" type="button" class="cloudinary-button" style="width: auto">
-  Upload files
+<button
+  id="{{ id }}"
+  type="button"
+  class="cloudinary-button px-3 py-1 bg-danger"
+>
+  Add File
 </button>
 <script type="text/javascript">
   var myWidget = cloudinary.createUploadWidget(
-    { cloudName: '{{cloudName}}', uploadPreset: '{{uploadPreset}}', cropping: true },
+    {
+      cloudName: "{{cloudName}}",
+      uploadPreset: "{{uploadPreset}}",
+      cropping: true,
+    },
     (error, result) => {
-      if (!error && result && result.event === 'success') {
-        document.getElementById('{{uploadValue}}').value = result.info.secure_url
+      if (!error && result && result.event === "success") {
+        const input = document.getElementById("{{uploadValue}}");
+        input.value = result.info.secure_url;
+        input.dispatchEvent(
+          new CustomEvent("uploadChange", { url: result.info.secure_url })
+        );
       }
-    },
-  )
-  document.getElementById('{{id}}').addEventListener(
-    'click',
+    }
+  );
+  document.getElementById("{{id}}").addEventListener(
+    "click",
     function () {
-      myWidget.open()
+      myWidget.open();
     },
-    false,
-  )
+    false
+  );
 </script>
