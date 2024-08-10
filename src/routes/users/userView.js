@@ -73,7 +73,6 @@ router.get("/logout", authSafe, (req, res, next) => {
 router.get("/seller", auth, async (req, res) => {
   const isSeller = req.user.role.includes("seller");
   const listings = await getListingByUser(req.user._id);
-  console.log(listings);
   res.render("seller.handlebars", {
     user: req.user,
     listings: listings,
