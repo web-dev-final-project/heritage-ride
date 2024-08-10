@@ -25,6 +25,7 @@ const createCar = async (make, model, year, category) => {
     }
 }
 const getCarById = async (carId) => {
+  //console.log(carId)
     const validCarId = Validator.validateId(carId);
     try {
       const carsCollection = await cars();

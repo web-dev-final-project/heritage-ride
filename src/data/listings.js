@@ -59,7 +59,8 @@ const getAll = async (query) => { // this will fire after a user enters search t
                   make: 1,
                   model: 1,
                   year: 1,
-                  price: '$listings.price' // Use the price from listings if available
+                  price: '$listings.price', // Use the price from listings if available
+                  listingId: '$listings._id'
               }
           }
       ]).toArray();
@@ -70,4 +71,19 @@ const getAll = async (query) => { // this will fire after a user enters search t
   }
 }
 
-export { createListing, getAll };
+const getListingById = async (listingId) => {
+    console.log(listingId)
+    const valListingId = Validator.validateId(listingId);
+    console.log(valListingId)
+    try {
+      const listingsCollection = await listings();
+      const listing = await listingsCollection.findOne({ _id: new ObjectId(valListingId) });
+    
+      return listing;
+    } 
+    catch (e) {
+      throw new DataBaseException(e);
+    }
+  };
+
+export { createListing, getAll, getListingById };

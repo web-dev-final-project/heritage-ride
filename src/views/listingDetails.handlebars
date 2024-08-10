@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listing Details</title>
+    <link rel="stylesheet" href="/public/index.css">
+</head>
+<body>
+    <div class="container">
+        <h1>{{car.make}} {{car.model}} ({{car.year}})</h1>
+        <p>Price: ${{listing.price}}</p>
+        <p>Status: {{listing.status}}</p>
+        <p>Listed on: {{listing.listedTime}}</p>
+
+        <h2>Description</h2>
+        <p>{{listing.description}}</p>
+
+        <h2>Mechanic Reviews</h2>
+        <ul>
+            {{#each listing.mechanicReview}}
+            <li>{{this}}</li>
+            {{/each}}
+        </ul>
+
+        <h2>Seller Information</h2>
+        <p>Name: {{seller.firstName}} {{seller.lastName}}</p>
+        <p>Email: {{seller.email}}</p>
+
+        <a href="/">Return to Homepage</a>
+    </div>
+</body>
+</html>

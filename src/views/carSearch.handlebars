@@ -21,9 +21,9 @@
         {{#if results.length}}
             <ul class="list-group">
                 {{#each results}}
-                    <li class="list-group-item">
-                        <strong>{{make}} {{model}} ({{year}})</strong> - ${{price}}
-                    </li>
+                    <a href="/api/listings/search/{{listingId}}" class="listing-link">
+                        {{this.make}} {{this.model}} ({{this.year}}) - ${{this.price}}
+                    </a>
                 {{/each}}
             </ul>
         {{else}}

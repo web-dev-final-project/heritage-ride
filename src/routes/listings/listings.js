@@ -1,8 +1,9 @@
 import { Router } from "express";
-import { getAll } from "../../data/listings.js";
+import { getAll, getListingById } from "../../data/listings.js";
 import { NotFoundException } from "../../utils/exceptions.js";
 import { authSafe } from "../../middleware/auth.js";
 import Validator from "../../utils/validator.js";
+import { getCarById } from "../../data/cars.js";
 
 const router = Router();
 
@@ -20,10 +21,38 @@ router.get('/search', authSafe, async (req, res, next) => { // car listings sear
     try {
       const result = await getAll(query);
       if (!result) throw new NotFoundException(`listing not found`);
-      res.render('carSearch', {results: result})
+      res.render('carSearch', {results: result, user})
     } catch (e) {
       next(e)
     }
   });
+
+  router.get('/search/:listingId', async (req, res, next) => {
+    const listingId = req.params.listingId;
+    console.log(listingId)
+    try {
+        // Fetch the listing details from the Listings collection
+        const listingDetails = await getListingById(listingId);
+        //console.log(listingDetails)
+        // Fetch the listing details from the Listings collection using the carId
+        const carDetails = await getCarById(listingDetails.itemId.toString());
+        //console.log(carDetails)
+
+        // toDo: have to extract user info by userId
+
+        if (!carDetails || !listingDetails) {
+            return res.status(404).render('404', { message: 'Car or listing not found' });
+        }
+
+        // Render the details page with car and listing information
+        res.render('listingDetails', {
+            car: carDetails,
+            listing: listingDetails
+        });
+    } 
+    catch (e) {
+      next(e);
+    }
+});
 
   export default router;
