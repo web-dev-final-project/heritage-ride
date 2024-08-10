@@ -41,6 +41,7 @@ const getCollectionFn = (collection) => {
 const users = getCollectionFn("users");
 const cars = getCollectionFn("cars");
 const parts = getCollectionFn("parts");
-const listings = getCollectionFn("listing");
+const listings = getCollectionFn("listings");
+const experts = getCollectionFn("experts");
 
-export { users, parts, cars, listings, dbConnection, closeConnection };
+export { users, parts, cars, listings, experts, dbConnection, closeConnection };

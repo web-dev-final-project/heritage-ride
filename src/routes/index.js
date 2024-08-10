@@ -1,5 +1,6 @@
 import { authSafe } from "../middleware/auth.js";
 import userAPI from "./users/user.js";
+import listingsView from "./listings/listingsView.js";
 import listingsAPI from "./listings/listings.js";
 import userView from "./users/userView.js";
 import expertsAPI from "./experts/expert.js";
@@ -24,13 +25,14 @@ const uiRouter = (app) => {
   // add your frontend routes here
   app.use("/user", userView);
   app.use("/expert", expertsView);
+  app.use("/listings", listingsView);
 };
 
 const apiRouter = (app) => {
   // add your backends routes here, prefix with /api/
-  app.use("/api/listings", listingsAPI)
+  app.use("/api/listings", listingsAPI);
   app.use("/api/user", userAPI);
-  app.use("api/expert", expertsAPI);
+  app.use("/api/expert", expertsAPI);
 };
 
 const getApiRoutes = (req) => {

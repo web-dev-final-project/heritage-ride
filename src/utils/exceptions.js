@@ -1,3 +1,5 @@
+import logger from "./logger.js";
+
 class NullException extends Error {
   constructor(object) {
     super(`${object} can not be null.`);
@@ -49,6 +51,23 @@ class DataBaseException extends Error {
   }
 }
 
+const databaseExceptionHandler = (e) => {
+  logger.error(e.stack);
+  if (e instanceof NotFoundException) {
+    throw new NotFoundException(e.message);
+  }
+  if (e instanceof ValidationException) {
+    throw new ValidationException(e.message);
+  }
+  if (e instanceof AccessException) {
+    throw new AccessException(e.message);
+  }
+  if (e instanceof TypeError) {
+    throw new Error(e.message);
+  }
+  throw new DataBaseException("Something has faild during database operation.");
+};
+
 export {
   TypeException,
   InvalidValueException,
@@ -60,4 +79,5 @@ export {
   NotFoundException,
   AccessException,
   DataBaseException,
+  databaseExceptionHandler,
 };

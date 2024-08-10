@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import {
   EmptyStringException,
   TypeException,
@@ -43,6 +44,13 @@ String.prototype.checkEmpty = function () {
   }
   return this.trim();
 };
+String.prototype.checkObjectId = function() {
+  let str = this.valueOf()
+  if (!ObjectId.isValid(str)) {
+    throw new InvalidValueException("Invalid Id.");
+  }
+  return str;
+}
 String.prototype.checkUrl = function () {
   try {
     const str = this.valueOf();
@@ -102,6 +110,14 @@ Object.prototype.containsValue = function (val) {
   if (!Object.values(this).includes(val)) return false;
   return true;
 };
+
+Object.prototype.checkNumber = function () {
+  if (typeof this !== "number") {
+    throw new TypeException("Input type must be number.");
+  }
+  return this;
+};
+
 const Role = {
   seller: "seller",
   expert: "expert",
