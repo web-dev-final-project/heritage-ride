@@ -11,6 +11,7 @@
   {{#if results.length}}
   <ul class="list-group container card p-3 search-grid">
     {{#each results}}
+    <a href="/listings/search/{{_id}}" class="text-decoration-none text-dark">
     <li class="card shadow p-2">
       <div class="d-flex justify-content-between">
         <div>
@@ -22,6 +23,7 @@
 
       <img src="{{ image }}" alt="" class="img-thumbnail" />
     </li>
+    </a>
     {{/each}}
   </ul>
   {{else}}
