@@ -69,4 +69,8 @@ router.get("/logout", authSafe, (req, res, next) => {
   res.redirect(`${req.protocol}://${req.get("host")}`);
 });
 
+router.get("/seller", auth, (req, res) => {
+  res.render("seller.handlebars", { user: req.user });
+});
+
 export default router;

@@ -1,8 +1,5 @@
 import { createListing } from "../../data/listings.js";
-import {
-  NotFoundException,
-  ValidationException,
-} from "../../utils/exceptions.js";
+import { ValidationException } from "../../utils/exceptions.js";
 import auth, { authSafe } from "../../middleware/auth.js";
 import Validator from "../../utils/validator.js";
 import { Router } from "express";

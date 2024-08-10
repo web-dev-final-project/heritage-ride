@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const navLogout = document.getElementById("nav-logout");
 
     navUserDetail.href = getCurrentRoute() + "/user";
-    navUserSeller.href = getCurrentRoute() + "/seller";
+    navUserSeller.href = getCurrentRoute() + "/user/seller";
     navUserExpert.href = getCurrentRoute() + "/expert";
     navUserEdit.href = getCurrentRoute() + "/user/edit";
     navLogout.href = getCurrentRoute() + "/user/logout";
