@@ -1,16 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Listing Details</title>
-    <link rel="stylesheet" href="/public/index.css">
-</head>
-<body>
+
     <div class="container">
         <!-- Car Details -->
         <h1>{{car.make}} {{car.model}} ({{car.year}})</h1>
-        <img src="{{listing.image}}" alt="Image of {{car.make}} {{car.model}} class="listing-image"">
+        <img src="{{listing.image}}" alt="Image of {{car.make}} {{car.model}} class="listing-display-image"">
         <h2>Details</h2>
         <p><strong>Color:</strong> {{car.color}}</p>
         <p><strong>Category:</strong> {{car.category}}</p>
@@ -28,7 +20,7 @@
         {{else}}
         <p>No mechanic reviews available.</p>
         {{/if}}
-        
+
         <p><strong>Status:</strong> {{listing.status}}</p>
         <p><strong>Listed on:</strong> {{listing.createdAt}}</p>
         <p><strong>Last Updated:</strong> {{listing.updatedAt}}</p>
@@ -40,6 +32,3 @@
 
         <!-- Return to Homepage Link -->
         <a href="/">Return to Homepage</a>
-    </div>
-</body>
-</html>

@@ -95,9 +95,7 @@ const getAll = async (query) => {
 };
 
 const getListingById = async (listingId) => {
-    //console.log(listingId)
     const valListingId = Validator.validateId(listingId);
-    //console.log(valListingId)
     try {
       const listingsCollection = await listings();
       const listing = await listingsCollection.findOne({ _id: new ObjectId(valListingId) });

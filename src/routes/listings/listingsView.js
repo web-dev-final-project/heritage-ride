@@ -8,8 +8,7 @@ import { findUser } from "../../data/users.js";
 
 const router = Router();
 
-router.get("/search", authSafe, async (req, res, next) => {
-  // car listings search, displays cars
+router.get("/search", authSafe, async (req, res, next) => { // car listings search, displays cars
   const query = req.query;
   // Error check
   const errors = Validator.validateQuery(query);
@@ -17,21 +16,20 @@ router.get("/search", authSafe, async (req, res, next) => {
     return res.status(400).render("carSearch", {
       error: "Invalid search criteria: " + errors.join(", "),
       results: [], // Ensure no results are shown if there's an error
+      user: req.user
     });
   }
 
   try {
     const result = await getAll(query);
-    console.log(result)
     if (!result) throw new NotFoundException(`listing not found`);
-    console.log(result._id)
     res.render("carSearch", { results: result, user: req.user });
   } catch (e) {
     next(e);
   }
 });
 
-router.get('/search/:listingId', async (req, res, next) => {
+router.get('/search/:listingId',authSafe, async (req, res, next) => {
   const listingId = req.params.listingId;
   //console.log(listingId)
   try {
@@ -43,13 +41,11 @@ router.get('/search/:listingId', async (req, res, next) => {
       //console.log(carDetails)
       const sellerDetails = await findUser(listingDetails.sellerId.toString())
       if (sellerDetails && sellerDetails.password) {
-        delete sellerDetails.password;
+        delete sellerDetails.password; // delete password field from current object
       }
 
-      // toDo: have to extract user info by userId
-
       if (!carDetails || !listingDetails) {
-          return res.status(404).render('404', { message: 'Car or listing not found' });
+          return res.status(404).render('404', { message: 'Car or listing not found', user: req.user });
       }
 
       // Render the details page with car and listing information
