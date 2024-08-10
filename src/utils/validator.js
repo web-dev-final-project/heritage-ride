@@ -109,9 +109,20 @@ class Validator {
     return expert;
   }
 
+  static validateTransaction(obj) {
+    if (!obj || obj === undefined)
+      throw new InvalidInputException("Transaction must not be empty");
+    let trans = {
+      sellerId: this.validateId(this.nullcheck(obj.sellerId)),
+      buyerId: this.validateId(this.nullcheck(obj.buyerId)),
+      listingId: this.validateId(this.nullcheck(obj.sellerId)),
+    };
+    return trans;
+  }
+
   static validateReview(obj) {
     if (!obj || obj === undefined)
-      throw new InvalidInputException("Input must not be empty");
+      throw new InvalidInputException("Review must not be empty");
     let expert = {
       // ...obj,
       // condition: Validator.nullcheck(obj.condition).checkString(),
