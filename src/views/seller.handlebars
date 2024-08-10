@@ -1,27 +1,28 @@
-<div id="seller-central-page">
+<div id="seller-central-page" class="seller-central-page">
+  {{#if isSeller}}
   <p class="fs-3">Welcome back, {{ user.firstName }}!</p>
   <p class="">
     There is <span id="listing-attention-num">0</span> listings require your
     attention.
   </p>
   {{#if listings}}
-  <div>
-    <ul>
-      <h3>Car Listings</h3>
-    </ul>
-    <ul>
-      <h3>Part Listings</h3>
-    </ul>
-  </div>
+  <ul class="search-grid container w-100" id="user-listings"></ul>
   {{else}}
   <p class="fs-4">
     You don't have anything listed, lets start by add a new listing.
   </p>
   {{/if}}
   <button class="btn btn-primary" id="add-listing">Add Listing</button>
+  {{else}}
+  {{> sell}}
+  {{/if}}
 </div>
 
 <div id="seller-add-page" class="d-none">{{> addListingGuide}}</div>
 
-<script></script>
+<script>
+  const isSeller = {{{json isSeller}}}
+  const listings = {{{json listings}}}
+  console.log(listings)
+</script>
 <script src="/scripts/seller.js"></script>
