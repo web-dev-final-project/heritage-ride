@@ -1,0 +1,34 @@
+
+    <div class="container">
+        <!-- Car Details -->
+        <h1>{{car.make}} {{car.model}} ({{car.year}})</h1>
+        <img src="{{listing.image}}" alt="Image of {{car.make}} {{car.model}} class="listing-display-image"">
+        <h2>Details</h2>
+        <p><strong>Color:</strong> {{car.color}}</p>
+        <p><strong>Category:</strong> {{car.category}}</p>
+        <p><strong>Price:</strong> ${{listing.price}}</p>
+        <p><strong>Listing Description:</strong> {{listing.description}}</p>
+
+         <!-- Mechanic Reviews -->
+        {{#if listing.mechanicReviews.length}}
+        <h2>Mechanic Reviews</h2>
+        <ul>
+            {{#each listing.mechanicReviews}}
+            <li>{{this}}</li>
+            {{/each}}
+        </ul>
+        {{else}}
+        <p>No mechanic reviews available.</p>
+        {{/if}}
+
+        <p><strong>Status:</strong> {{listing.status}}</p>
+        <p><strong>Listed on:</strong> {{listing.createdAt}}</p>
+        <p><strong>Last Updated:</strong> {{listing.updatedAt}}</p>
+
+        <!-- Seller Information -->
+        <h2>Seller Information</h2>
+        <p><strong>Name:</strong> {{seller.firstName}} {{seller.lastName}}</p>
+        <p><strong>Email:</strong> {{seller.email}}</p>
+
+        <!-- Return to Homepage Link -->
+        <a href="/">Return to Homepage</a>
