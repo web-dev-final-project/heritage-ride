@@ -10,18 +10,24 @@ class Validator {
     if (make && typeof make !== "string") {
       errors.push("Make must be a string");
     }
+    query.make = make.trim()
     // Validate model
     if (model && typeof model !== "string") {
       errors.push("Model must be a string");
     }
+    query.model = model.trim()
     // Validate year
     if (year) {
       const yearNum = parseInt(year, 10);
       if (isNaN(yearNum) || yearNum > new Date().getFullYear()) {
         errors.push("Year must be a valid number less than the current year");
       }
+      query.year = yearNum
     }
-    return errors;
+    if (errors.length > 0) {
+      throw new InvalidInputException(errors);
+    }
+    return query;
   }
   static validateListing(obj) {
     if (!obj || typeof obj !== "object") {
