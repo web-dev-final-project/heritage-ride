@@ -12,25 +12,45 @@ document.getElementById("add-listing").addEventListener("click", () => {
 });
 
 const generateList = (listContainer, list) => {
-  const lists = listings.filter((li) => li.itemType === list);
+  let lists = listings;
+  if (list !== "all") {
+    lists = listings.filter((li) => li.itemType === list);
+  }
   listContainer.innerHTML = "";
   for (let item of lists) {
     let element = document.createElement("li");
     element.classList.add("card");
     element.classList.add("p-2");
     element.innerHTML = `
+    <div class="d-flex justify-content-between">
+    <div>
     <p class="fs-5 my-0">${item.title}</p>
     <p>current status: ${item.status}</p>
+    </div>
+    <div><button id="item-${
+      item._id
+    }" class="btn btn-warning">Edit</button></div>
+    </div>
     <img src=${
       item.image ||
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSReWLry0CkAtuYdDZGhY6iuy5I4gudfFxjdw&s"
     } class="img-thumbnail"/>`;
     listContainer.appendChild(element);
+    document
+      .getElementById("item-" + item._id)
+      .addEventListener("click", () => {
+        document.location.href = `/listings/eidt/${item._id}`;
+      });
   }
   return lists;
 };
 
 if (sellerCentral) {
   const listContainer = document.getElementById("user-listings");
-  generateList(listContainer, "car");
+  const sellerListings = document.getElementById("seller-list-filter");
+  generateList(listContainer, sellerListings.value);
+
+  sellerListings.addEventListener("change", () => {
+    generateList(listContainer, sellerListings.value);
+  });
 }
