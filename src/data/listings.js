@@ -94,4 +94,18 @@ const getAll = async (query) => {
   }
 };
 
-export { createListing, getAll, getListingByUser };
+const getListingById = async (listingId) => {
+    const valListingId = Validator.validateId(listingId);
+    try {
+      const listingsCollection = await listings();
+      const listing = await listingsCollection.findOne({ _id: new ObjectId(valListingId) });
+   
+      return listing;
+    }
+    catch (e) {
+      throw new DataBaseException(e);
+    }
+  };
+ 
+
+export { createListing, getAll, getListingByUser, getListingById };
