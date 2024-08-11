@@ -10,6 +10,7 @@ import auth, { authSafe } from "../../middleware/auth.js";
 import { getApiRoutes } from "../index.js";
 import logger from "../../utils/logger.js";
 import { cloudinary } from "../../utils/class.js";
+import { getListingByUser } from "../../data/listings.js";
 
 const router = Router();
 
@@ -67,6 +68,16 @@ router.get("/logout", authSafe, (req, res, next) => {
     sameSite: "lax",
   });
   res.redirect(`${req.protocol}://${req.get("host")}`);
+});
+
+router.get("/seller", auth, async (req, res) => {
+  const isSeller = req.user.role.includes("seller");
+  const listings = await getListingByUser(req.user._id);
+  res.render("seller.handlebars", {
+    user: req.user,
+    listings: listings,
+    isSeller,
+  });
 });
 
 export default router;

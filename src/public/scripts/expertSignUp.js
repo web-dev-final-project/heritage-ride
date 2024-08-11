@@ -9,6 +9,15 @@ const expertForm = document.getElementById("expert-form");
 const textCount = document.getElementById("text-area-count");
 const expertAdress = document.getElementById("expert-adress-input");
 const expertBio = document.getElementById("expert-bio");
+const cancelEdit = document.getElementById("cancel-edit");
+
+cancelEdit.addEventListener("click", () => {
+  if (isEdit) {
+    document.location.href = "/expert";
+  } else {
+    document.location.href = "/user";
+  }
+});
 
 const expert = {
   userId: "",
@@ -45,6 +54,10 @@ const newExpertImage = (url) => {
   img.classList.add("expert-image-preview");
   item.appendChild(img);
   item.classList.add("expert-image-preview-wrapper");
+  item.addEventListener("click", () => {
+    expert.images = expert.images.filter((i) => i !== url);
+    item.remove();
+  });
   return item;
 };
 

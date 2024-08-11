@@ -1,7 +1,11 @@
 import { cars } from "./init.js";
 import { ObjectId } from "mongodb";
 import Validator from "../utils/validator.js";
-import { DataBaseException, NotFoundException } from "../utils/exceptions.js";
+import {
+  DataBaseException,
+  databaseExceptionHandler,
+  NotFoundException,
+} from "../utils/exceptions.js";
 
 const createCar = async (make, model, year, category) => {
   // Add: validate all args
@@ -34,5 +38,13 @@ const getCarById = async (carId) => {
     throw new DataBaseException(e);
   }
 };
+const getCars = async () => {
+  try {
+    const carsCollection = await cars();
+    return await carsCollection.find({}).toArray();
+  } catch (e) {
+    databaseExceptionHandler(e);
+  }
+};
 
-export { createCar, getCarById };
+export { createCar, getCarById, getCars };

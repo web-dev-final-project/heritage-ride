@@ -54,7 +54,12 @@
     <input hidden="true" id="expert-upload" name="expert-upload" />
   </div>
   <p id="expert-sign-up-err" class="err-message"></p>
-  <button class="btn btn-primary mt-4" type="submit">Submit</button>
+  <div class="d-flex gap-3">
+    <button class="btn btn-primary mt-4" type="submit">Submit</button>
+    <button class="btn btn-danger mt-4" type="button" id="cancel-edit">
+      Cancel
+    </button>
+  </div>
 </form>
 <script>
   const user = {{{json user}}}
