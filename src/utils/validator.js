@@ -86,9 +86,20 @@ class Validator {
     return arr;
   }
 
-  static validatePart(obj) {
-    return obj;
-  }
+static validatePart(obj) {
+    if (!obj || obj === undefined)
+        throw new InvalidInputException("Input must not be empty");
+    
+    let part = {
+        ...obj,
+        name: Validator.nullcheck(obj.name).checkString(),
+        price: Validator.nullcheck(obj.price).checkNumber(),
+        manufacturer: Validator.nullcheck(obj.manufacturer).checkString(),
+        sellerId: Validator.nullcheck(obj.sellerId).checkId(),
+        carIds: Validator.nullcheck(obj.carIds).checkArray().checkObjectIds(),
+    };
+    return part;
+}
 
   static nullcheck(obj) {
     if (!obj) throw new InvalidInputException("Some inputs are missing");
