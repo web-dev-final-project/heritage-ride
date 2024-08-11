@@ -37,6 +37,7 @@ namespace Express {
       avatar: string | undefined | null;
       email: string;
       address: string | undefined | null;
+      role: [string];
     };
     refreshToken: (user: any | null) => void;
   }

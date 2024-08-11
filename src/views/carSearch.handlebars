@@ -11,18 +11,18 @@
   {{#if results.length}}
   <ul class="list-group container card p-3 search-grid">
     {{#each results}}
-    <a href="/listings/search/{{_id}}" class="text-decoration-none text-dark">
-    <li class="card shadow p-2">
-      <div class="d-flex justify-content-between">
-        <div>
-          <h2 class="fs-5">{{ car.make }} {{ car.model }}</h2>
-          <h3 class="fs-6 text-secondary">{{ car.year }} {{ car.color }}</h3>
+    <a href="/listings/{{ _id }}" class="text-decoration-none text-dark">
+      <li class="card shadow p-2">
+        <div class="d-flex justify-content-between">
+          <div>
+            <h2 class="fs-5">{{ car.make }} {{ car.model }}</h2>
+            <h3 class="fs-6 text-secondary">{{ car.year }} {{ car.color }}</h3>
+          </div>
+          <h4 class="text-success">${{ price }}</h4>
         </div>
-        <h4 class="text-success">${{ price }}</h4>
-      </div>
 
-      <img src="{{ image }}" alt="" class="img-thumbnail" />
-    </li>
+        <img src="{{ image }}" alt="" class="img-thumbnail" />
+      </li>
     </a>
     {{/each}}
   </ul>

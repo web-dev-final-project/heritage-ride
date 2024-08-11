@@ -1,7 +1,12 @@
 <div class="custom-navbar">
-  <div class="nav-title-wrapper">  
-    <img class="nav-logo" src="/images/logo-black.svg" alt="" />
-    <h1 class="nav-name">HerritageRide</h1>
+  <div class="nav-title-wrapper d-flex align-items-center">  
+    <img class="nav-logo" src="/images/logo-black.svg" alt="logo" id="nav-logo"/>
+    <h1 class="nav-name" id="nav-name">HerritageRide</h1>
+    <ul class="d-flex mx-3 my-0 gap-3 h-100">
+      <li class="nav-tab" id="search-tab">Search</li>
+      <li class="nav-tab" id="expert-tab">Expert</li>
+      <li class="nav-tab" id="seller-tab">Seller</li>
+    </ul>
   </div>
 
   <button id="login-button" class="btn btn-lg btn-primary" style="display: {{#if user}}none{{else}}block{{/if}}">Login</button>

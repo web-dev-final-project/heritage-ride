@@ -1,0 +1,302 @@
+[
+  {
+    "make": "Citroën",
+    "model": "DS",
+    "color": "Green",
+    "year": { "$numberInt": "1957" },
+    "category": "Sedan",
+    "review": [],
+    "description": "The Citroën DS was ahead of its time with its futuristic design, hydropneumatic suspension, and advanced steering and braking systems.",
+    "tag": ["sedan", "french", "innovative"]
+  },
+  {
+    "make": "Ford",
+    "model": "Model T",
+    "color": "Black",
+    "year": { "$numberInt": "1908" },
+    "category": "Coupe",
+    "review": [],
+    "description": "The Ford Model T is known as the first affordable automobile, revolutionizing transportation in America.",
+    "tag": ["coupe", "american", "classic"]
+  },
+  {
+    "make": "Chevrolet",
+    "model": "Bel Air",
+    "color": "Red",
+    "year": { "$numberInt": "1957" },
+    "category": "Sedan",
+    "review": [],
+    "description": "The Chevrolet Bel Air is an iconic American car known for its stylish design and powerful engine options.",
+    "tag": ["sedan", "american", "iconic"]
+  },
+  {
+    "make": "Volkswagen",
+    "model": "Beetle",
+    "color": "Yellow",
+    "year": { "$numberInt": "1963" },
+    "category": "Coupe",
+    "review": [],
+    "description": "The Volkswagen Beetle is one of the most recognizable and beloved cars in automotive history.",
+    "tag": ["coupe", "german", "classic"]
+  },
+  {
+    "make": "Jaguar",
+    "model": "E-Type",
+    "color": "Silver",
+    "year": { "$numberInt": "1961" },
+    "category": "Convertible",
+    "review": [],
+    "description": "The Jaguar E-Type is often hailed as one of the most beautiful cars ever made, with stunning performance to match.",
+    "tag": ["convertible", "british", "elegant"]
+  },
+  {
+    "make": "Porsche",
+    "model": "911",
+    "color": "White",
+    "year": { "$numberInt": "1964" },
+    "category": "Coupe",
+    "review": [],
+    "description": "The Porsche 911 is a legendary sports car known for its distinctive design and exceptional driving dynamics.",
+    "tag": ["coupe", "german", "sporty"]
+  },
+  {
+    "make": "Ferrari",
+    "model": "250 GTO",
+    "color": "Red",
+    "year": { "$numberInt": "1962" },
+    "category": "Coupe",
+    "review": [],
+    "description": "The Ferrari 250 GTO is one of the most valuable and sought-after classic cars in the world, known for its racing pedigree.",
+    "tag": ["coupe", "italian", "exotic"]
+  },
+  {
+    "make": "Lamborghini",
+    "model": "Miura",
+    "color": "Orange",
+    "year": { "$numberInt": "1966" },
+    "category": "Coupe",
+    "review": [],
+    "description": "The Lamborghini Miura is widely regarded as the first supercar, with a mid-engine layout and stunning design.",
+    "tag": ["coupe", "italian", "supercar"]
+  },
+  {
+    "make": "Aston Martin",
+    "model": "DB5",
+    "color": "Silver",
+    "year": { "$numberInt": "1963" },
+    "category": "Coupe",
+    "review": [],
+    "description": "The Aston Martin DB5 is famous for its role as James Bond's car, with timeless elegance and powerful performance.",
+    "tag": ["coupe", "british", "luxury"]
+  },
+  {
+    "make": "Mercedes-Benz",
+    "model": "300SL",
+    "color": "Silver",
+    "year": { "$numberInt": "1954" },
+    "category": "Coupe",
+    "review": [],
+    "description": "The Mercedes-Benz 300SL is renowned for its iconic gullwing doors and groundbreaking engineering.",
+    "tag": ["coupe", "german", "innovative"]
+  },
+  {
+    "make": "Rolls-Royce",
+    "model": "Silver Cloud",
+    "color": "Black",
+    "year": { "$numberInt": "1955" },
+    "category": "Sedan",
+    "review": [],
+    "description": "The Rolls-Royce Silver Cloud epitomizes British luxury and craftsmanship, with an unmistakable presence on the road.",
+    "tag": ["sedan", "british", "luxury"]
+  },
+  {
+    "make": "Bentley",
+    "model": "R-Type Continental",
+    "color": "Green",
+    "year": { "$numberInt": "1952" },
+    "category": "Coupe",
+    "review": [],
+    "description": "The Bentley R-Type Continental was the fastest four-seater in the world when it was released, known for its performance and elegance.",
+    "tag": ["coupe", "british", "luxury"]
+  },
+  {
+    "make": "Alfa Romeo",
+    "model": "Giulia Sprint GT",
+    "color": "Red",
+    "year": { "$numberInt": "1963" },
+    "category": "Coupe",
+    "review": [],
+    "description": "The Alfa Romeo Giulia Sprint GT is a classic Italian sports car known for its stylish design and spirited driving experience.",
+    "tag": ["coupe", "italian", "sporty"]
+  },
+  {
+    "make": "Maserati",
+    "model": "3500 GT",
+    "color": "Blue",
+    "year": { "$numberInt": "1957" },
+    "category": "Coupe",
+    "review": [],
+    "description": "The Maserati 3500 GT was the first true production car from Maserati, combining performance and luxury.",
+    "tag": ["coupe", "italian", "luxury"]
+  },
+  {
+    "make": "BMW",
+    "model": "507",
+    "color": "White",
+    "year": { "$numberInt": "1956" },
+    "category": "Convertible",
+    "review": [],
+    "description": "The BMW 507 is a rare and stunning roadster, beloved for its beautiful design and high performance.",
+    "tag": ["convertible", "german", "sporty"]
+  },
+  {
+    "make": "Austin-Healey",
+    "model": "3000",
+    "color": "Blue",
+    "year": { "$numberInt": "1959" },
+    "category": "Convertible",
+    "review": [],
+    "description": "The Austin-Healey 3000 is a classic British sports car, known for its nimble handling and stylish design.",
+    "tag": ["convertible", "british", "classic"]
+  },
+  {
+    "make": "Triumph",
+    "model": "TR3",
+    "color": "Red",
+    "year": { "$numberInt": "1955" },
+    "category": "Convertible",
+    "review": [],
+    "description": "The Triumph TR3 is a classic British roadster, popular for its agility and spirited driving experience.",
+    "tag": ["convertible", "british", "sporty"]
+  },
+  {
+    "make": "Cadillac",
+    "model": "Eldorado",
+    "color": "Pink",
+    "year": { "$numberInt": "1959" },
+    "category": "Convertible",
+    "review": [],
+    "description": "The Cadillac Eldorado is a symbol of American luxury, with its bold design and powerful engine.",
+    "tag": ["convertible", "american", "luxury"]
+  },
+  {
+    "make": "Dodge",
+    "model": "Charger",
+    "color": "Black",
+    "year": { "$numberInt": "1969" },
+    "category": "Coupe",
+    "review": [],
+    "description": "The Dodge Charger is a muscle car icon, known for its aggressive styling and powerful performance.",
+    "tag": ["coupe", "american", "muscle"]
+  },
+  {
+    "make": "Pontiac",
+    "model": "GTO",
+    "color": "Orange",
+    "year": { "$numberInt": "1965" },
+    "category": "Coupe",
+    "review": [],
+    "description": "The Pontiac GTO is credited with starting the muscle car era, with its high-performance engine and bold styling.",
+    "tag": ["coupe", "american", "muscle"]
+  },
+  {
+    "make": "Shelby",
+    "model": "Cobra",
+    "color": "Blue",
+    "year": { "$numberInt": "1962" },
+    "category": "Roadster",
+    "review": [],
+    "description": "The Shelby Cobra is a legendary sports car, known for its lightweight design and immense power.",
+    "tag": ["roadster", "american", "sporty"]
+  },
+  {
+    "make": "Lotus",
+    "model": "Elan",
+    "color": "Yellow",
+    "year": { "$numberInt": "1962" },
+    "category": "Roadster",
+    "review": [],
+    "description": "The Lotus Elan is a lightweight British sports car, celebrated for its nimble handling and minimalist design.",
+    "tag": ["roadster", "british", "sporty"]
+  },
+  {
+    "make": "MG",
+    "model": "MGA",
+    "color": "Red",
+    "year": { "$numberInt": "1955" },
+    "category": "Roadster",
+    "review": [],
+    "description": "The MG MGA is a classic British roadster, known for its sleek design and enjoyable driving experience.",
+    "tag": ["roadster", "british", "classic"]
+  },
+  {
+    "make": "Jaguar",
+    "model": "XK120",
+    "color": "Silver",
+    "year": { "$numberInt": "1948" },
+    "category": "Roadster",
+    "review": [],
+    "description": "The Jaguar XK120 was the fastest production car in the world when it was launched, with timeless style and performance.",
+    "tag": ["roadster", "british", "iconic"]
+  },
+  {
+    "make": "Citroën",
+    "model": "2CV",
+    "color": "Blue",
+    "year": { "$numberInt": "1948" },
+    "category": "Sedan",
+    "review": [],
+    "description": "The Citroën 2CV is a French icon, known for its simplicity, durability, and distinctive design.",
+    "tag": ["sedan", "french", "iconic"]
+  },
+  {
+    "make": "Peugeot",
+    "model": "404",
+    "color": "White",
+    "year": { "$numberInt": "1960" },
+    "category": "Sedan",
+    "review": [],
+    "description": "The Peugeot 404 is a classic French sedan, known for its reliability and elegant design.",
+    "tag": ["sedan", "french", "classic"]
+  },
+  {
+    "make": "Renault",
+    "model": "4CV",
+    "color": "Yellow",
+    "year": { "$numberInt": "1947" },
+    "category": "Sedan",
+    "review": [],
+    "description": "The Renault 4CV is a small French car, known for its practicality and distinctive rear-engine layout.",
+    "tag": ["sedan", "french", "practical"]
+  },
+  {
+    "make": "Fiat",
+    "model": "500",
+    "color": "Red",
+    "year": { "$numberInt": "1957" },
+    "category": "Coupe",
+    "review": [],
+    "description": "The Fiat 500 is a beloved Italian city car, known for its compact size and charming design.",
+    "tag": ["coupe", "italian", "classic"]
+  },
+  {
+    "make": "Lancia",
+    "model": "Fulvia",
+    "color": "Blue",
+    "year": { "$numberInt": "1963" },
+    "category": "Coupe",
+    "review": [],
+    "description": "The Lancia Fulvia is a stylish Italian car, famous for its rally successes and elegant design.",
+    "tag": ["coupe", "italian", "sporty"]
+  },
+  {
+    "make": "Mercedes-Benz",
+    "model": "220SE",
+    "color": "White",
+    "year": { "$numberInt": "1959" },
+    "category": "Sedan",
+    "review": [],
+    "description": "The Mercedes-Benz 220SE is a classic luxury sedan, known for its engineering excellence and refined design.",
+    "tag": ["sedan", "german", "luxury"]
+  }
+]

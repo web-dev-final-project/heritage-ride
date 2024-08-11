@@ -43,5 +43,15 @@ const cars = getCollectionFn("cars");
 const parts = getCollectionFn("parts");
 const listings = getCollectionFn("listings");
 const experts = getCollectionFn("experts");
+const transactions = getCollectionFn("transactions");
 
-export { users, parts, cars, listings, experts, dbConnection, closeConnection };
+export {
+  users,
+  parts,
+  cars,
+  listings,
+  experts,
+  dbConnection,
+  closeConnection,
+  transactions,
+};

@@ -14,3 +14,22 @@
 .search-main {
   margin-top: 5rem;
 }
+.seller-bg-image {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.seller-hero-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: left;
+  padding: 3rem;
+}
+.seller-hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.seller-central-page {
+  max-width: 978px;
+}
