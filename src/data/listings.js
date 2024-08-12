@@ -25,26 +25,38 @@ const getListingByUser = async (userId) => {
 const createListing = async (sellerId, item) => {
   const validSellerId = Validator.validateId(sellerId);
   const validItem = Validator.validateListing(item);
-
+  // to Add: change users status to 'seller'
   try {
-    const db = await listings();
-    const res = await db.insertOne({
-      ...validItem,
-      status: "open",
-      itemId: new ObjectId(validItem.itemId),
-      sellerId: new ObjectId(validSellerId),
-      mechanicReviews: [],
-      createdAt: new Date().toUTCString(),
-      updatedAt: new Date().toUTCString(),
-    });
+    if (validItem.itemType === 'car') { // check if car or part
+      const { carId, price, image } = validItem;
+      
+      const car = await getCarById(carId) 
+      const db = await listings();
+      const res = await db.insertOne({
+        itemId: new ObjectId(carId),
+        title: `${car.make} ${car.model}`,
+        description: car.description,
+        price: price,
+        status: "open",
+        sellerId: new ObjectId(validSellerId),
+        mechanicReviews: [],
+        createdAt: new Date().toUTCString(),
+        updatedAt: new Date().toUTCString(),
+        image: image,
+        itemType: validItem.itemType
+      });
 
-    if (!res || !res.acknowledged || !res.insertedId) {
-      throw new DataBaseException("Insert listing failed");
+      if (!res || !res.acknowledged || !res.insertedId) {
+        throw new DataBaseException("Insert listing failed");
+      }
+      return {
+        ...item,
+        _id: res.insertedId,
+      };
     }
-    return {
-      ...item,
-      _id: res.insertedId,
-    };
+    else {
+      // code for inserting part
+    }
   } catch (e) {
     throw new DataBaseException(e.message);
   }

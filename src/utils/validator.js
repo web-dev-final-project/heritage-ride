@@ -29,25 +29,15 @@ class Validator {
         "Listing object must be provided and must be an object."
       );
     }
-    let listing = {
+    let listingInfo = {
       ...obj,
-      itemId: this.validateId(this.nullcheck(obj.itemId)),
-      title: this.nullcheck(obj.title).checkString(),
-      description: this.nullcheck(obj.description).checkString(),
-      price: this.nullcheck(obj.price).checkNumber(),
-      category: (() => {
-        let cat = this.nullcheck(obj.category)
-          .checkString()
-          .toLowerCase()
-          .trim();
-        if (cat === "car" || cat === "part") return cat;
-        else
-          throw new InvalidInputException(
-            "Category must be either car or part."
-          );
-      })(),
+      // other fields were unecessary since user will only enter price and image url?
+      price: this.nullcheck(obj.price).checkNumber(), 
+      // to Add: verify image url, 
+      // to Add?: verify car exists in db
+      itemType: this.nullcheck(obj.itemType)
     };
-    return listing;
+    return listingInfo;
   }
 
   static validateCar(obj) {
