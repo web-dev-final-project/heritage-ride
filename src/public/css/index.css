@@ -81,3 +81,7 @@ hr {
   text-align: center;
   margin-top: 4rem;
 }
+
+.snapshot {
+  max-width: 330px;
+}

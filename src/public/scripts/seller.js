@@ -20,7 +20,7 @@ const generateList = (list, status) => {
   }
   return lists;
 };
-const addList = (listContainer, lists) => {
+const addList = (listContainer, lists, status) => {
   listContainer.innerHTML = "";
   for (let item of lists) {
     let element = document.createElement("li");
@@ -39,7 +39,13 @@ const addList = (listContainer, lists) => {
     <img src=${
       item.image ||
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSReWLry0CkAtuYdDZGhY6iuy5I4gudfFxjdw&s"
-    } class="img-thumbnail"/>`;
+    } class="img-thumbnail"/>
+    ${
+      status === "reserved"
+        ? `<a href='/seller/transaction/${item._id}'><button class='btn btn-info mt-1 text-white w-100'>View</button></a>`
+        : ""
+    }
+    `;
     listContainer.appendChild(element);
     document
       .getElementById("item-" + item._id)
@@ -56,10 +62,10 @@ if (sellerCentral) {
   const listingInfo = document.getElementById("seller-listing-info");
 
   let list = generateList(sellerListings.value, "open");
-  addList(listContainer, list);
+  addList(listContainer, list, "open");
   sellerListings.addEventListener("change", () => {
     list = generateList(sellerListings.value, "open");
-    addList(listContainer, list);
+    addList(listContainer, list, "open");
     if (list.length === 0) {
       listingInfo.innerHTML = `You have 0 ${sellerListings.value} listing.`;
       listingInfo.style.display = "block";
@@ -67,7 +73,7 @@ if (sellerCentral) {
   });
 
   const reservedlist = generateList("car", "reserved");
-  addList(attentionList, reservedlist);
+  addList(attentionList, reservedlist, "reserved");
   document.getElementById("listing-attention-num").innerHTML =
     reservedlist.length;
 }

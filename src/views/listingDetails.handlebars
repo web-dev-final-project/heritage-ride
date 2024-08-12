@@ -8,7 +8,7 @@
   </h1>
   <img src="{{ listing.image }}" alt="Image of {{ car.make }}
   {{ car.model }} class="listing-display-image"">
-  <h2 class="text-success">Price: {{ listing.price }}</h2>
+  <h2 class="text-success">Price: {{currency listing.price }}</h2>
 
   <a href="/listings/order/{{ listing._id }}" id="order-button-link"
     ><button class="btn btn-primary btn-lg" id="order-button">

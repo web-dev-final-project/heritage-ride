@@ -1,8 +1,25 @@
 import { ObjectId } from "mongodb";
 import { handleAddError, handleUpdateError } from "../utils/databaseUtil.js";
-import { databaseExceptionHandler } from "../utils/exceptions.js";
+import {
+  databaseExceptionHandler,
+  NotFoundException,
+} from "../utils/exceptions.js";
 import Validator from "../utils/validator.js";
 import { listings, transactions } from "./init.js";
+
+const listingLookUp = [
+  {
+    $lookup: {
+      from: "listings",
+      localField: "listingId",
+      foreignField: "_id",
+      as: "listing",
+    },
+  },
+  {
+    $unwind: "$listing",
+  },
+];
 
 const getTransactionBySeller = async (userId) => {
   try {
@@ -28,7 +45,7 @@ const createTransaction = async (transc) => {
     const validTransc = Validator.validateTransaction(transc);
     const transactionDb = await transactions();
     const listingsDb = await listings();
-    const listing = await listingsDb.updateOne(
+    const listing = await listingsDb.findOneAndUpdate(
       { _id: new ObjectId(validTransc.listingId) },
       {
         $set: {
@@ -40,7 +57,7 @@ const createTransaction = async (transc) => {
     );
     const transaction = await transactionDb.insertOne({
       listingId: new ObjectId(validTransc.listingId),
-      sellerId: new ObjectId(listing.sellerId),
+      sellerId: listing.sellerId,
       buyerId: new ObjectId(validTransc.buyerId),
       status: "pending",
       amount: validTransc.amount,
@@ -68,9 +85,9 @@ const completeTransaction = async (transId) => {
           status: "complete",
           updatedAt: new Date().toUTCString(),
         },
-      },
-      { returnDocument: "after" }
+      }
     );
+    handleUpdateError(transaction);
     const listing = await listingsDb.updateOne(
       { _id: new ObjectId(transaction.listingId) },
       {
@@ -87,9 +104,50 @@ const completeTransaction = async (transId) => {
   }
 };
 
+const userLookUp = [
+  {
+    $lookup: {
+      from: "users",
+      localField: "buyerId",
+      foreignField: "_id",
+      as: "buyer",
+    },
+  },
+  {
+    $unwind: "$buyer",
+  },
+  {
+    $project: {
+      "buyer.password": 0,
+    },
+  },
+];
+const getTransactionByListingId = async (id) => {
+  try {
+    const validId = Validator.validateId(id);
+    const transactionDb = await transactions();
+    const res = await transactionDb
+      .aggregate([
+        {
+          $match: {
+            listingId: new ObjectId(validId),
+          },
+        },
+        ...userLookUp,
+        ...listingLookUp,
+      ])
+      .toArray();
+    if (res.length === 0) throw new NotFoundException("no transaction found");
+    return res[0];
+  } catch (e) {
+    databaseExceptionHandler(e);
+  }
+};
+
 export {
   completeTransaction,
   createTransaction,
   getTransactionByBuyer,
   getTransactionBySeller,
+  getTransactionByListingId,
 };
