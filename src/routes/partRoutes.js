@@ -26,9 +26,12 @@ router.get("/", async (req, res, next) => {
 });
 
 
-router.get('/:partId', auth, async (req, res, next) => {
+router.get('/:partId', authSafe, async (req, res, next) => {
     try {
-        const part = await getPartById(req.params.partId);
+      let partId = req.params.partId;
+    if (!partId) throw new InvalidInputException("Part ID can't be null.");
+    partId = Validator.validateId(partId);
+        const part = await getPartById(partId);
         res.status(200).json(part);
     } catch (e) {
         next(e);
@@ -39,7 +42,7 @@ router.get('/search', auth, async (req, res, next) => {
     try {
         const { query } = req.query;
         const parts = await searchPartsByName(query);
-        res.render('partSearch', { results: parts });
+        res.render('partSearch', { results: parts, user: req.user });
     } catch (e) {
         next(e);
     }
@@ -53,7 +56,5 @@ router.get('/:partId/cars', auth, async (req, res, next) => {
         next(e);
     }
 });
-
-router.use(error);
 
 export default router;
