@@ -1,4 +1,4 @@
- import { parts, cars } from "./init.js";
+import { parts, cars } from "./init.js";
 import { ObjectId } from "mongodb";
 import Validator from "../utils/validator.js";
 import { DataBaseException, NotFoundException } from "../utils/exceptions.js";
@@ -18,7 +18,8 @@ const createPart = async (name, price, manufacturer, sellerId, carIds) => {
         manufacturer: partData.manufacturer,
         sellerId: new ObjectId(partData.sellerId),
         carIds: partData.carIds.map(id => new ObjectId(id)),
-        dateAdded: new Date()
+        createdAt: new Date().toUTCString(), 
+        updatedAt: new Date().toUTCString() 
     };
 
     try {
@@ -28,7 +29,10 @@ const createPart = async (name, price, manufacturer, sellerId, carIds) => {
             throw new Error('Could not add part');
         }
         const newId = insertInfo.insertedId;
-        return await getPartById(newId.toString());
+         return {
+            ...newPart,
+            _id: insertInfo.insertedId
+        };
     } catch (e) {
         throw new DataBaseException(e.message);
     }
