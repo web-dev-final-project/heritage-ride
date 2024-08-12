@@ -1,8 +1,8 @@
 import { ObjectId } from "mongodb";
-import { handleAddError, handleUpdateError } from "../utils/databaseUtil";
-import { databaseExceptionHandler } from "../utils/exceptions";
-import Validator from "../utils/validator";
-import { listings, transactions } from "./init";
+import { handleAddError, handleUpdateError } from "../utils/databaseUtil.js";
+import { databaseExceptionHandler } from "../utils/exceptions.js";
+import Validator from "../utils/validator.js";
+import { listings, transactions } from "./init.js";
 
 const getTransactionBySeller = async (userId) => {
   try {
@@ -43,6 +43,9 @@ const createTransaction = async (transc) => {
       sellerId: new ObjectId(listing.sellerId),
       buyerId: new ObjectId(validTransc.buyerId),
       status: "pending",
+      amount: validTransc.amount,
+      paymentStatus: validTransc.paymentStatus,
+      payment: validTransc.payment,
       createdAt: new Date().toUTCString(),
       updatedAt: new Date().toUTCString(),
     });

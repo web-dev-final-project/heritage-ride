@@ -49,6 +49,51 @@ class Validator {
     };
     return listing;
   }
+  static validatePartialListing(obj) {
+    if (!obj || typeof obj !== "object") {
+      throw new InvalidInputException(
+        "Listing object must be provided and must be an object."
+      );
+    }
+    let listing = {};
+    if (obj.title) {
+      listing.title = obj.title.checkString();
+    }
+    if (obj.description) {
+      listing.description = obj.description.checkString();
+    }
+    if (obj.price) {
+      listing.price = obj.price.checkNumber();
+    }
+    if (obj.status) {
+      const stats = ["open", "reserved", "sold", "delisted"];
+      let cat = obj.status.trim().toLowerCase();
+      listing.status = (() => {
+        if (stats.includes(cat)) return cat;
+        else
+          throw new InvalidInputException(
+            "status must be open, reserved, sold or delisted."
+          );
+      })();
+    }
+    if (obj.itemType) {
+      let cat = obj.itemType;
+      listing.itemType = (() => {
+        if (cat === "car" || cat === "part") return cat;
+        else
+          throw new InvalidInputException(
+            "itemType must be either car or part."
+          );
+      })();
+    }
+    if (obj.image) {
+      listing.image = obj.image.checkString();
+    }
+    if (obj.gallery) {
+      listing.image = obj.image.checkStringArray();
+    }
+    return listing;
+  }
 
   static validateCar(obj) {
     return obj;
@@ -86,20 +131,20 @@ class Validator {
     return arr;
   }
 
-static validatePart(obj) {
+  static validatePart(obj) {
     if (!obj || obj === undefined)
-        throw new InvalidInputException("Input must not be empty");
-    
+      throw new InvalidInputException("Input must not be empty");
+
     let part = {
-        ...obj,
-        name: Validator.nullcheck(obj.name).checkString(),
-        price: Validator.nullcheck(obj.price).checkNumber(),
-        manufacturer: Validator.nullcheck(obj.manufacturer).checkString(),
-        sellerId: Validator.nullcheck(obj.sellerId).checkId(),
-        carIds: Validator.nullcheck(obj.carIds).checkArray().checkObjectIds(),
+      ...obj,
+      name: Validator.nullcheck(obj.name).checkString(),
+      price: Validator.nullcheck(obj.price).checkNumber(),
+      manufacturer: Validator.nullcheck(obj.manufacturer).checkString(),
+      sellerId: Validator.nullcheck(obj.sellerId).checkId(),
+      carIds: Validator.nullcheck(obj.carIds).checkArray().checkObjectIds(),
     };
     return part;
-}
+  }
 
   static nullcheck(obj) {
     if (!obj) throw new InvalidInputException("Some inputs are missing");
@@ -126,7 +171,10 @@ static validatePart(obj) {
     let trans = {
       sellerId: this.validateId(this.nullcheck(obj.sellerId)),
       buyerId: this.validateId(this.nullcheck(obj.buyerId)),
-      listingId: this.validateId(this.nullcheck(obj.sellerId)),
+      listingId: this.validateId(this.nullcheck(obj.listingId)),
+      amount: this.nullcheck(obj.amount).checkNumber(),
+      paymentStatus: this.nullcheck(obj.paymentStatus).checkString(),
+      payment: this.nullcheck(obj.payment),
     };
     return trans;
   }

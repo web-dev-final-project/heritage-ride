@@ -10,8 +10,10 @@
   {{ car.model }} class="listing-display-image"">
   <h2 class="text-success">Price: {{ listing.price }}</h2>
 
-  <a href="/listings/order/{{ listing._id }}"
-    ><button class="btn btn-primary btn-lg">Order Now</button></a
+  <a href="/listings/order/{{ listing._id }}" id="order-button-link"
+    ><button class="btn btn-primary btn-lg" id="order-button">
+      Order Now
+    </button></a
   >
 
   <h2>Details</h2>
@@ -40,3 +42,14 @@
   <p><strong>Name:</strong> {{ seller.firstName }} {{ seller.lastName }}</p>
   <p><strong>Email:</strong> {{ seller.email }}</p>
 </div>
+<script>
+  const listing = {{{json listing}}}
+  if (listing.status === "reserved") {
+    document.getElementById("order-button").disabled = true
+    document.getElementById("order-button").classList.add("disabled")
+    document.getElementById("order-button-link").addEventListener("click", (e) =>{
+      e.preventDefault()
+    })
+    document.getElementById("order-button-link").insertAdjacentHTML('afterend', "<p class='pt-3 fs-5'> Current listing has been reserved, please contact seller for more information. </p>")
+  }
+</script>

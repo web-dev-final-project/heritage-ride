@@ -25,8 +25,5 @@ export const handlebarsInstance = exphbs.create({
     utcToDate: (dateString) => {
       return dateString.split(" ").slice(1, 4).join(" ");
     },
-    log: (obj) => {
-      console.log(obj);
-    },
   },
 });

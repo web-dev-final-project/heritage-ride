@@ -1,11 +1,18 @@
 import { Router } from "express";
-import { getAll, getListingById } from "../../data/listings.js";
+import {
+  getAll,
+  getListingById,
+  updateListingById,
+} from "../../data/listings.js";
 import { NotFoundException } from "../../utils/exceptions.js";
-import { authSafe } from "../../middleware/auth.js";
+import auth, { authSafe } from "../../middleware/auth.js";
 import Validator from "../../utils/validator.js";
 import { getCarById } from "../../data/cars.js";
 import { findUser } from "../../data/users.js";
+import Stripe from "stripe";
+import { createTransaction } from "../../data/transaction.js";
 
+const stripe = new Stripe(process.env.STRIPE_KEY);
 const router = Router();
 
 router.get("/search", authSafe, async (req, res, next) => {
@@ -24,7 +31,67 @@ router.get("/search", authSafe, async (req, res, next) => {
   try {
     const result = await getAll(query);
     if (!result) throw new NotFoundException(`listing not found`);
-    res.render("carSearch", { results: result, user: req.user });
+    res.render("carSearch", {
+      results: result.filter((s) => s.sellerId.toString() !== req.user._id),
+      user: req.user,
+    });
+  } catch (e) {
+    next(e);
+  }
+});
+
+router.get("/order/success", auth, async (req, res, next) => {
+  try {
+    const sessionId = req.query.session_id.checkString();
+    const session = await stripe.checkout.sessions.retrieve(
+      sessionId.valueOf()
+    );
+    if (session.payment_status === "paid") {
+      const listingId = session.metadata.listingId;
+      await updateListingById(listingId, {
+        status: "reserved",
+      });
+      const transaction = {
+        listingId: listingId,
+        sellerId: session.metadata.sellerId,
+        buyerId: session.metadata.buyerId,
+        amount: session.amount_total,
+        paymentStatus: session.payment_status,
+        payment: {
+          sessionId: session.id,
+          custom_address: {
+            line1: session.customer_details.address.line1,
+            line2: session.customer_details.address.line2,
+            city: session.customer_details.address.city,
+            country: session.customer_details.address.country,
+            postal_code: session.customer_details.address.postal_code,
+            state: session.customer_details.address.state,
+          },
+          custom_name: session.customer_details.name,
+          custom_phone: session.customer_details.phone,
+          custom_email: session.customer_details.email,
+        },
+      };
+      await createTransaction(transaction);
+      res.render("success", { user: req.user, isComplete: true });
+    } else {
+      res.render("success", { user: req.user, isComplete: false });
+    }
+  } catch (e) {
+    next(e);
+  }
+});
+
+router.get("/order/:id", auth, async (req, res, next) => {
+  try {
+    const listingId = req.params.id;
+    const listingDetails = await getListingById(listingId);
+    const sellerDetails = await findUser(listingDetails.sellerId.toString());
+    res.render("order", {
+      listing: listingDetails,
+      user: req.user,
+      seller: sellerDetails,
+    });
   } catch (e) {
     next(e);
   }
@@ -32,26 +99,18 @@ router.get("/search", authSafe, async (req, res, next) => {
 
 router.get("/:listingId", authSafe, async (req, res, next) => {
   const listingId = req.params.listingId;
-  //console.log(listingId)
   try {
-    // Fetch the listing details from the Listings collection
     const listingDetails = await getListingById(listingId);
-    //console.log(listingDetails)
-    // Fetch the listing details from the Listings collection using the carId
     const carDetails = await getCarById(listingDetails.itemId.toString());
-    //console.log(carDetails)
     const sellerDetails = await findUser(listingDetails.sellerId.toString());
     if (sellerDetails && sellerDetails.password) {
       delete sellerDetails.password; // delete password field from current object
     }
-
     if (!carDetails || !listingDetails) {
       return res
         .status(404)
         .render("404", { message: "Car or listing not found", user: req.user });
     }
-
-    // Render the details page with car and listing information
     res.render("listingDetails", {
       car: carDetails,
       listing: listingDetails,
