@@ -7,7 +7,7 @@ import expertsAPI from "./experts/expert.js";
 import expertsView from "./experts/expertView.js";
 import sellerView from "./sellers/sellerView.js";
 import sellerAPI from "./sellers/seller.js";
-import partsRouter from "./parts/partsRoutes.js";
+import partsRouter from "./parts/partRoutes.js";
 import cars from "./cars/cars.js";
 
 import { Router } from "express";
