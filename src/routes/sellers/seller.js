@@ -8,6 +8,7 @@ const router = Router();
 
 router.get("/complete/:id", auth, async (req, res) => {
   const validId = await Validator.validateId(req.params.id);
+  console.log(validId);
   await completeTransaction(validId);
   res.status(200).send(new HttpResponse("success", HttpStatus.SUCCESS));
 });

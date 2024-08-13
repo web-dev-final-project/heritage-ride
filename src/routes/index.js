@@ -6,6 +6,7 @@ import userView from "./users/userView.js";
 import expertsAPI from "./experts/expert.js";
 import expertsView from "./experts/expertView.js";
 import sellerView from "./sellers/sellerView.js";
+import sellerAPI from "./sellers/seller.js";
 import cars from "./cars/cars.js";
 
 import { Router } from "express";
@@ -37,6 +38,7 @@ const apiRouter = (app) => {
   app.use("/api/user", userAPI);
   app.use("/api/expert", expertsAPI);
   app.use("/api/cars", cars);
+  app.use("/api/seller", sellerAPI);
 };
 
 const getApiRoutes = (req) => {

@@ -142,7 +142,7 @@ expertForm.addEventListener("submit", async (e) => {
     if (expert.skills.length === 0) {
       throw new Error("Please add at least one skill");
     }
-    if (expert.location.length < 5) {
+    if (expert.location.length < 5 || expert.location.length > 50) {
       throw new Error("Location should be more than 5 characters");
     }
     if (expert.userId.length === 0) {

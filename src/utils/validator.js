@@ -157,9 +157,13 @@ class Validator {
     let expert = {
       ...obj,
       userId: Validator.nullcheck(obj.userId).checkString().checkObjectId(),
-      bio: Validator.nullcheck(obj.bio).checkString(),
+      bio: Validator.nullcheck(obj.bio)
+        .checkString()
+        .checkStringLength(10, 500, "Bio"),
       skills: Validator.nullcheck(obj.skills).checkStringArray(),
-      location: Validator.nullcheck(obj.location).checkString(),
+      location: Validator.nullcheck(obj.location)
+        .checkString()
+        .checkStringLength(5, 50, "location"),
       images: Validator.nullcheck(obj.images).checkStringArray(),
     };
     return expert;

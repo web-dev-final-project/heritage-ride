@@ -34,3 +34,5 @@ apiRouter(app);
 app.use(router);
 
 app.use(error);
+
+// Todo: xss implementation

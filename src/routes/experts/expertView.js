@@ -13,15 +13,13 @@ router.get("/", auth, async (req, res, next) => {
   try {
     if (!req.user.role.includes("expert")) {
       res.redirect("/expert/create");
+    } else {
+      const exp = await expert.getExpertByUserId(req.user._id);
+      res.render("expert", {
+        expert: { ...exp, user: req.user },
+        user: req.user,
+      });
     }
-    const exp = await expert.getExpertByUserId(req.user._id);
-    if (!exp) {
-      throw new AccessException("User are not registered as expert.");
-    }
-    res.render("expert", {
-      expert: { ...exp, user: req.user },
-      user: req.user,
-    });
   } catch (e) {
     next(e);
   }
@@ -59,7 +57,12 @@ router.get("/search", authSafe, async (req, res, next) => {
 
 router.get("/create", auth, async (req, res, next) => {
   try {
-    res.render("expertSignUp", { user: req.user, cloudinary: cloudinary });
+    res.render("expertSignUp", {
+      user: req.user,
+      cloudinary: cloudinary,
+      isEdit: false,
+      expert: null,
+    });
   } catch (e) {
     next(e);
   }

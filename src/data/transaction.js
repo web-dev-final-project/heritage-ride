@@ -78,7 +78,7 @@ const completeTransaction = async (transId) => {
     const validId = Validator.validateId(transId);
     const transactionDb = await transactions();
     const listingsDb = await listings();
-    const transaction = await transactionDb.updateOne(
+    const transaction = await transactionDb.findOneAndUpdate(
       { _id: new ObjectId(validId) },
       {
         $set: {
@@ -87,7 +87,6 @@ const completeTransaction = async (transId) => {
         },
       }
     );
-    handleUpdateError(transaction);
     const listing = await listingsDb.updateOne(
       { _id: new ObjectId(transaction.listingId) },
       {
