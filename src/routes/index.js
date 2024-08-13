@@ -7,6 +7,7 @@ import expertsAPI from "./experts/expert.js";
 import expertsView from "./experts/expertView.js";
 import sellerView from "./sellers/sellerView.js";
 import sellerAPI from "./sellers/seller.js";
+import partsRouter from "./parts/partsRoutes.js";
 import cars from "./cars/cars.js";
 
 import { Router } from "express";
@@ -36,6 +37,7 @@ const apiRouter = (app) => {
   // add your backends routes here, prefix with /api/
   app.use("/api/listings", listingsAPI);
   app.use("/api/user", userAPI);
+  app.use("/api/parts", partsRouter);
   app.use("/api/expert", expertsAPI);
   app.use("/api/cars", cars);
   app.use("/api/seller", sellerAPI);
