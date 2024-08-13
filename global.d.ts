@@ -4,6 +4,7 @@ interface Object {
   checkArray(): Array;
   checkBoolean(): boolean;
   checkNull(): any;
+  checkNumber(): number;
   containsValue(str: string): boolean;
 }
 
@@ -12,6 +13,7 @@ interface String {
   checkUrl(): String;
   checkEmpty(): String;
   checkPassword(): String;
+  checkObjectId(): String;
 }
 
 interface Array {
@@ -35,6 +37,8 @@ namespace Express {
       avatar: string | undefined | null;
       email: string;
       address: string | undefined | null;
+      role: [string];
     };
+    refreshToken: (user: any | null) => void;
   }
 }

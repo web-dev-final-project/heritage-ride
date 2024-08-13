@@ -15,4 +15,9 @@ class HttpResponse {
   }
 }
 
-export { HttpResponse, HttpStatus };
+const cloudinary = {
+  cloudName: process.env.CLOUDINARY_NAME,
+  presetName: process.env.CLOUDINARY_PRESET,
+};
+
+export { HttpResponse, HttpStatus, cloudinary };

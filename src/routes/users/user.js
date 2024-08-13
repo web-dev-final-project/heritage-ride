@@ -99,7 +99,8 @@ router.post("/login", async (req, res, next) => {
 
     let resp;
     resp = await users.findUserByEmailOrUserName(userName, userName);
-    if (!resp) throw new NotFoundException(`Provided user not found`);
+    if (!resp)
+      throw new AuthenticationException(`Invalid username or password.`);
 
     const checkPass = await comparePassword(password, resp.password);
     if (!checkPass)

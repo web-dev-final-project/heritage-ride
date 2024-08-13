@@ -1,16 +1,36 @@
-
 <!-- Search Form -->
-<form id="searchForm" action="/api/listings/search" method="GET" class="mb-4">
-    <div class="input-group">
-        <input type="text" class="form-control" name="make" placeholder="Enter car make">
-        <input type="text" class="form-control" name="model" placeholder="Enter car model">
-        <input type="number" class="form-control" name="year" placeholder="Enter car year">
-        <select class="form-control" name="category">
-            <option value="">Select category</option>
-            <option value="Convertible">Convertible</option>
-            <option value="Sedan">Sedan</option>
-            <option value="SUV">SUV</option>
-        </select>
-        <button type="submit" class="btn btn-primary">Search</button>
-    </div>
+<form
+  class="container p-0 m-0"
+  id="searchForm"
+  action="/listings/search"
+  method="GET"
+  class="mb-4"
+>
+  <div class="input-group">
+    <input
+      type="text"
+      class="form-control"
+      name="make"
+      placeholder="Enter car make"
+    />
+    <input
+      type="text"
+      class="form-control"
+      name="model"
+      placeholder="Enter car model"
+    />
+    <input
+      type="number"
+      class="form-control"
+      name="year"
+      placeholder="Enter car year"
+    />
+    <select class="form-control" name="category">
+      <option value="">Select category</option>
+      <option value="Convertible">Convertible</option>
+      <option value="Sedan">Sedan</option>
+      <option value="SUV">SUV</option>
+    </select>
+    <button type="submit" class="btn btn-primary">Search</button>
+  </div>
 </form>
