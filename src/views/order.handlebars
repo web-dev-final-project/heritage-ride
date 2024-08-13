@@ -1,0 +1,25 @@
+<div>
+  <h1>Purchase</h1>
+  <p>Let's finalize your order</p>
+  <button class="btn btn-primary px-4" id="check-out">Pay Now</button>
+</div>
+<script>
+  document.getElementById("check-out").addEventListener("click", () => {
+    fetch("/api/listings/checkout", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        listingId: window.location.href.split("/").pop(),
+      }),
+    }).then((res) => {
+      if (res.ok) {
+        res.json().then((resp) => {
+          window.location.href = resp.content;
+        });
+      }
+    });
+  });
+</script>

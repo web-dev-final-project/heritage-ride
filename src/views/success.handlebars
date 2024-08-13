@@ -1,0 +1,14 @@
+<div>
+  {{#if isComplete}}
+  <h2>Transaction Complete</h2>
+  {{else}}
+  <h2>Request send, waiting for payment processing</h2>
+  {{/if}}
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    setTimeout(() => {
+      window.location.replace("/");
+    }, 3000);
+  });
+</script>

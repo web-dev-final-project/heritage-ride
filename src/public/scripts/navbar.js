@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.href = "/expert/all";
   });
   seller.addEventListener("click", () => {
-    window.location.href = "/user/seller";
+    window.location.href = "/seller";
   });
 
   document.getElementById("nav-name").addEventListener("click", () => {
@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const navLogout = document.getElementById("nav-logout");
 
     navUserDetail.href = getCurrentRoute() + "/user";
-    navUserSeller.href = getCurrentRoute() + "/user/seller";
+    navUserSeller.href = getCurrentRoute() + "/seller";
     navUserExpert.href = getCurrentRoute() + "/expert";
     navUserEdit.href = getCurrentRoute() + "/user/edit";
     navLogout.href = getCurrentRoute() + "/user/logout";

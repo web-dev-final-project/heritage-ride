@@ -25,8 +25,12 @@ export const handlebarsInstance = exphbs.create({
     utcToDate: (dateString) => {
       return dateString.split(" ").slice(1, 4).join(" ");
     },
-    log: (obj) => {
-      console.log(obj);
+    currency: (amount) => {
+      const formatter = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      });
+      return formatter.format(amount);
     },
   },
 });

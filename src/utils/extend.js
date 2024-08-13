@@ -4,11 +4,12 @@ import {
   TypeException,
   NullException,
   InvalidValueException,
+  ValidationException,
 } from "./exceptions.js";
 
-Object.prototype.checkNull = function () {
+Object.prototype.checkNull = function (name = "input") {
   if (!this || this == null || this == undefined) {
-    throw new NullException();
+    throw new NullException(`${name} can not be an empty.`);
   }
   return this;
 };
@@ -38,19 +39,19 @@ Object.prototype.checkArray = function () {
   return this;
 };
 
-String.prototype.checkEmpty = function () {
+String.prototype.checkEmpty = function (name = "string") {
   if (typeof this === "string" && this.trim().length === 0) {
-    throw new EmptyStringException();
+    throw new EmptyStringException(`${name} can't not be empty`);
   }
   return this.trim();
 };
-String.prototype.checkObjectId = function() {
-  let str = this.valueOf()
+String.prototype.checkObjectId = function (name = "value") {
+  let str = this.valueOf();
   if (!ObjectId.isValid(str)) {
-    throw new InvalidValueException("Invalid Id.");
+    throw new InvalidValueException(`Invalid Id ${name}.`);
   }
   return str;
-}
+};
 String.prototype.checkUrl = function () {
   try {
     const str = this.valueOf();
@@ -62,6 +63,14 @@ String.prototype.checkUrl = function () {
   } catch (e) {
     throw new InvalidValueException(e.message);
   }
+};
+
+String.prototype.checkStringLength = function (min, max, name = "value") {
+  if (this.valueOf() < min || this.valueOf() > max)
+    throw new ValidationException(
+      `${name} can not be shorter than ${min} or longer than ${max}`
+    );
+  return this;
 };
 
 String.prototype.checkEmail = function () {

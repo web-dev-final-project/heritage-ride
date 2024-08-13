@@ -11,11 +11,16 @@ document.getElementById("add-listing").addEventListener("click", () => {
     });
 });
 
-const generateList = (listContainer, list) => {
+const generateList = (list, status) => {
   let lists = listings;
   if (list !== "all") {
-    lists = listings.filter((li) => li.itemType === list);
+    lists = listings.filter(
+      (li) => li.itemType === list && li.status === status
+    );
   }
+  return lists;
+};
+const addList = (listContainer, lists, status) => {
   listContainer.innerHTML = "";
   for (let item of lists) {
     let element = document.createElement("li");
@@ -34,7 +39,13 @@ const generateList = (listContainer, list) => {
     <img src=${
       item.image ||
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSReWLry0CkAtuYdDZGhY6iuy5I4gudfFxjdw&s"
-    } class="img-thumbnail"/>`;
+    } class="img-thumbnail"/>
+    ${
+      status === "reserved"
+        ? `<a href='/seller/transaction/${item._id}'><button class='btn btn-info mt-1 text-white w-100'>View</button></a>`
+        : ""
+    }
+    `;
     listContainer.appendChild(element);
     document
       .getElementById("item-" + item._id)
@@ -42,15 +53,27 @@ const generateList = (listContainer, list) => {
         document.location.href = `/listings/eidt/${item._id}`;
       });
   }
-  return lists;
 };
 
 if (sellerCentral) {
   const listContainer = document.getElementById("user-listings");
+  const attentionList = document.getElementById("attention-list");
   const sellerListings = document.getElementById("seller-list-filter");
-  generateList(listContainer, sellerListings.value);
+  const listingInfo = document.getElementById("seller-listing-info");
 
+  let list = generateList(sellerListings.value, "open");
+  addList(listContainer, list, "open");
   sellerListings.addEventListener("change", () => {
-    generateList(listContainer, sellerListings.value);
+    list = generateList(sellerListings.value, "open");
+    addList(listContainer, list, "open");
+    if (list.length === 0) {
+      listingInfo.innerHTML = `You have 0 ${sellerListings.value} listing.`;
+      listingInfo.style.display = "block";
+    } else listingInfo.style.display = "none";
   });
+
+  const reservedlist = generateList("car", "reserved");
+  addList(attentionList, reservedlist, "reserved");
+  document.getElementById("listing-attention-num").innerHTML =
+    reservedlist.length;
 }
