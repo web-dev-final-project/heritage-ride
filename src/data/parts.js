@@ -28,13 +28,12 @@ const createPart = async (name, price, manufacturer, sellerId, carIds) => {
         if (!insertInfo.acknowledged || !insertInfo.insertedId) {
             throw new Error('Could not add part');
         }
-        const newId = insertInfo.insertedId;
          return {
             ...newPart,
             _id: insertInfo.insertedId
         };
     } catch (e) {
-        throw new DataBaseException(e.message);
+        throw new DataBaseException(e);
     }
 };
 
@@ -46,7 +45,7 @@ const getPartById = async (partId) => {
         if (!part) throw new NotFoundException('Part not found');
         return part;
     } catch (e) {
-        throw new DataBaseException(e.message);
+         databaseExceptionHandler(e);
     }
 };
 
@@ -54,33 +53,54 @@ const searchPartsByName = async (searchQuery) => {
     searchQuery = Validator.validateString(searchQuery, 'Search Query');
     try {
         const partsCollection = await parts();
-        const parts = await partsCollection.find(
-            { name: { $regex: searchQuery, $options: 'i' } },
-            { projection: { name: 1, price: 1, manufacturer: 1, specifications: 1, dateAdded: 1 } } 
-        ).toArray();
-        return parts;
+        const results = await partsCollection.aggregate([
+            {
+                $lookup: {
+                    from: "cars", 
+                    localField: "manufacturer", 
+                    foreignField: "make", 
+                    as: "carDetails" 
+                }
+            },
+            {
+                $unwind: {
+                    path: "$carDetails",
+                    preserveNullAndEmptyArrays: true 
+                }
+            },
+            {
+                $match: {
+                    $or: [
+                        { name: { $regex: searchQuery, $options: 'i' } },
+                        { manufacturer: { $regex: searchQuery, $options: 'i' } },
+                        { "carDetails.make": { $regex: searchQuery, $options: 'i' } },
+                        { "carDetails.model": { $regex: searchQuery, $options: 'i' } }
+                    ]
+                }
+            }
+        ]).toArray();
+        return results;
     } catch (e) {
-        throw new DataBaseException(e.message);
+        throw new DataBaseException(e);
     }
 };
 
-const getCarsByPartId = async (partId) => {
-    const validPartId = Validator.validateId(partId);
+const getPartByCarId = async (carId) => {
+    const validCarId = Validator.validateId(carId);
     try {
         const partsCollection = await parts();
-        const part = await partsCollection.findOne({ _id: new ObjectId(validPartId) });
-        if (!part) throw new NotFoundException('Part not found');
-
-        const carIds = part.carIds;
-        const carsCollection = await cars();
-        const carsList = await carsCollection.find({ _id: { $in: carIds } }).toArray();
-
-        return carsList;
+        const partsList = await partsCollection.find({ carIds: new ObjectId(validCarId) }).toArray();
+        if (partsList.length === 0) {
+            throw new NotFoundException('No parts found');
+        }
+        return partsList;
     } catch (e) {
-        throw new DataBaseException(e.message);
+        throw new DataBaseException(e);
     }
 };
 
-export { createPart, getPartById, searchPartsByName, getCarsByPartId };
+
+
+export { createPart, getPartById, searchPartsByName, getPartByCarId };
 
 
