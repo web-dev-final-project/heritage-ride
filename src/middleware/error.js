@@ -9,13 +9,13 @@ import logger from "../utils/logger.js";
 
 function error(err, req, res, next) {
   logger.error(err.stack);
-  if (err instanceof ValidationException)
+  if (err instanceof AuthenticationException)
     return res
       .status(400)
       .send(new HttpResponse(err.message, HttpStatus.FAILED));
-  if (err instanceof AuthenticationException)
+  if (err instanceof ValidationException)
     return res
-      .status(401)
+      .status(400)
       .send(new HttpResponse(err.message, HttpStatus.FAILED));
   if (err instanceof AccessException)
     return res

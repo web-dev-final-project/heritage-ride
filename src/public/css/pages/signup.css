@@ -5,7 +5,13 @@
   padding: var(--border-p);
 }
 .signup-input {
-  flex-grow: 1;
+  padding: 4px 8px;
+  border: 1px solid rgb(108, 107, 107);
+  border-radius: 8px;
+  height: auto;
+  margin: 10px 0;
+  /* outline-color: rgb(81, 225, 49) */
+  outline-color: rgb(237, 229, 66);
 }
 
 @media (min-width: 577px) {

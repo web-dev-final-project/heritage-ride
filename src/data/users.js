@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+import { generateToken } from "../utils/auth.js";
+>>>>>>> 2c6a561f49812957dfa89abf43e6b6bd8ac694e9
 import { DataBaseException, NotFoundException } from "../utils/exceptions.js";
 import Validator from "../utils/validator.js";
 import { users } from "./init.js";
@@ -5,13 +9,17 @@ import { ObjectId } from "mongodb";
 
 const createUser = async (user) => {
   const valUser = Validator.validateUser(user);
+  valUser.email = valUser.email.toLowerCase();
   try {
     const db = await users();
-    const res = await db.insertOne({
-      ...valUser,
-      createdAt: new Date().toUTCString(),
-      updatedAt: new Date().toUTCString(),
-    });
+    const res = await db.insertOne(
+      {
+        ...valUser,
+        createdAt: new Date().toUTCString(),
+        updatedAt: new Date().toUTCString(),
+      },
+      { password: 0 }
+    );
     if (!res || !res.acknowledged || !res.insertedId)
       new DataBaseException(`Insert user ${user.email} failed`);
     return {
@@ -52,7 +60,7 @@ const findUser = async (id) => {
 
 const findUserByEmailOrUserName = async (username, userEmail) => {
   let userName = username.checkString();
-  let email = userEmail.checkString();
+  let email = userEmail.checkString().toLowerCase();
   let user;
   try {
     const db = await users();
