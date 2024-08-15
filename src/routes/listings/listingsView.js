@@ -5,7 +5,7 @@ import {
   updateListingById,
 } from "../../data/listings.js";
 import { InvalidInputException, NotFoundException, ValidationException } from "../../utils/exceptions.js";
-import auth, auth, { authSafe } from "../../middleware/auth.js";
+import auth, { authSafe } from "../../middleware/auth.js";
 import Validator from "../../utils/validator.js";
 import { getCarById, getCars } from "../../data/cars.js";
 import { findUser } from "../../data/users.js";
