@@ -3,6 +3,8 @@ import * as expertDb from "../../data/experts.js";
 import Validator from "../../utils/validator.js";
 import auth from "../../middleware/auth.js";
 import { HttpResponse, HttpStatus } from "../../utils/class.js";
+import { ValidationException } from "../../utils/exceptions.js";
+import { addRequest, addReview } from "../../data/requests.js";
 
 const router = Router();
 
@@ -57,6 +59,37 @@ router.get("/search", async (req, res, next) => {
 
     const experts = await expertDb.searchExpertsByName(name1);
     res.status(200).send(new HttpResponse(experts, HttpStatus.SUCCESS));
+  } catch (e) {
+    next(e);
+  }
+});
+
+router.post("/hire", auth, async (req, res, next) => {
+  try {
+    const expertId = Validator.validateId(req.body.expertId);
+    const listId = Validator.validateId(req.body.listingId);
+    if (expertId === req.user._id) {
+      throw new ValidationException(
+        "user can't hire themselve for inspection."
+      );
+    }
+    const expert = await expertDb.getExpertById(expertId);
+    await addRequest(expert, listId);
+    res
+      .status(200)
+      .send(new HttpResponse("Expert reserved", HttpStatus.SUCCESS));
+  } catch (e) {
+    next(e);
+  }
+});
+
+router.post("/addReview", auth, async (req, res, next) => {
+  try {
+    const validExpertId = Validator.validateId(req.body.expertId);
+    const validIListingId = Validator.validateId(req.body.listingId);
+    const validReview = Validator.validateReview(req.body);
+    await addReview(validExpertId, validReview, validIListingId);
+    res.status(200).send(new HttpResponse("success", HttpStatus.SUCCESS));
   } catch (e) {
     next(e);
   }

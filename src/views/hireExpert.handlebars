@@ -10,30 +10,11 @@
     <h2>You don't have any listing for sale</h2>
     <button class="btn btn-lg btn-primary">Add My Car</button>
   </div>
-  <ul id="seller-listings">
-    {{#each listings}}
-    <li></li>
-    {{/each}}
-  </ul>
+  <ul id="seller-listings" class="gallery"></ul>
 </div>
 <script>
   const user = {{{json user}}}
   const listings = {{{json listings}}}
   const expertId = {{{json expertId}}}
-  if (!user.role.includes("seller")) {
-    document.getElementById("add-seller").classList.remove("d-none")
-    document.getElementById("add-seller").addEventListener("click", () => {
-      document.location.href = `listings/add`
-    })
-  }
-  else if (listings.length === 0) {
-    document.getElementById("add-car").classList.remove("d-none")
-    document.getElementById("add-car").addEventListener("click", () => {
-      document.location.href = `listings/add`
-    })
-  }
-
-  document.getElementById("return-button").addEventListener("click", () => {
-    document.location.href = `http://localhost:4000/expert/${expertId}`
-  })
 </script>
+<script src="/scripts/hire.js"></script>

@@ -6,16 +6,19 @@
   <h1 class="fs-3 text-secondary">
     {{ car.make }} {{ car.model }} ({{ car.year }})
   </h1>
-  <img src="{{ listing.image }}" alt="Image of {{ car.make }}
-  {{ car.model }} class="listing-display-image"">
-  <h2 class="text-success">Price: {{currency listing.price }}</h2>
-
-  <a href="/listings/order/{{ listing._id }}" id="order-button-link"
-    ><button class="btn btn-primary btn-lg" id="order-button">
-      Order Now
-    </button></a
-  >
-
+  <img
+    src="{{ listing.image }}"
+    alt="Image of {{ car.make }} {{ car.model }}"
+    class="listing-display-image w-100"
+  />
+  <div class="d-flex justify-content-between mt-4">
+    <a href="/listings/order/{{ listing._id }}" id="order-button-link"
+      ><button class="btn btn-primary btn-lg my-3" id="order-button">
+        Order Now
+      </button></a
+    >
+    <h2 class="text-success my-4">Price: {{currency listing.price }}</h2>
+  </div>
   <h2>Details</h2>
   <p><strong>Color:</strong> {{ car.color }}</p>
   <p><strong>Category:</strong> {{ car.category }}</p>
@@ -23,10 +26,24 @@
 
   <!-- Mechanic Reviews -->
   {{#if listing.mechanicReviews.length}}
-  <h2>Mechanic Reviews</h2>
+  <h2>Expert Reviews</h2>
   <ul>
     {{#each listing.mechanicReviews}}
-    <li>{{ this }}</li>
+    <li>
+      <div class="d-flex align-items-center">
+        <div class="nav-user-avatar-wrapper ratio ratio-1x1">
+          <img
+            class="nav-user-avatar w-100"
+            src="{{ this.mechanic.user.avatar }}"
+            alt="the expert's avatar"
+          />
+        </div>
+        <p class="my-0 mx-4">
+          Expert: {{ this.mechanic.user.firstName }}
+          {{ this.mechanic.user.lastName }}
+        </p>
+      </div>
+    </li>
     {{/each}}
   </ul>
   {{else}}

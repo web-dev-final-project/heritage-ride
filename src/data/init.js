@@ -54,4 +54,5 @@ export {
   dbConnection,
   closeConnection,
   transactions,
+  _connection,
 };

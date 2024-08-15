@@ -8,7 +8,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (document.location.href.includes("search"))
     search.classList.add("nav-select");
-  else if (document.location.href.includes("expert"))
+  else if (
+    document.location.href.includes("expert/all") ||
+    document.location.href.includes("expert/search")
+  )
     expert.classList.add("nav-select");
   else if (document.location.href.includes("seller"))
     seller.classList.add("nav-select");

@@ -58,12 +58,26 @@ const getExpertByUserId = async (userId) => {
   try {
     let validId = Validator.validateId(userId);
     const expertDb = await experts();
-    const expert = await expertDb.findOne({
-      userId: new ObjectId(validId),
-    });
-    if (!expert)
+    const expert = await expertDb
+      .aggregate([
+        {
+          $match: {
+            userId: new ObjectId(validId),
+          },
+        },
+        {
+          $lookup: {
+            from: "listings",
+            localField: "requests",
+            foreignField: "_id",
+            as: "reviews",
+          },
+        },
+      ])
+      .toArray();
+    if (expert.length === 0)
       throw new NotFoundException(`Expert with ID ${validId} not found`);
-    return { ...expert };
+    return expert[0];
   } catch (e) {
     databaseExceptionHandler(e);
   }
