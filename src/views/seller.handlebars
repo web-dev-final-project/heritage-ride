@@ -5,6 +5,10 @@
     There is <span id="listing-attention-num">0</span> listings require your
     attention.
   </p>
+  <ul class="search-grid container w-100" id="attention-list"></ul>
+
+  <h3 class="m-2">Active Listings</h3>
+  <hr />
   <div class="d-flex justify-content-between m-3">
     <div class="input-group w-auto">
       <div class="input-group-prepend">
@@ -16,11 +20,14 @@
         <option value="part">Parts</option>
       </select>
     </div>
+
     <button class="btn btn-primary" id="add-listing">Add Listing</button>
   </div>
-
   {{#if listings}}
+
   <ul class="search-grid container w-100" id="user-listings"></ul>
+  <p class="fs-5 mx-2" id="seller-listing-info"></p>
+
   {{else}}
   <p class="fs-4">
     You don't have anything listed, lets start by add a new listing.
