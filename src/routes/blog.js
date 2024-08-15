@@ -2,61 +2,81 @@ const express = require('express');
 const router = express.Router();
 const blogData = require('../data/blog'); // Import the blog logic from the data folder
 
-// Route to get all blog posts
+// Route to get all blog posts and render the view
 router.get('/', (req, res) => {
     try {
         const blogs = blogData.getAllBlogs();
-        res.json(blogs);
+        res.render('blogPosts', { blogs });
     } catch (error) {
-        res.status(500).json({ error: 'Failed to retrieve blog posts' });
+        res.status(500).render('error', { error: 'Failed to retrieve blog posts' });
     }
 });
 
-// Route to get a specific blog post by ID
+// Route to get a specific blog post by ID and render the view
 router.get('/:id', (req, res) => {
     try {
         const blog = blogData.getBlogById(parseInt(req.params.id));
         if (!blog) {
-            res.status(404).json({ error: 'Blog post not found' });
+            res.status(404).render('error', { error: 'Blog post not found' });
         } else {
-            res.json(blog);
+            res.render('singleBlog', { blog });
         }
     } catch (error) {
-        res.status(500).json({ error: 'Failed to retrieve the blog post' });
+        res.status(500).render('error', { error: 'Failed to retrieve the blog post' });
     }
 });
 
-// Route to create a new blog post (only customers can post)
+// Route to render the form for creating a new blog post
+router.get('/new', (req, res) => {
+    res.render('createBlog', { userId: req.userId });
+});
+
+// Route to render the form for editing a blog post
+router.get('/:id/edit', (req, res) => {
+    try {
+        const blog = blogData.getBlogById(parseInt(req.params.id));
+        if (!blog) {
+            res.status(404).render('error', { error: 'Blog post not found' });
+        } else {
+            res.render('editBlog', { blog, userId: req.userId });
+        }
+    } catch (error) {
+        res.status(500).render('error', { error: 'Failed to retrieve the blog post' });
+    }
+});
+
+// Route to handle creating a new blog post
 router.post('/', (req, res) => {
     const { userId, title, content } = req.body;
     try {
         const newBlog = blogData.createBlog(userId, title, content);
-        res.status(201).json(newBlog);
+        res.redirect(`/blogs/${newBlog.id}`);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(400).render('error', { error: error.message });
     }
 });
 
-// Route to update a blog post by ID (only the author can update their post)
+// Route to handle updating a blog post by ID
 router.put('/:id', (req, res) => {
     const { userId, content } = req.body;
     try {
         const updatedBlog = blogData.updateBlog(userId, parseInt(req.params.id), content);
-        res.json(updatedBlog);
+        res.redirect(`/blogs/${updatedBlog.id}`);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(400).render('error', { error: error.message });
     }
 });
 
-// Route to delete a blog post by ID (only the author can delete their post)
+// Route to handle deleting a blog post by ID
 router.delete('/:id', (req, res) => {
     const { userId } = req.body;
     try {
-        const deletedBlog = blogData.deleteBlog(userId, parseInt(req.params.id));
-        res.json(deletedBlog);
+        blogData.deleteBlog(userId, parseInt(req.params.id));
+        res.redirect('/blogs');
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(400).render('error', { error: error.message });
     }
 });
 
 module.exports = router;
+
