@@ -8,6 +8,7 @@ import { Router } from "express";
 import { HttpResponse, HttpStatus } from "../../utils/class.js";
 import Stripe from "stripe";
 import { addRole, findUser } from "../../data/users.js";
+import { generateToken } from "../../utils/auth.js";
 
 const router = Router();
 const stripe = new Stripe(process.env.STRIPE_KEY);
@@ -31,11 +32,18 @@ router.post("/create", auth, async (req, res, next) => {
       if (result.modifiedCount === 0) {
         throw new DataBaseException("Failed to add role");
       }
+      const token = generateToken(req.user);
+      res.cookie("token", token, {
+        maxAge: 24 * 60 * 60 * 1000, // 1 day
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax",
+      });
     }
     // change error handling since theres 2 different exception types?
 
     //res.status(201).send(new HttpResponse(listing, HttpStatus.SUCCESS));
-    res.redirect("/user/seller");
+    res.redirect("/seller");
   } catch (e) {
     next(e);
   }
