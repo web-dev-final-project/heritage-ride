@@ -16,51 +16,59 @@
     <div class="user-panel-tab"></div>
   </div>
   <div class="card shadow user-space">
-    <div class="d-flex justify-content-between">
-      <h2>Welcome back, {{ user.firstName }}</h2>
-      <div>
-        Edit
-        <i class="fa-solid fa-pen-to-square avatar-edit" id="edit-user"></i>
+    <div class="d-flex mb-4 align-items-center">
+      <h3 class="border-end border-start px-3 text-secondary" id="profile-tab">
+        Profile
+      </h3>
+      <h3 class="border-end px-3 text-secondary" id="purchase-tab">
+        Purchases
+      </h3>
+    </div>
+    <div id="profile-page">
+      <div class="d-flex justify-content-between">
+        <h2>Welcome back, {{ user.firstName }}</h2>
+        <div>
+          Edit
+          <i class="fa-solid fa-pen-to-square avatar-edit" id="edit-user"></i>
+        </div>
       </div>
-    </div>
 
-    <hr />
-    <div class="d-flex justify-content-between">
-      <p>User name:</p>
-      <p>{{ user.userName }}</p>
+      <hr />
+      <div class="d-flex justify-content-between">
+        <p>User name:</p>
+        <p>{{ user.userName }}</p>
+      </div>
+      <div class="d-flex justify-content-between">
+        <p>First name:</p>
+        <p>{{ user.firstName }}</p>
+      </div>
+      <div class="d-flex justify-content-between">
+        <p>Last name:</p>
+        <p>{{ user.lastName }}</p>
+      </div>
+      <div class="d-flex justify-content-between">
+        <p>Email:</p>
+        <p>{{ user.email }}</p>
+      </div>
+      <div class="d-flex justify-content-between">
+        <p>Role:</p>
+        <p>{{ user.role }}</p>
+      </div>
+      <hr />
     </div>
-    <div class="d-flex justify-content-between">
-      <p>First name:</p>
-      <p>{{ user.firstName }}</p>
-    </div>
-    <div class="d-flex justify-content-between">
-      <p>Last name:</p>
-      <p>{{ user.lastName }}</p>
-    </div>
-    <div class="d-flex justify-content-between">
-      <p>Email:</p>
-      <p>{{ user.email }}</p>
-    </div>
-    <div class="d-flex justify-content-between">
-      <p>Role:</p>
-      <p>{{ user.role }}</p>
+    <div id="purchase-page">
+      <h3>Ordered Items</h3>
+      <ul class="ordered-list"></ul>
+      <hr />
+      <h3>Purchase History</h3>
+      <ul class="history-list"></ul>
     </div>
   </div>
 </div>
 
-{{!-- should add this script to all pages except login and signup --}}
 <script>
-  if (window.location.pathname !== "/user/login") {
-    localStorage.setItem("lastVisitedUrl", window.location.href);
-  }
   const user = {{{json user}}};
-  const badgeIcon = document.querySelector(".badge-icon");
-  if (user && user.role && user.role.includes("expert")) {
-    badgeIcon.style.display = "block";
-  } else {
-    badgeIcon.style.display = "none";
-  }
-  document.getElementById("edit-user").addEventListener("click", () => {
-    window.location.href = "/user/edit"
-  })
+  const listings = {{{json listings}}}
+  console.log(listings)
 </script>
+<script src="/scripts/user.js"></script>

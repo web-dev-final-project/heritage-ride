@@ -27,10 +27,10 @@
   <!-- Mechanic Reviews -->
   {{#if listing.mechanicReviews.length}}
   <h2>Expert Reviews</h2>
-  <ul>
+  <ul class="gallery">
     {{#each listing.mechanicReviews}}
-    <li>
-      <div class="d-flex align-items-center">
+    <li class="card p-3">
+      <div class="d-flex align-items-center mb-4">
         <div class="nav-user-avatar-wrapper ratio ratio-1x1">
           <img
             class="nav-user-avatar w-100"
@@ -38,11 +38,22 @@
             alt="the expert's avatar"
           />
         </div>
-        <p class="my-0 mx-4">
-          Expert: {{ this.mechanic.user.firstName }}
+        <div class="user-badge ms-3">
+          <img
+            src="/images/expert_badge.png"
+            alt="expert badge"
+            class="badge-icon"
+          />
+        </div>
+        <p class="my-0 fs-4 mx-3 text-capitalize">
+          {{ this.mechanic.user.firstName }}
           {{ this.mechanic.user.lastName }}
         </p>
       </div>
+      <p>Date reviewed: {{ this.updateAt }}</p>
+      <p>Condition: {{ this.review.condition }}</p>
+      <p>Summary: {{ this.review.reviewMessage }}</p>
+      <p>Detail Review: {{ this.review.notes }}</p>
     </li>
     {{/each}}
   </ul>

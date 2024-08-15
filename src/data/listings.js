@@ -6,7 +6,7 @@ import {
   databaseExceptionHandler,
 } from "../utils/exceptions.js";
 import Validator from "../utils/validator.js";
-import { cars, listings } from "./init.js";
+import { cars, listings, transactions } from "./init.js";
 import { getCarById } from "./cars.js";
 import { handleUpdateError } from "../utils/databaseUtil.js";
 
@@ -22,6 +22,44 @@ const getListingByUser = async (userId) => {
     throw new DataBaseException("Error fetching listings");
   }
   return result;
+};
+
+const getListingByBuyer = async (userId) => {
+  const validId = Validator.validateId(userId);
+  try {
+    const transDb = await transactions();
+    const result = await transDb
+      .aggregate([
+        {
+          $match: { buyerId: new ObjectId(validId) },
+        },
+        {
+          $lookup: {
+            from: "listings",
+            localField: "listingId",
+            foreignField: "_id",
+            as: "listing",
+          },
+        },
+        {
+          $unwind: "$listing",
+        },
+        {
+          $addFields: {
+            "listing.transaction": "$$ROOT",
+          },
+        },
+        {
+          $replaceRoot: {
+            newRoot: "$listing",
+          },
+        },
+      ])
+      .toArray();
+    return result;
+  } catch (e) {
+    databaseExceptionHandler(e);
+  }
 };
 
 const createListing = async (sellerId, item) => {
@@ -131,4 +169,5 @@ export {
   getListingByUser,
   getListingById,
   updateListingById,
+  getListingByBuyer,
 };
