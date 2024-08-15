@@ -20,20 +20,45 @@ class Validator {
       if (isNaN(yearNum) || yearNum > new Date().getFullYear()) {
         errors.push("Year must be a valid number less than the current year");
       }
+      else {
+        query.year = yearNum
+      }
     }
-    return errors;
+    if (errors.length > 0) {
+      throw new InvalidInputException(errors);
+    }
+    else {
+      return query
+    }
   }
+
+  static validateImageURL(url) {
+    if (!url || typeof url !== "string") {
+      throw new InvalidInputException("Provided URL must be a string.");
+    }
+    const pattern = new RegExp('^https?:\\/\\/.+\\.(png|jpg|jpeg|bmp|gif|webp)(\\?.*)?$', 'i');
+    if (pattern.test(url)) {
+        return url
+    } else {
+        throw new InvalidInputException("Invalid image URL format.");
+    }
+  }
+
   static validateListing(obj) {
     if (!obj || typeof obj !== "object") {
       throw new InvalidInputException(
-        "Listing object must be provided and must be an object."
+        "Provided listing must be an object."
       );
+    }
+    let valImage = ""
+    if (obj.image) {
+      valImage = Validator.validateImageURL(obj.image)
     }
     let listingInfo = {
       ...obj,
-      // other fields were unecessary since user will only enter price and image url?
+      // other fields were unecessary since user will only enter price and image url
       price: this.nullcheck(obj.price).checkNumber(), 
-      // to Add: verify image url, 
+      image: valImage,
       // to Add?: verify car exists in db
       itemType: this.nullcheck(obj.itemType)
     };

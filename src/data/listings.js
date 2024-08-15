@@ -7,6 +7,7 @@ import {
 import Validator from "../utils/validator.js";
 import { cars, listings } from "./init.js";
 import { getCarById } from "./cars.js";
+import { addRole, findUser, updateUser } from "./users.js";
 
 const getListingByUser = async (userId) => {
   const validId = Validator.validateId(userId);
@@ -25,7 +26,6 @@ const getListingByUser = async (userId) => {
 const createListing = async (sellerId, item) => {
   const validSellerId = Validator.validateId(sellerId);
   const validItem = Validator.validateListing(item);
-  // to Add: change users status to 'seller'
   try {
     if (validItem.itemType === 'car') { // check if car or part
       const { carId, price, image } = validItem;
@@ -49,6 +49,16 @@ const createListing = async (sellerId, item) => {
       if (!res || !res.acknowledged || !res.insertedId) {
         throw new DataBaseException("Insert listing failed");
       }
+      // Update role to seller
+      // const user = await findUser(validSellerId);
+      // if (!user) {
+      //   throw new DataBaseException("User not found");
+      // }
+      // if (!user.role.includes("seller")) {
+      //   user.role.push("seller");
+      // }
+      // await updateUser(user);
+
       return {
         ...item,
         _id: res.insertedId,
@@ -62,22 +72,22 @@ const createListing = async (sellerId, item) => {
   }
 };
 
-const getAll = async (query) => {
+const getAll = async (query) => { // for cars
   // this will fire after a user enters search terms and clicks search
-  // Add: validate each query field
   try {
+    const valQuery = Validator.validateQuery(query)
     const listingCollection = await listings();
     // Build the query object
     const matchConditions = {};
 
-    if (query.make)
-      matchConditions["car.make"] = { $regex: new RegExp(query.make, "i") };
-    if (query.model)
-      matchConditions["car.model"] = { $regex: new RegExp(query.model, "i") };
-    if (query.year) matchConditions["car.year"] = query.year;
-    if (query.category)
+    if (valQuery.make)
+      matchConditions["car.make"] = { $regex: new RegExp(valQuery.make, "i") };
+    if (valQuery.model)
+      matchConditions["car.model"] = { $regex: new RegExp(valQuery.model, "i") };
+    if (valQuery.year) matchConditions["car.year"] = valQuery.year;
+    if (valQuery.category)
       matchConditions["car.category"] = {
-        $regex: new RegExp(query.category, "i"),
+        $regex: new RegExp(valQuery.category, "i"),
       };
 
     const aggregation = [
