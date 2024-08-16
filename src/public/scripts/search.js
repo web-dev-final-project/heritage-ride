@@ -1,7 +1,11 @@
 const searchGrid = document.getElementById("search-grid");
 
 const filteredListings = listings.filter((li) => li.status === "open");
-
+if (filteredListings.length === 0) {
+  const searchNotFound = document.getElementById("search-not-found");
+  searchNotFound.style.display = "block";
+  searchGrid.style.display = "none";
+}
 for (let item of filteredListings) {
   const list = document.createElement("div");
   list.innerHTML = `
