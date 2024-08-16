@@ -1,36 +1,28 @@
 <div class="expert-box">
-  <h1>Experts</h1>
-
-  <div class="display-flex-2">
-    <button id="show-all-experts" class="btn btn-primary">
-      Show All Experts
-    </button>
-  </div>
+  <h1 hidden>Experts</h1>
 
   <div class="search-expert">
-    <label for="expert-name">Search Expert by Name</label>
-    <div class="input-group mb-3">
-      <span class="input-group-text" id="basic-addon1">@</span>
-      <input
-        class="search-input"
-        type="text"
-        id="expert-name"
-        placeholder="Enter name"
-        aria-label="ExpertName"
-        aria-describedby="basic-addon1"
-      />
-    </div>
-    <div class="display-flex-2">
-      <button id="search-expert" class="btn btn-secondary">Search</button>
+    <div class="d-flex align-items-center gap-3">
+      <label for="expert-name" class="text-nowrap fs-3">Search Expert</label>
+      <div class="input-group">
+        <input
+          class="search-input p-1 w-100"
+          type="text"
+          id="expert-name"
+          placeholder="Search"
+          aria-label="ExpertName"
+          aria-describedby="basic-addon1"
+        />
+      </div>
+      <div class="display-flex-2">
+        <button id="search-expert" class="btn btn-secondary">Search</button>
+      </div>
     </div>
   </div>
-
-  {{#if error}}
-  <p class="error-message">{{ error }}</p>
-  {{else}}
+  <p class="error-message" id="error">{{ error }}</p>
+  {{#if experts}}
+  {{#each experts}}
   <ul id="experts-list" class="p-0 d-flex gap-3">
-    {{#if experts}}
-    {{#each experts}}
     <li class="expert card shadow p-4" id="{{ this._id }}">
       <p>
         <strong>Name:</strong> {{ this.user.firstName }}
@@ -38,18 +30,22 @@
       </p>
       <p><strong>Username:</strong> {{ this.user.userName }}</p>
       <p><strong>Email:</strong> {{ this.user.email }}</p>
-      <p><strong>Address:</strong> {{ this.user.address }}</p>
+      <p>
+        <strong>Address:</strong> {{#if this.user.address }}
+        {{ this.user.address }} {{else}} No record {{/if}}
+      </p>
       <img src="{{ this.user.avatar }}" alt="{{ this.user.userName }}" />
     </li>
-    {{/each}}
-    {{else}}
-    <p>No experts found.</p>
-    {{/if}}
   </ul>
+  {{/each}}
+  {{else}}
+  <p class="text-center fs-3">No experts found.</p>
   {{/if}}
 
   <script>
     const experts = {{{json experts}}}
+    console.log(experts)
+    const error = "{{{json error}}}"
   </script>
   <script src="/scripts/expertSearch.js"></script>
 </div>

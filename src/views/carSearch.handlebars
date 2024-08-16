@@ -8,7 +8,8 @@
   <p style="color: red">{{ error }}</p>
   {{/if}}
 
-  {{#if results.length}}
+  <ul class="list-group container card p-3 search-grid" id="search-grid"></ul>
+  {{!-- {{#if results.length}}
   <ul class="list-group container card p-3 search-grid">
     {{#each results}}
     <a href="/listings/{{ _id }}" class="text-decoration-none text-dark">
@@ -28,7 +29,12 @@
   </ul>
   {{else}}
   <p>No cars found matching your criteria.</p>
-  {{/if}}
+  {{/if}} --}}
 </div>
 
 <a href="/">Return to Homepage</a>
+
+<script>
+  const listings = {{{json results}}}
+</script>
+<script src="/scripts/search.js"></script>

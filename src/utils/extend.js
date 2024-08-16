@@ -105,14 +105,16 @@ Array.prototype.checkIsEmpty = function () {
     throw new InvalidValueException("Array can not be empty.");
   return this;
 };
-Array.prototype.checkNumberArray = function () {
+Array.prototype.checkNumberArray = function (name = "array") {
   if (this.some((item) => typeof item !== "number"))
-    throw new InvalidValueException("Array should only contains numbers");
+    throw new InvalidValueException(`${name} should only contains numbers`);
   return this;
 };
-Array.prototype.checkStringArray = function () {
+Array.prototype.checkStringArray = function (name = "array") {
   if (this.some((item) => typeof item !== "string" || item.length === 0))
-    throw new InvalidValueException("Array should only contains valid strings");
+    throw new InvalidValueException(
+      `${name} should only contains valid strings`
+    );
   return this;
 };
 Object.prototype.containsValue = function (val) {
@@ -120,9 +122,18 @@ Object.prototype.containsValue = function (val) {
   return true;
 };
 
-Object.prototype.checkNumber = function () {
+Object.prototype.checkNumber = function (
+  min = -Number.MAX_VALUE * 2,
+  max = Number.MAX_VALUE * 2,
+  name = "input"
+) {
   if (typeof this !== "number") {
-    throw new TypeException("Input type must be number.");
+    throw new TypeException(`${name} must be number.`);
+  }
+  if (this.valueOf() < min || this.valueOf() > max) {
+    throw new InvalidValueException(
+      `${name} must be larger than ${min} and less than ${max}`
+    );
   }
   return this;
 };

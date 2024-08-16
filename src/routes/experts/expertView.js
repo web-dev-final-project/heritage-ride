@@ -4,7 +4,10 @@ import * as expert from "../../data/experts.js";
 import logger from "../../utils/logger.js";
 import auth, { authSafe } from "../../middleware/auth.js";
 import { cloudinary } from "../../utils/class.js";
-import { AccessException } from "../../utils/exceptions.js";
+import {
+  AccessException,
+  ValidationException,
+} from "../../utils/exceptions.js";
 import { getListingByUser } from "../../data/listings.js";
 
 const router = Router();
@@ -71,6 +74,11 @@ router.get("/create", auth, async (req, res, next) => {
 router.get("/hire", auth, async (req, res, next) => {
   try {
     const validId = Validator.validateId(req.query.id);
+    if (validId === req.user._id) {
+      throw new ValidationException(
+        "user can't hire themselve for inspection."
+      );
+    }
     const listings = await getListingByUser(req.user._id);
     res.render("hireExpert", {
       expertId: validId,
@@ -101,7 +109,9 @@ router.get("/:id", auth, async (req, res, next) => {
   try {
     const validId = Validator.validateId(req.params.id);
     const exp = await expert.getExpertById(validId);
-    res.render("expert", { expert: exp, user: req.user });
+    if (exp.userId.toString() === req.user._id) {
+      res.redirect("/expert");
+    } else res.render("expert", { expert: exp, user: req.user });
   } catch (e) {
     next(e);
   }
