@@ -56,41 +56,55 @@ const getPartById = async (partId) => {
 };
 
 const searchPartsByName = async (searchQuery) => {
-  searchQuery = searchQuery.checkString();
-  try {
-    const partsCollection = await parts();
-    const results = await partsCollection
-      .aggregate([
-        {
-          $lookup: {
-            from: "cars",
-            localField: "manufacturer",
-            foreignField: "make",
-            as: "carDetails",
-          },
-        },
-        {
-          $unwind: {
-            path: "$carDetails",
-            preserveNullAndEmptyArrays: true,
-          },
-        },
-        {
-          $match: {
-            $or: [
-              { name: { $regex: searchQuery, $options: "i" } },
-              { manufacturer: { $regex: searchQuery, $options: "i" } },
-              { "carDetails.make": { $regex: searchQuery, $options: "i" } },
-              { "carDetails.model": { $regex: searchQuery, $options: "i" } },
-            ],
-          },
-        },
-      ])
-      .toArray();
-    return results;
-  } catch (e) {
-    throw new DataBaseException(e);
-  }
+    searchQuery = Validator.validateString(searchQuery, 'Search Query');
+    try {
+        const partsCollection = await parts();
+        const results = await partsCollection.aggregate([
+            {
+                $match: {
+                    name: { $regex: searchQuery, $options: 'i' }
+                }
+            },
+            {
+                $lookup: {
+                    from: "listings", 
+                    localField: "_id", 
+                    foreignField: "itemId", 
+                    as: "listings" 
+                }
+            },
+            {
+                $unwind: {
+                    path: "$listings",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $lookup: {
+                    from: "cars", 
+                    localField: "listings.itemId", 
+                    foreignField: "_id", 
+                    as: "carDetails" 
+                }
+            },
+            {
+                $group: {
+                    _id: "$_id",
+                    name: { $first: "$name" },
+                    price: { $first: "$price" },
+                    manufacturer: { $first: "$manufacturer" },
+                    listings: { $push: "$listings" },
+                    carDetails: { $push: "$carDetails" }
+                }
+            }
+        ]).toArray();
+        return results.map(part => ({
+            ...part,
+            cars: part.carDetails.flat()
+        }));
+    } catch (e) {
+        throw new DataBaseException(e);
+    }
 };
 
 const getPartByCarId = async (carId) => {
