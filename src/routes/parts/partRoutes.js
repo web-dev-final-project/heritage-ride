@@ -3,39 +3,23 @@ import {
   createPart,
   getPartById,
   searchPartsByName,
-  getPartByCarId,
+  getPartByCarId
 } from "../../data/parts.js";
-import { getAllExperts } from "../../data/experts.js";
-import auth, { authSafe } from "../../middleware/auth.js";
 import { InvalidInputException } from "../../utils/exceptions.js";
 import Validator from "../../utils/validator.js";
+import auth, { authSafe } from "../../middleware/auth.js";
 
 const router = Router();
 
-router
-  .get("/", async (req, res, next) => {
-    try {
-      const experts = await getAllExperts();
-      res.status(200).send(experts);
-    } catch (e) {
-      next(e);
-    }
-  })
-  .post("/", auth, async (req, res, next) => {
-    try {
-      const { name, price, manufacturer, sellerId, carIds } = req.body;
-      const newPart = await createPart(
-        name,
-        price,
-        manufacturer,
-        sellerId,
-        carIds
-      );
-      res.status(201).json(newPart);
-    } catch (e) {
-      next(e);
-    }
-  });
+router.post("/", auth, async (req, res, next) => {
+  try {
+    const { name, price, manufacturer, sellerId, carIds } = req.body;
+    const newPart = await createPart(name, price, manufacturer, sellerId, carIds);
+    res.status(201).json(newPart);
+  } catch (e) {
+    next(e);
+  }
+});
 
 router.get("/:partId", authSafe, async (req, res, next) => {
   try {
@@ -52,8 +36,11 @@ router.get("/:partId", authSafe, async (req, res, next) => {
 router.get("/search", auth, async (req, res, next) => {
   try {
     const { query } = req.query;
+    if (!query || typeof query !== 'string') {
+      throw new InvalidInputException("Search query must be a non-empty string.");
+    }
     const parts = await searchPartsByName(query);
-    res.render("partSearch", { results: parts, user: req.user });
+    res.status(200).json(parts);
   } catch (e) {
     next(e);
   }
@@ -61,7 +48,9 @@ router.get("/search", auth, async (req, res, next) => {
 
 router.get("/:partId/cars", auth, async (req, res, next) => {
   try {
-    const carsList = await getPartByCarId(req.params.partId);
+    const partId = req.params.partId;
+    if (!partId) throw new InvalidInputException("Part ID can't be null.");
+    const carsList = await getPartByCarId(partId);
     res.status(200).json(carsList);
   } catch (e) {
     next(e);
