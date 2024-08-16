@@ -72,12 +72,30 @@
 </div>
 <script>
   const listing = {{{json listing}}}
+  const orderButton = document.getElementById("order-button")
+  const orderLink = document.getElementById("order-button-link")
+  const user = {{{json user}}}
   if (listing.status === "reserved") {
-    document.getElementById("order-button").disabled = true
-    document.getElementById("order-button").classList.add("disabled")
-    document.getElementById("order-button-link").addEventListener("click", (e) =>{
+    orderButton.disabled = true
+    orderButton.classList.add("disabled")
+    orderLink.addEventListener("click", (e) =>{
       e.preventDefault()
     })
-    document.getElementById("order-button-link").insertAdjacentHTML('afterend', "<p class='pt-3 fs-5'> Current listing has been reserved, please contact seller for more information. </p>")
+    orderLink.insertAdjacentHTML('afterend', "<p class='pt-3 fs-5'> Current listing has been reserved, please contact seller for more information. </p>")
+  }
+  else if (listing.status !== "open") {
+    orderButton.disabled = true
+    orderButton.innerHTML = 'Item Sold'
+    orderButton.classList.add("disabled")
+    orderLink.addEventListener("click", (e) =>{
+      e.preventDefault()
+    })
+  }
+  else if (listing.status === 'open' && listing.sellerId === user._id) {
+    orderButton.innerHTML = 'Edit'
+    orderButton.classList.remove("btn-primary")
+    orderButton.classList.add("btn-warning")
+    orderLink.href = '/listings/edit/66b79b319d873645ee2076e4'
+    orderLink.insertAdjacentHTML('afterend', "<p class='pt-3 fs-5'> You are the owner of this listing. </p>")
   }
 </script>

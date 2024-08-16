@@ -86,15 +86,44 @@ const getExpertByUserId = async (userId) => {
 const searchExpertsByName = async (name) => {
   try {
     const db = await users();
-    const experts = await db
-      .find({
-        $or: [
-          { firstName: { $regex: name, $options: "i" } },
-          { lastName: { $regex: name, $options: "i" } },
-        ],
-        role: { $in: ["expert"] },
-      })
+    const res = await db
+      .aggregate([
+        {
+          $lookup: {
+            from: "experts",
+            localField: "_id",
+            foreignField: "userId",
+            as: "expert",
+          },
+        },
+        {
+          $unwind: {
+            path: "$expert",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $match: {
+            $or: [
+              { firstName: { $regex: name, $options: "i" } },
+              { lastName: { $regex: name, $options: "i" } },
+              { userName: { $regex: name, $options: "i" } },
+              { "expert.skills": { $regex: name, $options: "i" } },
+              { "expert.location": { $regex: name, $options: "i" } },
+            ],
+          },
+        },
+      ])
       .toArray();
+    const experts = [];
+    for (let item of res) {
+      const expert = { ...item.expert };
+      delete item.expert;
+      delete item.password;
+      expert.user = item;
+      experts.push(expert);
+    }
+
     return experts;
   } catch (e) {
     throw new DataBaseException(e);
