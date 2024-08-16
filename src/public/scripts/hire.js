@@ -27,9 +27,8 @@ if (!user.role.includes("seller")) {
     element.classList.add("p-2");
     element.innerHTML = `
     <div class="d-flex justify-content-between">
-    <div>
-    <p class="fs-5 my-0">${item.title}</p>
-    <p>current status: ${item.status}</p>
+        <p class="fs-5 my-0">${item.title}</p>
+        <p>current status: ${item.status}</p>
     </div>
     <img src=${
       item.image ||
