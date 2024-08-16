@@ -1,17 +1,15 @@
 {{#extend "main"}}
 {{#content "body"}}
     <h1>Edit Blog Post</h1>
-    <form action="/blogs/{{blog.id}}?_method=PUT" method="POST">
+    <form action="/blogs/{{blog._id}}?_method=PUT" method="POST">
         <label for="title">Title:</label>
-        <input type="text" id="title" name="title" value="{{blog.title}}" required readonly>
+        <input type="text" id="title" name="title" value="{{blog.title}}" readonly>
         
         <label for="content">Content:</label>
         <textarea id="content" name="content" required>{{blog.content}}</textarea>
         
-        <input type="hidden" name="userId" value="{{userId}}">
-        
         <button type="submit">Update Post</button>
     </form>
-    <a href="/blogs/{{blog.id}}">Cancel</a>
+    <a href="/blogs/{{blog._id}}">Cancel</a>
 {{/content}}
 {{/extend}}
