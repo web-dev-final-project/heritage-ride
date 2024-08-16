@@ -36,17 +36,25 @@ class Validator {
     }
   }
 
-  static validateImageURL(url) {
-    if (!url || typeof url !== "string") {
-      throw new InvalidInputException("Provided URL must be a string.");
+  static validateImageURL(image) {
+    if (typeof image !== 'string' || image.trim() === '' || !/^https?:\/\/.+/.test(image)) {
+      throw new InvalidInputException('Image URL must be a valid URL.');
     }
-    const pattern = new RegExp('^https?:\\/\\/.+\\.(png|jpg|jpeg|bmp|gif|webp)(\\?.*)?$', 'i');
-    if (pattern.test(url)) {
-        return url
-    } else {
-        throw new InvalidInputException("Invalid image URL format.");
-    }
+    return image;
   }
+
+  //delete:
+  // static validateImageURL(url) {
+  //   if (!url || typeof url !== "string") {
+  //     throw new InvalidInputException("Provided URL must be a string.");
+  //   }
+  //   const pattern = new RegExp('^https?:\\/\\/.+\\.(png|jpg|jpeg|bmp|gif|webp)(\\?.*)?$', 'i');
+  //   if (pattern.test(url)) {
+  //       return url
+  //   } else {
+  //       throw new InvalidInputException("Invalid image URL format.");
+  //   }
+  // }
 
   static validateCreateListing(obj) {
     if (!obj || typeof obj !== "object") {

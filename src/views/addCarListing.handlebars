@@ -1,23 +1,29 @@
-<div class="container">
-    <h1>Add a New Car Listing</h1>
-    <form action="/api/listings/create" method="POST">
-        <div class="form-group">
-            <label for="car">Select Car:</label>
-            <select id="car" name="carId" required>
-                {{#each cars}}
-                    <option value="{{this._id}}">{{this.make}} {{this.model}} ({{this.year}})</option>
-                {{/each}}
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="price">Price:</label>
-            <input type="number" id="price" name="price" required>
-        </div>
-        <div class="form-group">
-            <label for="image">Image URL:</label>
-            <input type="text" id="image" name="image">
-        </div>
-        <input type="hidden" name="itemType" value="{{itemType}}">
-        <button type="submit" class="btn btn-primary">Submit Listing</button>
-    </form>
+<h1>Add a New Car Listing</h1>
+<form action="/api/listings/create" method="POST">
+    <div class="form-group">
+        <label for="car">Select Car:</label>
+        <select id="car" name="carId" required>
+            {{#each cars}}
+                <option value="{{this._id}}">{{this.make}} {{this.model}} ({{this.year}})</option>
+            {{/each}}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="price">Price:</label>
+        <input type="number" id="price" name="price" required>
+    </div>
+    <div class="form-group">
+        <label for="image">Image URL:</label>
+        <input type="text" id="image" name="image">
+    </div>
+    <input type="hidden" name="itemType" value="{{itemType}}">
+    <button type="submit" class="btn btn-primary">Submit Listing</button>
+</form>
+
+<div id="errorContainer" style="color: red;">
+    {{#if errorMessage}}
+        <p>{{errorMessage}}</p>
+    {{/if}}
 </div>
+
+<script src="/scripts/createListing.js"></script>
