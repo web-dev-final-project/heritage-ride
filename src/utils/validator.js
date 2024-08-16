@@ -44,22 +44,20 @@ class Validator {
     }
   }
 
-  static validateListing(obj) {
+  static validateCreateListing(obj) {
     if (!obj || typeof obj !== "object") {
       throw new InvalidInputException(
         "Provided listing must be an object."
       );
     }
     let valImage = ""
-    if (obj.image) {
+    if (obj.image) { // image is optional
       valImage = Validator.validateImageURL(obj.image)
     }
     let listingInfo = {
       ...obj,
-      // other fields were unecessary since user will only enter price and image url
       price: this.nullcheck(obj.price).checkNumber(), 
       image: valImage,
-      // to Add?: verify car exists in db
       itemType: this.nullcheck(obj.itemType)
     };
     return listingInfo;

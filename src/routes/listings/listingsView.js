@@ -88,7 +88,7 @@ router.get("/order/:id", auth, async (req, res, next) => {
   }
 });
 
-// create listing
+// create listing page
 router.get('/create', auth, async (req, res, next) => {
   // check item type (car or part)
   const itemType = req.query.itemtype; // from the query parameters in addListing.handlebars
