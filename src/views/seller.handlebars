@@ -7,8 +7,19 @@
   </p>
   <ul class="search-grid container w-100" id="attention-list"></ul>
 
-  <h3 class="m-2">Active Listings</h3>
-  <hr />
+  <div class="d-flex">
+    <h3 class="py-2 px-4 fs-4 mb-0" role="button" id="active-page">
+      Active Listings
+    </h3>
+    <h3 class="py-2 px-4 fs-4 mb-0" role="button" id="review-page">
+      Under Review
+    </h3>
+    <h3 class="py-2 px-4 fs-4 mb-0" role="button" id="sold-page">
+      Sold Listings
+    </h3>
+  </div>
+
+  <hr class="mt-0" />
   <div class="d-flex justify-content-between m-3">
     <div class="input-group w-auto">
       <div class="input-group-prepend">
@@ -44,5 +55,6 @@
 <script>
   const isSeller = {{{json isSeller}}}
   const listings = {{{json listings}}}
+  const user = {{{json user}}}
 </script>
 <script src="/scripts/seller.js"></script>

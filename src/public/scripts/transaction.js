@@ -16,7 +16,6 @@ document.getElementById("approve-transaction").addEventListener("click", () => {
       Swal.showLoading();
       fetch("/api/seller/complete/" + transaction._id)
         .then((res) => {
-          console.log(res);
           if (res.ok && res.status === 200) {
             Swal.fire({
               title: "Sucess!",

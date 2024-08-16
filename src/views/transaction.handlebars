@@ -14,7 +14,11 @@
     <p class="fs-5">Username: {{ transaction.buyer.userName }}</p>
     <p class="fs-5">
       Email:
-      <span class="text-primary">{{ transaction.buyer.email }}</span>
+      <span class="text-primary">
+        {{#if transaction.buyer.email}}
+        {{ transaction.buyer.email }}
+        {{else}} no address on record {{/if}}
+      </span>
     </p>
     <p>
       Customer Address: {{#if transaction.buyer.address}}
@@ -45,8 +49,15 @@
       <p class="fs-5">Payment information:</p>
       <ul class="border">
         <li>Name on payment: {{ transaction.payment.custom_name }}</li>
-        <li>Phone on payment: {{ transaction.payment.phone }}</li>
-        <li>Email on payment: {{ transaction.payment.email }}</li>
+        <li>
+          Phone on payment: {{#if transaction.payment.phone }}
+          {{ transaction.payment.phone }} {{else}} user left blank {{/if}}
+        </li>
+        <li>
+          Email on payment:
+          {{#if transaction.payment.email}}{{ transaction.payment.email }}
+          {{else}} user left blank {{/if}}
+        </li>
         <li>Zipcode: {{ transaction.payment.custom_address.postal_code }}</li>
         <li>Country: {{ transaction.payment.custom_address.country }}</li>
       </ul>

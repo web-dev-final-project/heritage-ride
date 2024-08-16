@@ -1,5 +1,7 @@
 .expert-box {
   padding: 20px;
+  width: 100%;
+  max-width: 920px;
 }
 
 .search-expert {

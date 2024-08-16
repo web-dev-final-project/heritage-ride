@@ -1,0 +1,27 @@
+<div>
+  <div></div>
+  <div></div>
+</div>
+<script>
+    const listing = {{{json listing}}}
+    const expert = {{{json expert}}}
+
+  document.getElementById("check-out").addEventListener("click", () => {
+      fetch("/api/listings/checkout/expert", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          expertId: expert._id
+        }),
+      }).then((res) => {
+        if (res.ok) {
+          res.json().then((resp) => {
+            window.location.href = resp.content;
+          });
+        }
+      });
+    });
+</script>

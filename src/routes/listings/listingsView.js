@@ -4,7 +4,10 @@ import {
   getListingById,
   updateListingById,
 } from "../../data/listings.js";
-import { InvalidInputException, NotFoundException, ValidationException } from "../../utils/exceptions.js";
+import {
+  NotFoundException,
+  ValidationException,
+} from "../../utils/exceptions.js";
 import auth, { authSafe } from "../../middleware/auth.js";
 import Validator from "../../utils/validator.js";
 import { getCarById, getCars } from "../../data/cars.js";
@@ -23,7 +26,7 @@ router.get("/search", authSafe, async (req, res, next) => { // car listings sear
     const result = await getAll(valQuery);
     if (!result) throw new NotFoundException(`listing not found`);
     res.render("carSearch", {
-      results: result.filter((s) => s.sellerId.toString() !== req.user._id),
+      results: result,
       user: req.user,
     });
   } catch (e) {
@@ -39,6 +42,10 @@ router.get("/order/success", auth, async (req, res, next) => {
     );
     if (session.payment_status === "paid") {
       const listingId = session.metadata.listingId;
+      const list = await getListingById(listingId);
+      if (list.status !== "open") {
+        throw new ValidationException("Listing is not on sale");
+      }
       await updateListingById(listingId, {
         status: "reserved",
       });
