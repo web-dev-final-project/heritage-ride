@@ -3,10 +3,12 @@ import {
   DataBaseException,
   NotFoundException,
   InvalidInputException,
+  databaseExceptionHandler,
 } from "../utils/exceptions.js";
 import Validator from "../utils/validator.js";
-import { cars, listings } from "./init.js";
+import { cars, listings, transactions } from "./init.js";
 import { getCarById } from "./cars.js";
+import { handleUpdateError } from "../utils/databaseUtil.js";
 
 const getListingByUser = async (userId) => {
   const validId = Validator.validateId(userId);
@@ -20,6 +22,44 @@ const getListingByUser = async (userId) => {
     throw new DataBaseException("Error fetching listings");
   }
   return result;
+};
+
+const getListingByBuyer = async (userId) => {
+  const validId = Validator.validateId(userId);
+  try {
+    const transDb = await transactions();
+    const result = await transDb
+      .aggregate([
+        {
+          $match: { buyerId: new ObjectId(validId) },
+        },
+        {
+          $lookup: {
+            from: "listings",
+            localField: "listingId",
+            foreignField: "_id",
+            as: "listing",
+          },
+        },
+        {
+          $unwind: "$listing",
+        },
+        {
+          $addFields: {
+            "listing.transaction": "$$ROOT",
+          },
+        },
+        {
+          $replaceRoot: {
+            newRoot: "$listing",
+          },
+        },
+      ])
+      .toArray();
+    return result;
+  } catch (e) {
+    databaseExceptionHandler(e);
+  }
 };
 
 const createListing = async (sellerId, item) => {
@@ -95,17 +135,39 @@ const getAll = async (query) => {
 };
 
 const getListingById = async (listingId) => {
-    const valListingId = Validator.validateId(listingId);
-    try {
-      const listingsCollection = await listings();
-      const listing = await listingsCollection.findOne({ _id: new ObjectId(valListingId) });
-   
-      return listing;
-    }
-    catch (e) {
-      throw new DataBaseException(e);
-    }
-  };
- 
+  const valListingId = Validator.validateId(listingId);
+  try {
+    const listingsCollection = await listings();
+    const listing = await listingsCollection.findOne({
+      _id: new ObjectId(valListingId),
+    });
+    if (!listing) throw new NotFoundException("No listing with this id found.");
+    return listing;
+  } catch (e) {
+    databaseExceptionHandler(e);
+  }
+};
 
-export { createListing, getAll, getListingByUser, getListingById };
+const updateListingById = async (id, updates) => {
+  try {
+    const listingsCollection = await listings();
+    const valListingId = Validator.validateId(id);
+    const validUpdate = Validator.validatePartialListing(updates);
+    const res = await listingsCollection.updateOne(
+      { _id: new ObjectId(valListingId) },
+      { $set: { ...validUpdate } }
+    );
+    handleUpdateError(res);
+  } catch (e) {
+    databaseExceptionHandler(e);
+  }
+};
+
+export {
+  createListing,
+  getAll,
+  getListingByUser,
+  getListingById,
+  updateListingById,
+  getListingByBuyer,
+};

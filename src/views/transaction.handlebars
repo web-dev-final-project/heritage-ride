@@ -1,0 +1,77 @@
+<section class="container m-auto d-flex gap-4">
+  <div class="card p-3">
+    <h2 class="fs-3">Buyer</h2>
+    <div class="user-image-wrapper">
+      <img
+        class="user-image"
+        src="{{ transaction.buyer.avatar }}"
+        alt="buyer's avatar"
+      />
+    </div>
+    <p class="fs-4">
+      Name: {{ transaction.buyer.firstName }} {{ transaction.buyer.lastName }}
+    </p>
+    <p class="fs-5">Username: {{ transaction.buyer.userName }}</p>
+    <p class="fs-5">
+      Email:
+      <span class="text-primary">
+        {{#if transaction.buyer.email}}
+        {{ transaction.buyer.email }}
+        {{else}} no address on record {{/if}}
+      </span>
+    </p>
+    <p>
+      Customer Address: {{#if transaction.buyer.address}}
+      {{ transaction.buyer.address }} {{else}} no address on record {{/if}}
+    </p>
+  </div>
+
+  <div class="border d-flex p-4 gap-3">
+    <div class="snapshot">
+      <img
+        src="{{ transaction.listing.image }}"
+        alt="item image"
+        class="w-100"
+      />
+    </div>
+    <div>
+      <h3>{{ transaction.listing.title }}</h3>
+
+      <p class="fs-2 text-info">
+        Price: {{currency transaction.listing.price }}
+      </p>
+
+      <p class="fs-3">
+        Payment Status:
+        <span class="text-success">{{ transaction.paymentStatus }}</span>
+      </p>
+      <p>Date of payment: {{ transaction.createdAt }}</p>
+      <p class="fs-5">Payment information:</p>
+      <ul class="border">
+        <li>Name on payment: {{ transaction.payment.custom_name }}</li>
+        <li>
+          Phone on payment: {{#if transaction.payment.phone }}
+          {{ transaction.payment.phone }} {{else}} user left blank {{/if}}
+        </li>
+        <li>
+          Email on payment:
+          {{#if transaction.payment.email}}{{ transaction.payment.email }}
+          {{else}} user left blank {{/if}}
+        </li>
+        <li>Zipcode: {{ transaction.payment.custom_address.postal_code }}</li>
+        <li>Country: {{ transaction.payment.custom_address.country }}</li>
+      </ul>
+      <button
+        class="btn btn-success btn-lg w-100 mt-3"
+        id="approve-transaction"
+      >
+        Approve
+      </button>
+    </div>
+  </div>
+</section>
+<script>
+  const transaction = {{{json transaction}}}
+  const price = "{{currency transaction.amount}}"
+</script>
+<script src="/scripts/transaction.js"></script>

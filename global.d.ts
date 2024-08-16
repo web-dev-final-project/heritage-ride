@@ -14,6 +14,7 @@ interface String {
   checkEmpty(): String;
   checkPassword(): String;
   checkObjectId(): String;
+  checkStringLength(min: string, max: string): String;
 }
 
 interface Array {

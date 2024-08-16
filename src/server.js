@@ -8,10 +8,13 @@ import router, { apiRouter, uiRouter } from "./routes/index.js";
 import path from "path";
 import { handlebarsInstance } from "./settings.js";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 
 const app = express();
 const port = process.env.PORT || 4000;
 
+app.use(cors());
+app.options("*", cors());
 app.use(express.static(path.join(path.resolve(), "src/public")));
 app.engine("handlebars", handlebarsInstance.engine);
 app.set("view engine", "handlebars");
@@ -31,3 +34,5 @@ apiRouter(app);
 app.use(router);
 
 app.use(error);
+
+// Todo: xss implementation

@@ -7,25 +7,28 @@ import {
   NotFoundException,
   ValidationException,
 } from "../utils/exceptions.js";
+import { handleUpdateError } from "../utils/databaseUtil.js";
 
-const addRequest = async (expertId, listingId) => {
-  const expert = Validator.validateId(expertId);
+const addRequest = async (expert, listingId) => {
   const validId = Validator.validateId(listingId);
   try {
     const listing = await listings();
-    const liRes = listing.findOne({ _id: listingId });
+    const liRes = await listing.findOne({ _id: new ObjectId(listingId) });
     if (!liRes) throw new NotFoundException("Invalid listing");
-    if (liRes.mechanicReviews.find((r) => r.mechanicId === expertId))
+    if (liRes.mechanicReviews.find((r) => r.mechanicId === expert._id))
       throw new ValidationException(
         "You already have this review from this expert."
       );
     const db = await experts();
-    const res = db.updateOne(
+    if (expert.requests.some((requestId) => requestId.equals(validId))) {
+      throw new ValidationException("request already existed.");
+    }
+    const res = await db.updateOne(
       {
-        _Id: new ObjectId(expert),
+        _id: new ObjectId(expert._id),
       },
       {
-        $push: { requests: validId },
+        $push: { requests: new ObjectId(validId) },
         $set: { updateAt: new Date().toUTCString() },
       },
       { returnDocument: "after" }
@@ -35,13 +38,14 @@ const addRequest = async (expertId, listingId) => {
     }
     const emptyReview = {
       _id: new ObjectId(),
-      mechanicId: expert,
+      mechanic: expert,
       status: "pending",
       review: null,
+      createdAt: new Date().toUTCString(),
     };
-    const listingRes = liRes.updateOne(
+    const listingRes = await listing.updateOne(
       {
-        _Id: new ObjectId(validId),
+        _id: new ObjectId(validId),
       },
       {
         $push: { mechanicReviews: emptyReview },
@@ -52,7 +56,6 @@ const addRequest = async (expertId, listingId) => {
     if (listingRes.matchedCount === 0) {
       throw new NotFoundException("No listing found");
     }
-    return res;
   } catch (e) {
     databaseExceptionHandler(e);
   }
@@ -65,32 +68,29 @@ const addReview = async (expertId, review, listingId) => {
   try {
     const expertDb = await experts();
     const listingDb = await listings();
-    const expertRes = expertDb.updateOne(
-      { _Id: new ObjectId(validExpertId) },
+    const expertRes = await expertDb.updateOne(
+      { _id: new ObjectId(validExpertId) },
       {
-        $pull: { requests: validIListingId },
+        $pull: { requests: new ObjectId(validIListingId) },
         $set: { updateAt: new Date().toUTCString() },
-        $inc: { carReviewed: 1 },
+        $push: { carReviewed: new ObjectId(validIListingId) },
       }
     );
-    if (expertRes.matchedCount === 0) {
-      throw new NotFoundException("No expert found");
-    }
-    const listingRes = listingDb.updateOne(
+    handleUpdateError(expertRes);
+    const listingRes = await listingDb.updateOne(
       {
-        _Id: new ObjectId(validIListingId),
+        _id: new ObjectId(validIListingId),
       },
       {
         $set: {
           updateAt: new Date().toUTCString(),
-          "mechanicReviews.$.review": validReview,
+          "mechanicReviews.0.review": validReview,
+          "mechanicReviews.0.updateAt": new Date().toUTCString(),
         },
       },
       { returnDocument: "after" }
     );
-    if (listingRes.matchedCount === 0) {
-      throw new NotFoundException("No listing found");
-    }
+    handleUpdateError(listingRes);
     return listingRes;
   } catch (e) {
     databaseExceptionHandler(e);
@@ -101,7 +101,7 @@ const getRequestListings = async (expertId) => {
   const validExpertId = Validator.validateId(expertId);
   try {
     const listingDb = await listings();
-    const res = listingDb.find({
+    const res = await listingDb.find({
       "mechanicReviews.mechanicId": new ObjectId(validExpertId),
     });
     return res;

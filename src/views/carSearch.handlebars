@@ -8,7 +8,11 @@
   <p style="color: red">{{ error }}</p>
   {{/if}}
 
-  {{#if results.length}}
+  <ul class="list-group container card p-3 search-grid" id="search-grid"></ul>
+  <p id="search-not-found" class="fs-4">
+    No cars found matching your criteria.
+  </p>
+  {{!-- {{#if results.length}}
   <ul class="list-group container card p-3 search-grid">
     {{#each results}}
     <a href="/listings/{{ _id }}" class="text-decoration-none text-dark">
@@ -18,7 +22,7 @@
             <h2 class="fs-5">{{ car.make }} {{ car.model }}</h2>
             <h3 class="fs-6 text-secondary">{{ car.year }} {{ car.color }}</h3>
           </div>
-          <h4 class="text-success">${{ price }}</h4>
+          <h4 class="text-success">{{currency price }}</h4>
         </div>
 
         <img src="{{ image }}" alt="" class="img-thumbnail" />
@@ -27,8 +31,12 @@
     {{/each}}
   </ul>
   {{else}}
-  <p>No cars found matching your criteria.</p>
-  {{/if}}
+  {{/if}} --}}
 </div>
 
 <a href="/">Return to Homepage</a>
+
+<script>
+  const listings = {{{json results}}}
+</script>
+<script src="/scripts/search.js"></script>

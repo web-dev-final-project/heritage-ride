@@ -19,7 +19,7 @@
         <p>
           <span>Certified Expert</span> since: {{utcToDate expert.createdAt }}
         </p>
-        <p>Contract fufilled: {{ expert.carReviewed }}</p>
+        <p>Contract fufilled: {{ expert.carReviewed.length }}</p>
 
         <p>Shop address: {{ expert.location }}</p>
         <div class="d-flex justify-content-center m-4">
@@ -43,7 +43,7 @@
       </ul>
     </div>
   </section>
-  <section>
+  <section id="expert-gallery">
     <h3 class="m-2 fs-4 p-1">Gallery</h3>
     <ul class="container gallery gap-2">
       {{#each expert.images}}
@@ -58,14 +58,26 @@
       {{/each}}
     </ul>
   </section>
+  <hr class="m-3" />
+  <p class="fs-4 m-2">You have {{ expert.reviews.length }} review requests.</p>
+  <section id="review-requets" class="search-grid container w-100"></section>
+  <hr class="m-3" />
+  <p class="fs-4 m-2">Request history</p>
+  <section
+    id="completed-requests"
+    class="search-grid container w-100"
+  ></section>
+  <hr class="m-3" />
   <section>
-    <h3 class="m-2 fs-4 p-1">Reviews</h3>
+    <h3 class="m-2 fs-4 p-1">Customer Reviews</h3>
     <ul>
       {{#each expert.reviews}}
       <li class="w-100">
         <div>
           <p>{{ reviewer }}</p>
+          {{!--
           <p>{{> stars}}</p>
+          --}}
           <p>date: {{ createdAt }}</p>
           <p>{{ comment }}</p>
         </div>
@@ -79,6 +91,49 @@
 
 <div id="overlay" class="overlay" onclick="closeImage()">
   <img id="fullImage" src="" alt="Full Size Image" />
+</div>
+
+<div class="overlay" id="overlay-2">
+  <form class="modal-content d-flex align-items-center" id="review-modal">
+    <span class="close align-self-end" onclick="closeModal()">&times;</span>
+    <h2 class="fs-4">Vehicle Inspection/appraisal Form</h2>
+    <div class="d-flex flex-column w-100 px-4">
+      <label for="condition" class="mt-3">What is the condition?</label>
+      <select class="w-100" id="condition">
+        <option>Great</option>
+        <option>Good</option>
+        <option>Fair</option>
+        <option>Need work</option>
+      </select>
+      <label for="estimateValue" class="mt-3" id="estimate-value-label"
+        >Estimated Value</label
+      >
+      <input type="number" id="estimateValue" value="0" />
+      <p class="d-none text-danger m-0" id="estimateValueError">
+        Value must be between 1 to 10 millions
+      </p>
+      <label for="reviewMessage" class="mt-3">Short Summary</label>
+      <input name="reviewMessage" id="reviewMessage" />
+      <p class="d-none text-danger m-0" id="reviewMessageError">
+        Summary must be at least 10, at most 80 characters
+      </p>
+      <label for="notes" class="mt-3">Detailed breakdown</label>
+      <textarea name="notes" rows="8" id="notes"></textarea>
+      <p class="d-none text-danger m-0" id="notesError">
+        Detailed must be at least 10, at most 500 characters
+      </p>
+    </div>
+    <div class="mt-2">
+      <button type="submit" class="btn btn-primary m-2 px-5">Submit</button>
+      <button
+        onclick="closeModal()"
+        type="button"
+        class="btn btn-danger m-2 px-5"
+      >
+        Cancel
+      </button>
+    </div>
+  </form>
 </div>
 
 <script>

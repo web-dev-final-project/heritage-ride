@@ -8,7 +8,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (document.location.href.includes("search"))
     search.classList.add("nav-select");
-  else if (document.location.href.includes("expert"))
+  else if (
+    document.location.href.includes("expert/all") ||
+    document.location.href.includes("expert/search")
+  )
     expert.classList.add("nav-select");
   else if (document.location.href.includes("seller"))
     seller.classList.add("nav-select");
@@ -20,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.href = "/expert/all";
   });
   seller.addEventListener("click", () => {
-    window.location.href = "/user/seller";
+    window.location.href = "/seller";
   });
 
   document.getElementById("nav-name").addEventListener("click", () => {
@@ -45,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const navLogout = document.getElementById("nav-logout");
 
     navUserDetail.href = getCurrentRoute() + "/user";
-    navUserSeller.href = getCurrentRoute() + "/user/seller";
+    navUserSeller.href = getCurrentRoute() + "/seller";
     navUserExpert.href = getCurrentRoute() + "/expert";
     navUserEdit.href = getCurrentRoute() + "/user/edit";
     navLogout.href = getCurrentRoute() + "/user/logout";
