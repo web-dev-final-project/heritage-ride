@@ -1,13 +1,3 @@
-const sellerCentral = document.getElementById("seller-central-page");
-const activePage = document.getElementById("active-page");
-const reviewPage = document.getElementById("review-page");
-const selectList = document.getElementById("seller-list-filter");
-const soldPage = document.getElementById("sold-page");
-
-activePage.classList.add("border");
-reviewPage.classList.add("fw-light");
-soldPage.classList.add("fw-light");
-
 document.getElementById("add-listing").addEventListener("click", () => {
   sellerCentral.classList.add("d-none");
   document.getElementById("seller-add-page").classList.remove("d-none");
@@ -18,6 +8,16 @@ document.getElementById("add-listing").addEventListener("click", () => {
       document.getElementById("seller-add-page").classList.add("d-none");
     });
 });
+
+const sellerCentral = document.getElementById("seller-central-page");
+const activePage = document.getElementById("active-page");
+const reviewPage = document.getElementById("review-page");
+const selectList = document.getElementById("seller-list-filter");
+const soldPage = document.getElementById("sold-page");
+
+activePage.classList.add("border");
+reviewPage.classList.add("fw-light");
+soldPage.classList.add("fw-light");
 
 const generateList = (list, status) => {
   let lists = listings;

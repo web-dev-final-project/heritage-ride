@@ -15,23 +15,22 @@ const stripe = new Stripe(process.env.STRIPE_KEY);
 
 router.post("/create", auth, async (req, res, next) => {
   try {
-    // check inputs
     req.body.price = Number(req.body.price); // will convert to number if price is a number, otherwise NaN
     if (isNaN(req.body.price)) {
       throw new ValidationException("Price must be a valid number");
     }
-    const validListing = Validator.validateListing(req.body);
+    const validListing = Validator.validateCreateListing(req.body);
 
     const listing = await createListing(req.user._id, validListing);
 
     if (!req.user.role.includes("seller")){
       // Add 'seller' role to the user in the db
       const result = await addRole(req.user._id, "seller");
-      // Update req.user with the new role so it is recognized by other routes
-      req.user = await findUser(req.user._id);
       if (result.modifiedCount === 0) {
         throw new DataBaseException("Failed to add role");
       }
+      // Update req.user with the new role so it is recognized by other routes
+      req.user = await findUser(req.user._id);
       const token = generateToken(req.user);
       res.cookie("token", token, {
         maxAge: 24 * 60 * 60 * 1000, // 1 day
@@ -40,10 +39,7 @@ router.post("/create", auth, async (req, res, next) => {
         sameSite: "lax",
       });
     }
-    // change error handling since theres 2 different exception types?
-
-    //res.status(201).send(new HttpResponse(listing, HttpStatus.SUCCESS));
-    res.redirect("/seller");
+    res.status(201).send(new HttpResponse(listing, HttpStatus.SUCCESS));
   } catch (e) {
     next(e);
   }

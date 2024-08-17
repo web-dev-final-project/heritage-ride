@@ -64,9 +64,10 @@ const getListingByBuyer = async (userId) => {
 };
 
 const createListing = async (sellerId, item) => {
-  const validSellerId = Validator.validateId(sellerId);
-  const validItem = Validator.validateListing(item);
   try {
+    const validSellerId = Validator.validateId(sellerId);
+    const validItem = Validator.validateCreateListing(item);
+
     if (validItem.itemType === 'car') { // check if car or part
       const { carId, price, image } = validItem;
       
@@ -89,15 +90,6 @@ const createListing = async (sellerId, item) => {
       if (!res || !res.acknowledged || !res.insertedId) {
         throw new DataBaseException("Insert listing failed");
       }
-      // Update role to seller
-      // const user = await findUser(validSellerId);
-      // if (!user) {
-      //   throw new DataBaseException("User not found");
-      // }
-      // if (!user.role.includes("seller")) {
-      //   user.role.push("seller");
-      // }
-      // await updateUser(user);
 
       return {
         ...item,
@@ -108,7 +100,7 @@ const createListing = async (sellerId, item) => {
       // code for inserting part
     }
   } catch (e) {
-    throw new DataBaseException(e.message);
+    databaseExceptionHandler(e)
   }
 };
 

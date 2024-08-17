@@ -36,34 +36,27 @@ class Validator {
     }
   }
 
-  static validateImageURL(url) {
-    if (!url || typeof url !== "string") {
-      throw new InvalidInputException("Provided URL must be a string.");
+  static validateImageURL(image) {
+    if (typeof image !== 'string' || image.trim() === '' || !/^https?:\/\/.+/.test(image)) {
+      throw new InvalidInputException('Image URL must be a valid URL.');
     }
-    const pattern = new RegExp('^https?:\\/\\/.+\\.(png|jpg|jpeg|bmp|gif|webp)(\\?.*)?$', 'i');
-    if (pattern.test(url)) {
-        return url
-    } else {
-        throw new InvalidInputException("Invalid image URL format.");
-    }
+    return image;
   }
 
-  static validateListing(obj) {
+  static validateCreateListing(obj) {
     if (!obj || typeof obj !== "object") {
       throw new InvalidInputException(
         "Provided listing must be an object."
       );
     }
     let valImage = ""
-    if (obj.image) {
+    if (obj.image) { // image is optional
       valImage = Validator.validateImageURL(obj.image)
     }
     let listingInfo = {
       ...obj,
-      // other fields were unecessary since user will only enter price and image url
       price: this.nullcheck(obj.price).checkNumber(), 
       image: valImage,
-      // to Add?: verify car exists in db
       itemType: this.nullcheck(obj.itemType)
     };
     return listingInfo;
