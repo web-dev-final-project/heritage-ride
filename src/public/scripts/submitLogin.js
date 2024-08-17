@@ -11,8 +11,11 @@ const clearInput = () => {
   passwordLogin.value = "";
 };
 
-const validateInput = (str) => {
-  return !(!str || str.trim().length < 4);
+const validateUsername = (str) => {
+  return !(!str || str.trim().length < 5 || str.trim().length > 20);
+};
+const validatePassword = (str) => {
+  return !(!str || str.trim().length < 10 || str.trim().length > 30);
 };
 
 document
@@ -28,8 +31,8 @@ document
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userName: userNameLogin.value,
-        password: passwordLogin.value,
+        userName: filterXSS(userNameLogin.value),
+        password: filterXSS(passwordLogin.value),
       }),
     });
     if (!res.ok) {
@@ -46,12 +49,18 @@ userNameLogin.addEventListener("click", () => {
   loginMessage.innerHTML = "";
 });
 userNameLogin.addEventListener("input", () => {
-  if (validateInput(userNameLogin.value) && validateInput(passwordLogin.value))
+  if (
+    validateUsername(userNameLogin.value) &&
+    validatePassword(passwordLogin.value)
+  )
     button.disabled = false;
   else button.disabled = true;
 });
 passwordLogin.addEventListener("input", () => {
-  if (validateInput(userNameLogin.value) && validateInput(passwordLogin.value))
+  if (
+    validateUsername(userNameLogin.value) &&
+    validatePassword(passwordLogin.value)
+  )
     button.disabled = false;
   else button.disabled = true;
 });

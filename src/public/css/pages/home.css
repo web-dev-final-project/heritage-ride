@@ -30,6 +30,3 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
-.seller-central-page {
-  max-width: 978px;
-}

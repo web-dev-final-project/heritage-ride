@@ -26,7 +26,6 @@ router.get("/*", authSafe, (req, res) => {
 export default router;
 
 const uiRouter = (app) => {
-  // add your frontend routes here
   app.use("/user", userView);
   app.use("/expert", expertsView);
   app.use("/listings", listingsView);
@@ -34,7 +33,6 @@ const uiRouter = (app) => {
 };
 
 const apiRouter = (app) => {
-  // add your backends routes here, prefix with /api/
   app.use("/api/listings", listingsAPI);
   app.use("/api/user", userAPI);
   app.use("/api/parts", partsRouter);
