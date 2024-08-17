@@ -24,34 +24,42 @@ class Validator {
       if (isNaN(yearNum) || yearNum > new Date().getFullYear()) {
         errors.push("Year must be a valid number less than the current year");
       }
+      else {
+        query.year = yearNum
+      }
     }
-    return errors;
+    if (errors.length > 0) {
+      throw new InvalidInputException(errors);
+    }
+    else {
+      return query
+    }
   }
-  static validateListing(obj) {
+
+  static validateImageURL(image) {
+    if (typeof image !== 'string' || image.trim() === '' || !/^https?:\/\/.+/.test(image)) {
+      throw new InvalidInputException('Image URL must be a valid URL.');
+    }
+    return image;
+  }
+
+  static validateCreateListing(obj) {
     if (!obj || typeof obj !== "object") {
       throw new InvalidInputException(
-        "Listing object must be provided and must be an object."
+        "Provided listing must be an object."
       );
     }
-    let listing = {
+    let valImage = ""
+    if (obj.image) { // image is optional
+      valImage = Validator.validateImageURL(obj.image)
+    }
+    let listingInfo = {
       ...obj,
-      itemId: this.validateId(this.nullcheck(obj.itemId)),
-      title: this.nullcheck(obj.title).checkString(),
-      description: this.nullcheck(obj.description).checkString(),
-      price: this.nullcheck(obj.price).checkNumber(),
-      category: (() => {
-        let cat = this.nullcheck(obj.category)
-          .checkString()
-          .toLowerCase()
-          .trim();
-        if (cat === "car" || cat === "part") return cat;
-        else
-          throw new InvalidInputException(
-            "Category must be either car or part."
-          );
-      })(),
+      price: this.nullcheck(obj.price).checkNumber(), 
+      image: valImage,
+      itemType: this.nullcheck(obj.itemType)
     };
-    return listing;
+    return listingInfo;
   }
   static validatePartialListing(obj) {
     if (!obj || typeof obj !== "object") {

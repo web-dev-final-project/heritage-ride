@@ -5,12 +5,13 @@ import {
   updateListingById,
 } from "../../data/listings.js";
 import {
+  InvalidInputException,
   NotFoundException,
   ValidationException,
 } from "../../utils/exceptions.js";
 import auth, { authSafe } from "../../middleware/auth.js";
 import Validator from "../../utils/validator.js";
-import { getCarById } from "../../data/cars.js";
+import { getCarById, getCars } from "../../data/cars.js";
 import { findUser } from "../../data/users.js";
 import Stripe from "stripe";
 import { createTransaction } from "../../data/transaction.js";
@@ -20,19 +21,11 @@ const router = Router();
 
 router.get("/search", authSafe, async (req, res, next) => {
   // car listings search, displays cars
-  const query = req.query;
-  // Error check
-  const errors = Validator.validateQuery(query);
-  if (errors.length > 0) {
-    return res.status(400).render("carSearch", {
-      error: "Invalid search criteria: " + errors.join(", "),
-      results: [], // Ensure no results are shown if there's an error
-      user: req.user,
-    });
-  }
-
   try {
-    const result = await getAll(query);
+    // Error check
+    const valQuery = Validator.validateQuery(req.query);
+
+    const result = await getAll(valQuery);
     if (!result) throw new NotFoundException(`listing not found`);
     res.render("carSearch", {
       results: result,
@@ -104,14 +97,35 @@ router.get("/order/:id", auth, async (req, res, next) => {
   }
 });
 
+// create listing
+router.get("/create", auth, async (req, res, next) => {
+  // check item type (car or part)
+  const itemType = req.query.itemtype; // from the query parameters in addListing.handlebars
+  if (!itemType || (itemType !== "car" && itemType !== "part")) {
+    throw new InvalidInputException("Invalid item type");
+  }
+
+  try {
+    const cars = await getCars();
+    return res.render("addCarListing", {
+      cars: cars,
+      itemType: itemType,
+      user: req.user,
+    });
+  } catch (e) {
+    next(e);
+  }
+});
+
 router.get("/:listingId", authSafe, async (req, res, next) => {
   const listingId = req.params.listingId;
   try {
     const listingDetails = await getListingById(listingId);
     const carDetails = await getCarById(listingDetails.itemId.toString());
     const sellerDetails = await findUser(listingDetails.sellerId.toString());
+
     if (sellerDetails && sellerDetails.password) {
-      delete sellerDetails.password; // delete password field from current object
+      delete sellerDetails.password; // delete password field from current object to protect user
     }
     if (!carDetails || !listingDetails) {
       return res

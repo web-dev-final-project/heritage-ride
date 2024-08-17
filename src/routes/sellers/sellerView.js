@@ -7,12 +7,11 @@ import Validator from "../../utils/validator.js";
 const router = Router();
 
 router.get("/", auth, async (req, res) => {
-  const isSeller = req.user.role.includes("seller");
   const listings = await getListingByUser(req.user._id);
   res.render("seller.handlebars", {
     user: req.user,
     listings: listings,
-    isSeller,
+    isSeller: listings.length > 0,
   });
 });
 
