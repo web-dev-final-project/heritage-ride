@@ -77,6 +77,7 @@ const createListing = async (sellerId, item) => {
         itemId: new ObjectId(carId),
         title: `${car.make} ${car.model}`,
         description: car.description,
+        sellerNotes: validItem.sellerNotes,
         price: price,
         status: "open",
         sellerId: new ObjectId(validSellerId),

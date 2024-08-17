@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const carId = formData.get("carId");
     const price = formData.get("price");
     const image = formData.get("image-upload");
-    const description = formData.get("description");
+    const notes = formData.get("notes");
 
     const urlParams = new URLSearchParams(window.location.search);
     const itemType = urlParams.get("itemtype");
@@ -49,6 +49,9 @@ document.addEventListener("DOMContentLoaded", () => {
       if (isNaN(parsedPrice) || parsedPrice <= 0) {
         throw new Error("Price must be a valid positive number.");
       }
+      if (parsedPrice > 10000000) {
+        throw new Error("Price is too high")
+      }
       if (
         typeof image !== "string" ||
         image.trim() === "" ||
@@ -56,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ) {
         throw new Error("Image URL must be a valid URL.");
       }
-      if (description.trim().length < 20 || description.trim().length > 500)
+      if (notes.trim().length < 20 || notes.trim().length > 500)
         throw new Error("Description must be between 20 to 500 characters.");
 
       const response = await fetch("/api/listings/create", {
@@ -68,6 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
         body: JSON.stringify({
           carId: filterXSS(carId),
           price: filterXSS(parsedPrice),
+          sellerNotes: filterXSS(notes),
           image: filterXSS(image),
           itemType: filterXSS(itemType),
         }),

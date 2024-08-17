@@ -49,12 +49,23 @@ class Validator {
         "Provided listing must be an object."
       );
     }
-    let valImage = ""
-    if (obj.image) { // image is optional
-      valImage = Validator.validateImageURL(obj.image)
+    if (!obj.carId) {
+      throw new Error("Car ID cannot be empty.");
+    }
+    const parsedPrice = Number(obj.price);
+    if (isNaN(parsedPrice) || parsedPrice <= 0) {
+      throw new Error("Price must be a valid positive number.");
+    }
+    if (parsedPrice > 10000000) {
+      throw new Error("Price is too high")
+    }
+    const valImage = Validator.validateImageURL(obj.image)
+    if (obj.sellerNotes.trim().length < 20 || obj.sellerNotes.trim().length > 500) {
+      throw new Error("Description must be between 20 to 500 characters.");
     }
     let listingInfo = {
       ...obj,
+      sellerNotes: this.nullcheck(obj.sellerNotes),
       price: this.nullcheck(obj.price).checkNumber(), 
       image: valImage,
       itemType: this.nullcheck(obj.itemType)
