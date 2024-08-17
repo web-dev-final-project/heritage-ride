@@ -1,78 +1,70 @@
-const express = require('express');
-const router = express.Router();
-const Blog = require('../data/blogs');
+import express from 'express';
+import { getAllBlogs, getBlogById, createBlog, updateBlog, deleteBlog } from '../data/blog.js';
 
-// Get all blog posts
+const router = express.Router();
+
+// Route to display all blogs
 router.get('/', async (req, res) => {
     try {
-        const blogs = await Blog.find({});
-        res.render('blogPosts', { blogs });
-    } catch (error) {
-        res.status(500).render('error', { error: 'Failed to load blogs' });
+        const blogs = await getAllBlogs();
+        res.render('blogs', { blogs });
+    } catch (e) {
+        res.status(500).send("Error fetching blogs");
     }
 });
 
-// Get form to create a new blog post
-router.get('/new', (req, res) => {
-    res.render('createBlog', { userId: req.session.userId });
-});
-
-// Get a single blog post by ID
+// Route to display a specific blog by ID
 router.get('/:id', async (req, res) => {
     try {
-        const blog = await Blog.findById(req.params.id);
-        if (!blog) throw new Error('Blog not found');
-        res.render('singleBlog', { blog });
-    } catch (error) {
-        res.status(404).render('error', { error: error.message });
+        const blog = await getBlogById(req.params.id);
+        if (!blog) {
+            res.status(404).send("Blog not found");
+        } else {
+            res.render('blogDetail', { blog });
+        }
+    } catch (e) {
+        res.status(500).send("Error fetching the blog");
     }
 });
 
-// Create a new blog post
+// Route to create a new blog
 router.post('/', async (req, res) => {
     try {
-        const { title, content, author, authorRole } = req.body;
-        const newBlog = new Blog({ title, content, author, authorRole });
-        await newBlog.save();
-        res.redirect('/blogs');
-    } catch (error) {
-        res.status(400).render('error', { error: error.message });
+        const { title, content } = req.body;
+        if (!title || !content) {
+            res.status(400).send("Title and content are required");
+            return;
+        }
+        const newBlogId = await createBlog(title, content);
+        res.redirect(`/blogs/${newBlogId}`);
+    } catch (e) {
+        res.status(500).send("Error creating the blog");
     }
 });
 
-// Get form to edit a blog post by ID
-router.get('/:id/edit', async (req, res) => {
-    try {
-        const blog = await Blog.findById(req.params.id);
-        if (!blog) throw new Error('Blog not found');
-        res.render('editBlog', { blog });
-    } catch (error) {
-        res.status(404).render('error', { error: error.message });
-    }
-});
-
-// Update a blog post by ID
+// Route to update an existing blog
 router.put('/:id', async (req, res) => {
     try {
-        const { content } = req.body;
-        const blog = await Blog.findByIdAndUpdate(req.params.id, { content }, { new: true });
-        if (!blog) throw new Error('Blog not found');
-        res.redirect(`/blogs/${blog._id}`);
-    } catch (error) {
-        res.status(400).render('error', { error: error.message });
+        const { title, content } = req.body;
+        if (!title || !content) {
+            res.status(400).send("Title and content are required");
+            return;
+        }
+        const updatedBlog = await updateBlog(req.params.id, title, content);
+        res.redirect(`/blogs/${updatedBlog._id}`);
+    } catch (e) {
+        res.status(500).send("Error updating the blog");
     }
 });
 
-// Delete a blog post by ID
+// Route to delete a blog
 router.delete('/:id', async (req, res) => {
     try {
-        await Blog.findByIdAndDelete(req.params.id);
+        await deleteBlog(req.params.id);
         res.redirect('/blogs');
-    } catch (error) {
-        res.status(500).render('error', { error: 'Failed to delete blog' });
+    } catch (e) {
+        res.status(500).send("Error deleting the blog");
     }
 });
 
-module.exports = router;
-
-
+export default router;
