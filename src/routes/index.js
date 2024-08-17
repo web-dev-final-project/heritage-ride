@@ -7,7 +7,7 @@ import expertsAPI from "./experts/expert.js";
 import expertsView from "./experts/expertView.js";
 import sellerView from "./sellers/sellerView.js";
 import sellerAPI from "./sellers/seller.js";
-import partsRouter from "./parts/partRoutes.js";
+import parts from "./parts/partRoutes.js";
 import cars from "./cars/cars.js";
 
 import { Router } from "express";
@@ -30,12 +30,13 @@ const uiRouter = (app) => {
   app.use("/expert", expertsView);
   app.use("/listings", listingsView);
   app.use("/seller", sellerView);
+  app.use("/parts", parts); 
 };
 
 const apiRouter = (app) => {
   app.use("/api/listings", listingsAPI);
   app.use("/api/user", userAPI);
-  app.use("/api/parts", partsRouter);
+  app.use("/api/parts", parts);
   app.use("/api/expert", expertsAPI);
   app.use("/api/cars", cars);
   app.use("/api/seller", sellerAPI);
