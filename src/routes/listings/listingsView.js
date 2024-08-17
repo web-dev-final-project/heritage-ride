@@ -15,6 +15,7 @@ import { getCarById, getCars } from "../../data/cars.js";
 import { findUser } from "../../data/users.js";
 import Stripe from "stripe";
 import { createTransaction } from "../../data/transaction.js";
+import { cloudinary } from "../../utils/class.js";
 
 const stripe = new Stripe(process.env.STRIPE_KEY);
 const router = Router();
@@ -97,10 +98,8 @@ router.get("/order/:id", auth, async (req, res, next) => {
   }
 });
 
-// create listing
 router.get("/create", auth, async (req, res, next) => {
-  // check item type (car or part)
-  const itemType = req.query.itemtype; // from the query parameters in addListing.handlebars
+  const itemType = req.query.itemtype;
   if (!itemType || (itemType !== "car" && itemType !== "part")) {
     throw new InvalidInputException("Invalid item type");
   }
@@ -111,6 +110,7 @@ router.get("/create", auth, async (req, res, next) => {
       cars: cars,
       itemType: itemType,
       user: req.user,
+      cloudinary: cloudinary,
     });
   } catch (e) {
     next(e);

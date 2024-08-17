@@ -18,11 +18,6 @@
     ></script>
     <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-      if (window.location.pathname !== "/user/login") {
-        localStorage.setItem("lastVisitedUrl", window.location.href);
-      }
-    </script>
   </head>
   <body class="app">
     {{> navbar}}
@@ -47,5 +42,12 @@
       src="https://kit.fontawesome.com/08f64c7329.js"
       crossorigin="anonymous"
     ></script>
+    <script>
+      window.addEventListener("beforeunload", function () {
+        if (window.location.pathname !== "/user/login") {
+          localStorage.setItem("lastVisitedUrl", window.location.href);
+        }
+      });
+    </script>
   </body>
 </html>
