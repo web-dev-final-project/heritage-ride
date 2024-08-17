@@ -9,6 +9,15 @@ const avatar = document.getElementById("avatar-upload");
 const signup = document.getElementById("signup-button");
 const signupCancel = document.getElementById("signup-cancel-button");
 
+const firstNameError = document.getElementById("first-name-upload-error");
+const lastNameError = document.getElementById("last-name-upload-error");
+const userNameError = document.getElementById("username-upload-error");
+const passwordError = document.getElementById("password-upload-error");
+const passwordReenterError = document.getElementById("password-upload-2-error");
+const emailError = document.getElementById("email-upload-error");
+const addressError = document.getElementById("address-upload-error");
+const avatarError = document.getElementById("avatar-upload-error");
+
 const validation = {
   [firstName.id]: false,
   [lastName.id]: false,
@@ -16,6 +25,7 @@ const validation = {
   [password.id]: false,
   [passwordReenter.id]: false,
   [email.id]: false,
+  [address.id]: false,
 };
 
 if (window.location.pathname === "/user/edit" && user) {
@@ -29,6 +39,7 @@ if (window.location.pathname === "/user/edit" && user) {
   validation[lastName.id] = true;
   validation[userName.id] = true;
   validation[email.id] = true;
+  validation[address.id] = true;
   document.getElementById("signup-title").innerHTML = "Edit Profile";
 } else document.getElementById("signup-title").innerHTML = "Sign Up";
 
@@ -39,14 +50,14 @@ document.addEventListener("DOMContentLoaded", () => {
     .addEventListener("submit", async (e) => {
       e.preventDefault();
       const obj = {
-        firstName: firstName.value,
-        lastName: lastName.value,
-        userName: userName.value,
-        password: password.value,
-        email: email.value.toLowerCase(),
-        address: address.value,
+        firstName: filterXSS(firstName.value.toLowerCase().trim()),
+        lastName: filterXSS(lastName.value.toLowerCase().trim()),
+        userName: filterXSS(userName.value.toLowerCase().trim()),
+        password: filterXSS(password.value.trim()),
+        email: filterXSS(email.value.toLowerCase().trim()),
+        address: filterXSS(address.value.trim()),
         avatar:
-          avatar.value.trim() ||
+          filterXSS(avatar.value.trim()) ||
           "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/2048px-User-avatar.svg.png",
       };
       const url = isEditing ? `/api/user/${user._id}` : "/api/user/signup";
@@ -87,6 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (condition()) {
         element.style.outlineColor = "rgb(81, 225, 49)";
         validation[element.id] = true;
+        element.nextElementSibling.style.display = "none";
       } else {
         element.style.outlineColor = "rgb(237, 229, 66)";
         validation[element.id] = false;
@@ -94,45 +106,113 @@ document.addEventListener("DOMContentLoaded", () => {
       handleInputChange();
     });
   };
-  handleInputValidation(firstName, () => firstName.value.trim().length > 2);
-  handleInputValidation(lastName, () => lastName.value.trim().length > 2);
-  handleInputValidation(userName, () => userName.value.trim().length > 4);
-  handleInputValidation(password, () => password.value.length > 8);
+  handleInputValidation(
+    firstName,
+    () =>
+      !firstName.value.trim().includes(" ") &&
+      firstName.value.trim().length >= 2 &&
+      firstName.value.trim().length <= 20
+  );
+  handleInputValidation(
+    lastName,
+    () =>
+      !lastName.value.trim().includes(" ") &&
+      lastName.value.trim().length >= 2 &&
+      lastName.value.trim().length <= 20
+  );
+  handleInputValidation(
+    userName,
+    () =>
+      !userName.value.trim().includes(" ") &&
+      userName.value.trim().length >= 5 &&
+      userName.value.trim().length <= 20
+  );
+  handleInputValidation(
+    password,
+    () =>
+      !password.value.trim().includes(" ") &&
+      password.value.length >= 10 &&
+      password.value.trim().length <= 30
+  );
   handleInputValidation(
     passwordReenter,
-    () =>
-      passwordReenter.value.length > 8 &&
-      passwordReenter.value === password.value
+    () => passwordReenter.value === password.value
   );
   handleInputValidation(
     email,
-    () => email.value.length > 5 && email.value.includes("@")
+    () =>
+      !email.value.trim().includes(" ") &&
+      email.value.length > 5 &&
+      email.value.trim().length <= 40 &&
+      email.value.includes("@")
   );
+  handleInputValidation(address, () => address.value.length <= 50);
 
   firstName.addEventListener("blur", () => {
-    if (firstName.value.trim().length < 3) firstName.style.borderColor = "red";
+    if (
+      firstName.value.trim().length < 2 ||
+      firstName.value.trim().length > 20 ||
+      firstName.value.trim().includes(" ")
+    ) {
+      firstName.style.borderColor = "red";
+      firstNameError.style.display = "block";
+    }
   });
 
   lastName.addEventListener("blur", () => {
-    if (lastName.value.trim().length < 3) lastName.style.borderColor = "red";
+    if (
+      lastName.value.trim().length < 2 ||
+      lastName.value.trim().length > 20 ||
+      lastName.value.trim().includes(" ")
+    ) {
+      lastName.style.borderColor = "red";
+      lastNameError.style.display = "block";
+    }
   });
   userName.addEventListener("blur", () => {
-    if (userName.value.trim().length < 5) userName.style.borderColor = "red";
+    if (
+      userName.value.trim().length < 5 ||
+      userName.value.trim().length > 20 ||
+      userName.value.trim().includes(" ")
+    ) {
+      userName.style.borderColor = "red";
+      userNameError.style.display = "block";
+    }
   });
   password.addEventListener("blur", () => {
-    if (password.value.trim().length < 9) password.style.borderColor = "red";
+    if (
+      password.value.trim().length < 10 ||
+      password.value.trim().length > 30 ||
+      password.value.trim().includes(" ")
+    ) {
+      password.style.borderColor = "red";
+      passwordError.style.display = "block";
+    }
   });
   passwordReenter.addEventListener("blur", () => {
-    if (
-      passwordReenter.value.trim().length < 9 &&
-      passwordReenter.value !== password.value
-    )
-      email.style.borderColor = "red";
+    if (passwordReenter.value !== password.value) {
+      passwordReenter.style.borderColor = "red";
+      passwordReenterError.style.display = "block";
+    }
   });
   email.addEventListener("blur", () => {
-    if (email.value.trim().length < 6 && email.value.includes("@"))
+    if (
+      (email.value.trim().length < 5 ||
+        email.value.trim().length > 40 ||
+        email.value.trim().includes(" ")) &&
+      !email.value.includes("@")
+    ) {
       email.style.borderColor = "red";
+      emailError.style.display = "block";
+    }
   });
+  address.addEventListener("blur", () => {
+    if (address.value.trim().length > 50) {
+      address.style.borderColor = "red";
+      addressError.style.display = "block";
+    }
+  });
+
   signupCancel.addEventListener("click", () => {
     window.location.href = getCurrentRoute();
   });
