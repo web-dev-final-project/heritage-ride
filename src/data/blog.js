@@ -1,38 +1,45 @@
-const mongoose = require('mongoose');
-const { Schema } = mongoose;
+import { MongoClient, ObjectId } from 'mongodb';
 
-const blogSchema = new Schema({
-    title: {
-        type: String,
-        required: true,
-        validate: {
-            validator: (v) => v.length > 0,
-            message: 'Title cannot be empty'
-        }
-    },
-    content: {
-        type: String,
-        required: true,
-        validate: {
-            validator: (v) => v.length > 0,
-            message: 'Content cannot be empty'
-        }
-    },
-    author: {
-        type: String,
-        required: true
-    },
-    authorRole: {
-        type: String,
-        required: true,
-        enum: ['Customer', 'Seller', 'Expert']
-    },
-    date: {
-        type: Date,
-        default: Date.now
+const mongoURI = 'yourMongoURI'; // Replace with your actual MongoDB URI
+const dbName = 'yourDBName';     // Replace with your actual database name
+const collectionName = 'blogs';
+
+let dbClient;
+
+async function connectToDb() {
+    if (!dbClient) {
+        dbClient = new MongoClient(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
+        await dbClient.connect();
     }
-});
+    return dbClient.db(dbName);
+}
 
-const Blog = mongoose.model('Blog', blogSchema);
+export async function getAllBlogs() {
+    const db = await connectToDb();
+    return db.collection(collectionName).find({}).toArray();
+}
 
-module.exports = Blog;
+export async function getBlogById(id) {
+    const db = await connectToDb();
+    return db.collection(collectionName).findOne({ _id: new ObjectId(id) });
+}
+
+export async function createBlog(title, content) {
+    const db = await connectToDb();
+    const newBlog = { title, content };
+    const result = await db.collection(collectionName).insertOne(newBlog);
+    return result.insertedId;
+}
+
+export async function updateBlog(id, title, content) {
+    const db = await connectToDb();
+    const updatedBlog = { title, content };
+    await db.collection(collectionName).updateOne({ _id: new ObjectId(id) }, { $set: updatedBlog });
+    return await getBlogById(id);
+}
+
+export async function deleteBlog(id) {
+    const db = await connectToDb();
+    await db.collection(collectionName).deleteOne({ _id: new ObjectId(id) });
+    return true;
+}
