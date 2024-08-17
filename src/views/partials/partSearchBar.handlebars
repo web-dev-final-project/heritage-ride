@@ -1,0 +1,25 @@
+<!-- Part Search Form -->
+<form
+  class="container p-0 m-0"
+  id="searchForm"
+  action="/parts/search"
+  method="GET"
+  class="mb-4"
+>
+  <div class="input-group">
+    <input
+      type="text"
+      class="form-control"
+      name="name"
+      placeholder="Enter part name"
+    />
+
+    <select class="form-control" name="category">
+      <option value="">Select category</option>
+      <option value="Engine">Engine</option>
+      <option value="Muffler">Muffler</option>
+      <option value="Tires">Tires</option>
+    </select>
+    <button type="submit" class="btn btn-primary">Search</button>
+  </div>
+</form>

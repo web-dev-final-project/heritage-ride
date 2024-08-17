@@ -1,6 +1,6 @@
     <div class="container mt-4">
 
-        {{> searchBar}}
+        {{> partSearchBar}}
 
         <h1>Part Search Results</h1>
 
@@ -12,11 +12,10 @@
     <ul class="list-group">
         {{#each results}}
             <li class="list-group-item">
-                <strong>{{name}}</strong> - {{specifications}}<br>
+               <strong>{{name}}</strong> - {{description}}<br>
                 Price: ${{price}}<br>
-                Manufacturer: {{manufacturer}}<br>
                 Added on: {{dateAdded}}<br>
-                <a href="/part/{{_id}}/cars">View Cars with this Part</a>
+                <a href="/part/{{_id}}">View Part</a>
             </li>
         {{/each}}
     </ul>
