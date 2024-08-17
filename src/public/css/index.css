@@ -94,6 +94,10 @@ hr {
   animation: l13 1s infinite linear;
 }
 
+.page-width {
+  max-width: 978px;
+}
+
 .hidden {
   display: none;
 }

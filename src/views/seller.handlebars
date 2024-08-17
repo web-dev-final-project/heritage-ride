@@ -1,53 +1,57 @@
-<div id="seller-central-page" class="seller-central-page">
-  {{#if isSeller}}
-  <p class="fs-3 text-capitalize">Welcome back, {{ user.firstName }}!</p>
-  <p class="">
-    There is <span id="listing-attention-num">0</span> listings require your
-    attention.
-  </p>
-  <ul class="search-grid container w-100" id="attention-list"></ul>
+<div class="w-100">
+  <div id="seller-central-page" class="page-width m-auto">
+    {{#if isSeller}}
+    <p class="fs-3 text-capitalize">Welcome back, {{ user.firstName }}!</p>
+    <p class="">
+      There is <span id="listing-attention-num">0</span> listings require your
+      attention.
+    </p>
+    <ul class="search-grid container w-100" id="attention-list"></ul>
 
-  <div class="d-flex">
-    <h3 class="py-2 px-4 fs-4 mb-0" role="button" id="active-page">
-      Active Listings
-    </h3>
-    <h3 class="py-2 px-4 fs-4 mb-0" role="button" id="review-page">
-      Under Review
-    </h3>
-    <h3 class="py-2 px-4 fs-4 mb-0" role="button" id="sold-page">
-      Sold Listings
-    </h3>
-  </div>
-
-  <hr class="mt-0" />
-  <div class="d-flex justify-content-between m-3">
-    <div class="input-group w-auto">
-      <div class="input-group-prepend">
-        <label class="input-group-text" for="seller-list-filter">Display</label>
-      </div>
-      <select class="custom-select" id="seller-list-filter">
-        <option selected value="all">All</option>
-        <option value="car">Cars</option>
-        <option value="part">Parts</option>
-      </select>
+    <div class="d-flex">
+      <h3 class="py-2 px-4 fs-4 mb-0" role="button" id="active-page">
+        Active Listings
+      </h3>
+      <h3 class="py-2 px-4 fs-4 mb-0" role="button" id="review-page">
+        Under Review
+      </h3>
+      <h3 class="py-2 px-4 fs-4 mb-0" role="button" id="sold-page">
+        Sold Listings
+      </h3>
     </div>
 
-    <button class="btn btn-primary" id="add-listing">Add Listing</button>
+    <hr class="mt-0" />
+    <div class="d-flex justify-content-between m-3">
+      <div class="input-group w-auto">
+        <div class="input-group-prepend">
+          <label class="input-group-text" for="seller-list-filter"
+            >Display</label
+          >
+        </div>
+        <select class="custom-select" id="seller-list-filter">
+          <option selected value="all">All</option>
+          <option value="car">Cars</option>
+          <option value="part">Parts</option>
+        </select>
+      </div>
+
+      <button class="btn btn-primary" id="add-listing">Add Listing</button>
+    </div>
+    {{#if listings}}
+
+    <ul class="search-grid container w-100" id="user-listings"></ul>
+    <p class="fs-5 mx-2" id="seller-listing-info"></p>
+
+    {{else}}
+    <p class="fs-4">
+      You don't have anything listed, lets start by add a new listing.
+    </p>
+    {{/if}}
+
+    {{else}}
+    {{> sell}}
+    {{/if}}
   </div>
-  {{#if listings}}
-
-  <ul class="search-grid container w-100" id="user-listings"></ul>
-  <p class="fs-5 mx-2" id="seller-listing-info"></p>
-
-  {{else}}
-  <p class="fs-4">
-    You don't have anything listed, lets start by add a new listing.
-  </p>
-  {{/if}}
-
-  {{else}}
-  {{> sell}}
-  {{/if}}
 </div>
 
 <div id="seller-add-page" class="d-none">{{> addListingGuide}}</div>
