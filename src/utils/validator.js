@@ -1,5 +1,9 @@
 import { ObjectId } from "mongodb";
-import { InvalidInputException, InvalidValueException } from "./exceptions.js";
+import {
+  InvalidInputException,
+  InvalidValueException,
+  ValidationException,
+} from "./exceptions.js";
 import { Role } from "./extend.js";
 
 class Validator {
@@ -202,12 +206,27 @@ class Validator {
     if (!obj || obj === undefined)
       throw new InvalidInputException("Review must not be empty");
     let expert = {
-      // ...obj,
-      // condition: Validator.nullcheck(obj.condition).checkString(),
-      // stars: Validator.nullcheck(obj.stars).checkNumber(),
-      // estimateValue: Validator.nullcheck(obj.estimateValue).checkString(),
-      // reviewMessage: Validator.nullcheck(obj.reviewMessage).checkString(),
-      // reviewDate: Validator.nullcheck(obj.reviewDate).checkDate()
+      ...obj,
+      condition: (() => {
+        const state = Validator.nullcheck(obj.condition)
+          .checkString()
+          .toLowerCase();
+        if (!["great", "good", "fair", "need work"].includes(state)) {
+          throw new ValidationException("invalid condition");
+        }
+        return state;
+      })(),
+      estimateValue: Validator.nullcheck(obj.estimateValue).checkNumber(
+        1,
+        100000000,
+        "Estimated value"
+      ),
+      reviewMessage: Validator.nullcheck(obj.reviewMessage).checkString(
+        10,
+        80,
+        "Summary"
+      ),
+      notes: Validator.nullcheck(obj.notes).checkString(10, 500, "Details"),
     };
     return expert;
   }

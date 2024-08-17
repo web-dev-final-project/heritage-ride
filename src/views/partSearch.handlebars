@@ -1,28 +1,27 @@
-    <div class="container mt-4">
+<div class="container mt-4">
+  {{> searchBar}}
 
-        {{> searchBar}}
+  <h1>Part Search Results</h1>
 
-        <h1>Part Search Results</h1>
+  {{#if error}}
+  <p style="color: red">{{ error }}</p>
+  {{/if}}
 
-        {{#if error}}
-            <p style="color: red;">{{error}}</p>
-        {{/if}}
+  {{#if results.length}}
+  <ul class="list-group">
+    {{#each results}}
+    <li class="list-group-item">
+      <strong>{{ name }}</strong> - {{ specifications }}<br />
+      Price: ${{ price }}<br />
+      Manufacturer: {{ manufacturer }}<br />
+      Added on: {{ dateAdded }}<br />
+      <a href="/part/{{ _id }}/cars">View Cars with this Part</a>
+    </li>
+    {{/each}}
+  </ul>
+  {{else}}
+  <p>No parts found matching your criteria.</p>
+  {{/if}}
+</div>
 
-{{#if results.length}}
-    <ul class="list-group">
-        {{#each results}}
-            <li class="list-group-item">
-                <strong>{{name}}</strong> - {{specifications}}<br>
-                Price: ${{price}}<br>
-                Manufacturer: {{manufacturer}}<br>
-                Added on: {{dateAdded}}<br>
-                <a href="/part/{{_id}}/cars">View Cars with this Part</a>
-            </li>
-        {{/each}}
-    </ul>
-{{else}}
-    <p>No parts found matching your criteria.</p>
-{{/if}}
-    </div>
-    
-    <a href="/">Return to Homepage</a>
+<a href="/">Return to Homepage</a>

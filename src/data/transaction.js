@@ -60,7 +60,7 @@ const createTransaction = async (transc) => {
       sellerId: listing.sellerId,
       buyerId: new ObjectId(validTransc.buyerId),
       status: "pending",
-      amount: validTransc.amount,
+      amount: validTransc.amount / 100,
       paymentStatus: validTransc.paymentStatus,
       payment: validTransc.payment,
       createdAt: new Date().toUTCString(),

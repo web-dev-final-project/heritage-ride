@@ -4,7 +4,11 @@ import {
   getListingById,
   updateListingById,
 } from "../../data/listings.js";
-import { InvalidInputException, NotFoundException, ValidationException } from "../../utils/exceptions.js";
+import {
+  InvalidInputException,
+  NotFoundException,
+  ValidationException,
+} from "../../utils/exceptions.js";
 import auth, { authSafe } from "../../middleware/auth.js";
 import Validator from "../../utils/validator.js";
 import { getCarById, getCars } from "../../data/cars.js";
@@ -15,7 +19,8 @@ import { createTransaction } from "../../data/transaction.js";
 const stripe = new Stripe(process.env.STRIPE_KEY);
 const router = Router();
 
-router.get("/search", authSafe, async (req, res, next) => { // car listings search, displays cars
+router.get("/search", authSafe, async (req, res, next) => {
+  // car listings search, displays cars
   try {
     // Error check
     const valQuery = Validator.validateQuery(req.query);
@@ -23,7 +28,7 @@ router.get("/search", authSafe, async (req, res, next) => { // car listings sear
     const result = await getAll(valQuery);
     if (!result) throw new NotFoundException(`listing not found`);
     res.render("carSearch", {
-      results: result.filter((s) => s.sellerId.toString() !== req.user._id),
+      results: result,
       user: req.user,
     });
   } catch (e) {
@@ -39,6 +44,10 @@ router.get("/order/success", auth, async (req, res, next) => {
     );
     if (session.payment_status === "paid") {
       const listingId = session.metadata.listingId;
+      const list = await getListingById(listingId);
+      if (list.status !== "open") {
+        throw new ValidationException("Listing is not on sale");
+      }
       await updateListingById(listingId, {
         status: "reserved",
       });
@@ -89,19 +98,22 @@ router.get("/order/:id", auth, async (req, res, next) => {
 });
 
 // create listing
-router.get('/create', auth, async (req, res, next) => {
+router.get("/create", auth, async (req, res, next) => {
   // check item type (car or part)
   const itemType = req.query.itemtype; // from the query parameters in addListing.handlebars
-  if (!itemType || (itemType !== 'car' && itemType !== 'part')) { 
-    throw new InvalidInputException('Invalid item type')
+  if (!itemType || (itemType !== "car" && itemType !== "part")) {
+    throw new InvalidInputException("Invalid item type");
   }
 
   try {
     const cars = await getCars();
-    return res.render("addCarListing", { cars: cars, itemType: itemType, user: req.user });
-  } 
-  catch (e) {
-    next(e)
+    return res.render("addCarListing", {
+      cars: cars,
+      itemType: itemType,
+      user: req.user,
+    });
+  } catch (e) {
+    next(e);
   }
 });
 

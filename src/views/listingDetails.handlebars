@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container listing-detail">
   <!-- Return to Homepage Link -->
   <a href="/">Return to Homepage</a>
   <!-- Car Details -->
@@ -6,50 +6,109 @@
   <h1 class="fs-3 text-secondary">
     {{ car.make }} {{ car.model }} ({{ car.year }})
   </h1>
-  <img src="{{ listing.image }}" alt="Image of {{ car.make }}
-  {{ car.model }} class="listing-display-image"">
-  <h2 class="text-success">Price: {{currency listing.price }}</h2>
+  <img
+    src="{{ listing.image }}"
+    alt="Image of {{ car.make }} {{ car.model }}"
+    class="listing-display-image w-100"
+  />
+  <div class="d-flex justify-space-between">
+    <div class="d-flex flex-column mt-4 me-3 w-75">
+      <h2>Details</h2>
+      <p><strong>Color:</strong> {{ car.color }}</p>
+      <p><strong>Category:</strong> {{ car.category }}</p>
 
-  <a href="/listings/order/{{ listing._id }}" id="order-button-link"
-    ><button class="btn btn-primary btn-lg" id="order-button">
-      Order Now
-    </button></a
-  >
-
-  <h2>Details</h2>
-  <p><strong>Color:</strong> {{ car.color }}</p>
-  <p><strong>Category:</strong> {{ car.category }}</p>
+      <p><strong>Listed on:</strong> {{ listing.createdAt }}</p>
+      <p><strong>Last Updated:</strong> {{ listing.updatedAt }}</p>
+    </div>
+    <div class="d-flex flex-column mt-4 card p-3">
+      <p><strong>Status:</strong> {{ listing.status }}</p>
+      <h2 class="text-success my-4">Price: {{currency listing.price }}</h2>
+      <a href="/listings/order/{{ listing._id }}" id="order-button-link"
+        ><button class="btn btn-primary btn-lg my-3 w-100" id="order-button">
+          Order Now
+        </button></a
+      >
+    </div>
+  </div>
+  <hr class="my-4" />
+  <!-- Seller Information -->
+  <h2>Seller Information</h2>
+  <p><strong>Name:</strong> {{ seller.firstName }} {{ seller.lastName }}</p>
+  <p><strong>Email:</strong> {{ seller.email }}</p>
+  <hr class="my-4" />
   <p><strong>Listing Description:</strong> {{ listing.description }}</p>
 
   <!-- Mechanic Reviews -->
   {{#if listing.mechanicReviews.length}}
-  <h2>Mechanic Reviews</h2>
-  <ul>
+  <h2>Expert Reviews</h2>
+  <ul class="gallery">
     {{#each listing.mechanicReviews}}
-    <li>{{ this }}</li>
+    <li class="card p-3">
+      <div class="d-flex align-items-center mb-4">
+        <div class="nav-user-avatar-wrapper ratio ratio-1x1">
+          <img
+            class="nav-user-avatar w-100"
+            src="{{ this.mechanic.user.avatar }}"
+            alt="the expert's avatar"
+          />
+        </div>
+        <div class="user-badge ms-3">
+          <img
+            src="/images/expert_badge.png"
+            alt="expert badge"
+            class="badge-icon"
+          />
+        </div>
+        <p class="my-0 fs-4 mx-3 text-capitalize">
+          {{ this.mechanic.user.firstName }}
+          {{ this.mechanic.user.lastName }}
+        </p>
+      </div>
+      <p>Date reviewed: {{ this.updateAt }}</p>
+      <p>Condition: {{ this.review.condition }}</p>
+      <p>Summary: {{ this.review.reviewMessage }}</p>
+      <p>Detail Review: {{ this.review.notes }}</p>
+    </li>
     {{/each}}
   </ul>
   {{else}}
   <p>No mechanic reviews available.</p>
   {{/if}}
-
-  <p><strong>Status:</strong> {{ listing.status }}</p>
-  <p><strong>Listed on:</strong> {{ listing.createdAt }}</p>
-  <p><strong>Last Updated:</strong> {{ listing.updatedAt }}</p>
-
-  <!-- Seller Information -->
-  <h2>Seller Information</h2>
-  <p><strong>Name:</strong> {{ seller.firstName }} {{ seller.lastName }}</p>
-  <p><strong>Email:</strong> {{ seller.email }}</p>
 </div>
 <script>
   const listing = {{{json listing}}}
+  const orderButton = document.getElementById("order-button")
+  const orderLink = document.getElementById("order-button-link")
+  const user = {{{json user}}}
   if (listing.status === "reserved") {
-    document.getElementById("order-button").disabled = true
-    document.getElementById("order-button").classList.add("disabled")
-    document.getElementById("order-button-link").addEventListener("click", (e) =>{
+    orderButton.disabled = true
+    orderButton.classList.add("disabled")
+    orderLink.addEventListener("click", (e) =>{
       e.preventDefault()
     })
-    document.getElementById("order-button-link").insertAdjacentHTML('afterend', "<p class='pt-3 fs-5'> Current listing has been reserved, please contact seller for more information. </p>")
+    orderLink.insertAdjacentHTML('afterend', "<p class='pt-3 fs-5'> Current listing has been reserved, please contact seller for more information. </p>")
+  }
+  else if (listing.status !== "open") {
+    orderButton.disabled = true
+    orderButton.innerHTML = 'Item Sold'
+    orderButton.classList.add("disabled")
+    orderLink.addEventListener("click", (e) =>{
+      e.preventDefault()
+    })
+  }
+  else if (listing.status === 'open' && listing.sellerId === user._id) {
+    orderButton.innerHTML = 'Edit'
+    orderButton.classList.remove("btn-primary")
+    orderButton.classList.add("btn-warning")
+    orderLink.href = '/listings/edit/66b79b319d873645ee2076e4'
+    orderLink.insertAdjacentHTML('afterend', "<p class='pt-3 fs-5'> You are the owner of this listing. </p>")
+  }
+  else if (listing.price > 999999) {
+    orderButton.disabled = true
+    orderButton.classList.add("disabled")
+    orderLink.addEventListener("click", (e) =>{
+      e.preventDefault()
+    })
+    orderLink.insertAdjacentHTML('afterend', "<p class='pt-3 fs-5'> Online transaction is restricted due to high value items, please contact seller. </p>")
   }
 </script>
