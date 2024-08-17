@@ -1,5 +1,5 @@
 document.getElementById("search-expert").addEventListener("click", function () {
-  const name = document.getElementById("expert-name").value;
+  const name = filterXSS(document.getElementById("expert-name").value);
   if (!name || name.trim().length === 0) {
     window.location.href = "/expert/all";
   } else {

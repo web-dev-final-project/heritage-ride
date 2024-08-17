@@ -6,6 +6,7 @@ import {
   InvalidValueException,
   ValidationException,
 } from "./exceptions.js";
+import xss from "xss";
 
 Object.prototype.checkNull = function (name = "input") {
   if (!this || this == null || this == undefined) {
@@ -16,7 +17,7 @@ Object.prototype.checkNull = function (name = "input") {
 
 Object.prototype.checkString = function () {
   if (typeof this !== "string") throw new TypeException();
-  const st = this.trim();
+  const st = xss(this.trim());
   if (st.length === 0)
     throw new InvalidValueException("Input can not be an empty string");
   return st;

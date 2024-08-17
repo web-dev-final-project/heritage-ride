@@ -98,4 +98,12 @@
     orderLink.href = '/listings/edit/66b79b319d873645ee2076e4'
     orderLink.insertAdjacentHTML('afterend', "<p class='pt-3 fs-5'> You are the owner of this listing. </p>")
   }
+  else if (listing.price > 999999) {
+    orderButton.disabled = true
+    orderButton.classList.add("disabled")
+    orderLink.addEventListener("click", (e) =>{
+      e.preventDefault()
+    })
+    orderLink.insertAdjacentHTML('afterend', "<p class='pt-3 fs-5'> Online transaction is restricted due to high value items, please contact seller. </p>")
+  }
 </script>

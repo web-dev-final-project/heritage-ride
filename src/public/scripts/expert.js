@@ -71,10 +71,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = {
         expertId: expert._id,
         listingId: currentList._id,
-        condition: condition.value.trim(),
-        estimateValue: Number(value.value),
-        reviewMessage: summary.value.trim(),
-        notes: reviewNotes.value.trim(),
+        condition: filterXSS(condition.value.trim()),
+        estimateValue: Number(filterXSS(value.value)),
+        reviewMessage: filterXSS(summary.value.trim()),
+        notes: filterXSS(reviewNotes.value.trim()),
       };
       fetch("/api/expert/addReview", {
         method: "POST",
