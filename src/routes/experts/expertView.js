@@ -65,6 +65,7 @@ router.get("/create", auth, async (req, res, next) => {
       cloudinary: cloudinary,
       isEdit: false,
       expert: null,
+      cloudinary: cloudinary,
     });
   } catch (e) {
     next(e);
