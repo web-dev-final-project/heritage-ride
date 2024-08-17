@@ -75,7 +75,15 @@ document.addEventListener("DOMContentLoaded", () => {
         ).content;
       } else {
         document.getElementById("signup-button").disabled = true;
-        document.location.href = "/user";
+        Swal.fire({
+          title: "Sucess!",
+          text: "Your have successfully registered, please login.",
+          icon: "success",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.replace("/user/login");
+          }
+        });
       }
     });
 
