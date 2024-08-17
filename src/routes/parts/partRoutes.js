@@ -41,14 +41,37 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.get('/search', async (req, res) => {
+router.get('/search', async (req, res, next) => {
+  const query = req.query;
+
+  const errors = Validator.validateQuery(query);
+  if (errors.length > 0) {
+    return res.status(400).render("partSearch", {
+      error: "Invalid search criteria: " + errors.join(", "),
+      results: [], 
+      user: req.user
+    });
+  }
+
   try {
-    const query = req.query;
-    const results = await searchPartsByName(query);
-    res.json(results);
+    const result = await searchPartsByName(query);
+    if (!result || result.length === 0) {
+      return res.render("partSearch", {
+        error: "Listing not found",
+        results: [], 
+        user: req.user
+      });
+    }
+    
+    res.render("partSearch", {
+      results: result,
+      user: req.user
+    });
   } catch (e) {
-    res.status(500).json({e});
+    next(e);
   }
 });
+
+
 
 export default router;

@@ -13,7 +13,7 @@
             class="user-image"
           />
         </div>
-        <h3 class="text-center m-3">
+        <h3 class="text-center m-3 text-capitalize">
           {{ expert.user.firstName }} {{ expert.user.lastName }}
         </h3>
         <p>
@@ -59,10 +59,12 @@
     </ul>
   </section>
   <hr class="m-3" />
-  <p class="fs-4 m-2">You have {{ expert.reviews.length }} review requests.</p>
+  <p class="fs-4 m-2 d-none" id="review-counter">
+    You have {{ expert.pendingReviews.length }} active review requests.
+  </p>
   <section id="review-requets" class="search-grid container w-100"></section>
   <hr class="m-3" />
-  <p class="fs-4 m-2">Request history</p>
+  <p class="fs-4 m-2">Past Services</p>
   <section
     id="completed-requests"
     class="search-grid container w-100"

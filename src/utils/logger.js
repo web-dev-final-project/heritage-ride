@@ -21,7 +21,13 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 const startLog = (req, res, next) => {
-  if (req.url.includes("/api"))
+  if (
+    req.url.includes("/api") ||
+    req.url.includes("/expert") ||
+    req.url.includes("/user") ||
+    req.url.includes("/transaction") ||
+    req.url.includes("/listings")
+  )
     logger.info(`new request: (${req.method}) to ${req.url}.`);
   next();
 };
