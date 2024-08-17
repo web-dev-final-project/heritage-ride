@@ -12,6 +12,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const carId = formData.get('carId');
       const price = formData.get('price');
       const image = formData.get('image');
+
+      // Get itemType from the URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const itemType = urlParams.get('itemtype');
   
       try {
         // Field validation
@@ -38,7 +42,8 @@ document.addEventListener('DOMContentLoaded', () => {
             body: JSON.stringify({
               carId: carId,
               price: parsedPrice,
-              image: image
+              image: image,
+              itemType: itemType
             })
           });
   

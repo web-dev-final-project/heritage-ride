@@ -19,7 +19,9 @@ router.post("/create", auth, async (req, res, next) => {
     if (isNaN(req.body.price)) {
       throw new ValidationException("Price must be a valid number");
     }
+    console.log(req.body)
     const validListing = Validator.validateCreateListing(req.body);
+    console.log(validListing)
 
     const listing = await createListing(req.user._id, validListing);
 
