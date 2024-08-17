@@ -1,5 +1,6 @@
 .listing-display-image {
-    width: 100%; /* Adjust to parent container */
-    max-width: 300px; /* Limit maximum size */
-    height: auto; /* Maintain aspect ratio */
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  border-radius: 20px;
 }

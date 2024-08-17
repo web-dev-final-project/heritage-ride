@@ -86,7 +86,7 @@
     <p class="text-danger" id="signup-message"></p>
   </div>
   <div class="display-flex-2">
-    <button type="submit" id="signup-button" disabled class="btn-primary">
+    <button type="submit" id="signup-button" disabled class="btn btn-primary">
       Submit
     </button>
     <button type="button" id="signup-cancel-button" class="btn btn-danger">
@@ -96,6 +96,10 @@
 </form>
 <script>
   window.appData = { signupUrl: "{{signUpUrl}}" };
-  const user = "{{{json user}}}";
+  {{#if user}}
+    const user = {{{json user}}};
+  {{else}}
+    const user = null;
+  {{/if}}
 </script>
 <script src="/scripts/signup.js"></script>
