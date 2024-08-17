@@ -133,7 +133,7 @@ const searchExpertsByName = async (name) => {
         {
           $unwind: {
             path: "$expert",
-            preserveNullAndEmptyArrays: true,
+            preserveNullAndEmptyArrays: false,
           },
         },
         {
