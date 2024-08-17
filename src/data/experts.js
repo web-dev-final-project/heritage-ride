@@ -40,15 +40,41 @@ const getExpertById = async (expertId) => {
   try {
     let validId = Validator.validateId(expertId);
     const expertDb = await experts();
-    const userDb = await users();
-    const expert = await expertDb.findOne({
-      _id: new ObjectId(validId),
-    });
-    if (!expert)
+    const expert = await expertDb
+      .aggregate([
+        {
+          $match: {
+            _id: new ObjectId(validId),
+          },
+        },
+        {
+          $lookup: {
+            from: "listings",
+            localField: "carReviewed",
+            foreignField: "_id",
+            as: "pastReviews",
+          },
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "userId",
+            foreignField: "_id",
+            as: "user",
+          },
+        },
+        {
+          $unwind: {
+            path: "$user",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+      ])
+      .toArray();
+    if (expert.length === 0)
       throw new NotFoundException(`Expert with ID ${validId} not found`);
-    const user = await userDb.findOne({ _id: new ObjectId(expert.userId) });
-    delete user.password;
-    return { ...expert, user };
+    delete expert[0].user.password;
+    return expert[0];
   } catch (e) {
     databaseExceptionHandler(e);
   }
@@ -70,7 +96,15 @@ const getExpertByUserId = async (userId) => {
             from: "listings",
             localField: "requests",
             foreignField: "_id",
-            as: "reviews",
+            as: "pendingReviews",
+          },
+        },
+        {
+          $lookup: {
+            from: "listings",
+            localField: "carReviewed",
+            foreignField: "_id",
+            as: "pastReviews",
           },
         },
       ])

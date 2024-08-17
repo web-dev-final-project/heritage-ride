@@ -8,6 +8,9 @@
     id="first-name-upload"
     placeholder="first name"
   />
+  <p class="text-danger hidden" id="first-name-upload-error">
+    First name must be between 2 to 20 characters, and no space
+  </p>
 
   <label for="last-name-upload" hidden>Last name</label>
   <input
@@ -16,6 +19,9 @@
     id="last-name-upload"
     placeholder="last name"
   />
+  <p class="text-danger hidden" id="last-name-upload-error">
+    Last name must be between 2 to 20 characters, and no space
+  </p>
 
   <label for="username-upload" hidden>User name</label>
   <input
@@ -24,6 +30,9 @@
     id="username-upload"
     placeholder="username"
   />
+  <p class="text-danger hidden" id="username-upload-error">
+    Username must be between 5 to 20 characters, and no space
+  </p>
 
   <label for="password-upload" hidden>Password</label>
   <input
@@ -32,6 +41,9 @@
     id="password-upload"
     placeholder="password"
   />
+  <p class="text-danger hidden" id="password-upload-error">
+    Password must be between 10 to 30 characters, and no space
+  </p>
 
   <label for="password-upload-2" hidden>Reenter password</label>
   <input
@@ -40,6 +52,9 @@
     id="password-upload-2"
     placeholder="Re-enter password"
   />
+  <p class="text-danger hidden" id="password-upload-2-error">
+    Password does not match
+  </p>
 
   <label for="email-upload" hidden>Email</label>
   <input
@@ -48,6 +63,9 @@
     id="email-upload"
     placeholder="email"
   />
+  <p class="text-danger hidden" id="email-upload-error">
+    Email must be valid email address between 5 to 40 characters, and no space
+  </p>
 
   <label for="address-upload" hidden>Address</label>
   <input
@@ -56,6 +74,9 @@
     id="address-upload"
     placeholder="address"
   />
+  <p class="text-danger hidden" id="address-upload-error">
+    Address must be less than 50 characters
+  </p>
 
   <p>Upload your avatar</p>
   <div>
@@ -75,6 +96,6 @@
 </form>
 <script>
   window.appData = { signupUrl: "{{signUpUrl}}" };
-  const user = {{{json user}}}
+  const user = "{{{json user}}}";
 </script>
 <script src="/scripts/signup.js"></script>

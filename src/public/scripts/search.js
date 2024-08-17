@@ -21,7 +21,9 @@ for (let item of filteredListings) {
           <h4 class="text-success">${currency(item.price)}</h4>
         </div>
 
-        <img src=${item.image} alt="" class="img-thumbnail" />
+        <div class='gallery-image'><img src=${
+          item.image
+        } alt="" class="img-thumbnail h-100" /></div>
       </li>
     </a>
   `;
