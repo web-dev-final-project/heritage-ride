@@ -19,7 +19,7 @@ cancelEdit.addEventListener("click", () => {
   }
 });
 
-const expert = {
+let expert = {
   userId: "",
   bio: "",
   skills: [],
@@ -125,27 +125,39 @@ expertAdress.addEventListener("input", () => {
   expert.location = expertAdress.value.trim();
 });
 
+const checkXSS = (expert) => {
+  return {
+    userId: filterXSS(expert.userId),
+    bio: filterXSS(expert.bio),
+    skills: filterXSS(expert.skills),
+    location: filterXSS(expert.location),
+    images: filterXSS(expert.images),
+  };
+};
+
 expertForm.addEventListener("submit", async (e) => {
   e.preventDefault();
-
-  expert.userId = user._id;
-
+  let expertChecked = checkXSS(expert);
+  expertChecked.userId = user._id;
   try {
-    if (expert.bio.length < 10) {
+    if (expertChecked.bio.length < 10) {
       throw new Error(
         "Bio must be more than 10 and less and equal than 500 characters"
       );
     }
-    if (expert.images.length === 0) {
-      throw new Error("Please upload images of your shop or brand");
-    }
-    if (expert.skills.length === 0) {
-      throw new Error("Please add at least one skill");
-    }
-    if (expert.location.length < 5 || expert.location.length > 50) {
+    if (
+      expertChecked.location.length < 5 ||
+      expertChecked.location.length > 50
+    ) {
       throw new Error("Location should be more than 5 characters");
     }
-    if (expert.userId.length === 0) {
+    if (expertChecked.skills.length === 0) {
+      throw new Error("Please add at least one skill");
+    }
+    if (expertChecked.images.length === 0) {
+      throw new Error("Please upload images of your shop or brand");
+    }
+    if (expertChecked.userId.length === 0) {
       window.location.replace("/user/login");
     }
 
@@ -156,7 +168,7 @@ expertForm.addEventListener("submit", async (e) => {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(expert),
+        body: JSON.stringify(expertChecked),
       });
       if (res.ok) {
         document.location.replace("/expert");
@@ -171,7 +183,7 @@ expertForm.addEventListener("submit", async (e) => {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(expert),
+        body: JSON.stringify(expertChecked),
       });
       if (res.ok) {
         document.location.replace("/expert");

@@ -68,6 +68,11 @@
   filter: opacity(80%);
   cursor: pointer;
 }
+.gallery-image {
+  aspect-ratio: 12/8;
+  overflow: hidden;
+  text-align: center;
+}
 .gallery-item:hover {
   filter: grayscale(100%);
   filter: opacity(100%);

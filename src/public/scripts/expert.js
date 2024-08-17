@@ -71,10 +71,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = {
         expertId: expert._id,
         listingId: currentList._id,
-        condition: condition.value.trim(),
-        estimateValue: Number(value.value),
-        reviewMessage: summary.value.trim(),
-        notes: reviewNotes.value.trim(),
+        condition: filterXSS(condition.value.trim()),
+        estimateValue: Number(filterXSS(value.value)),
+        reviewMessage: filterXSS(summary.value.trim()),
+        notes: filterXSS(reviewNotes.value.trim()),
       };
       fetch("/api/expert/addReview", {
         method: "POST",
@@ -111,11 +111,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  const reviewedList = document.getElementById("completed-requests");
   if (expert.userId === user._id) {
+    document.getElementById("review-counter").classList.remove("d-none");
     expertHireButton.classList.add("d-none");
     expertEditButton.classList.remove("d-none");
     expertGallery.classList.add("d-none");
-    for (let list of expert.reviews) {
+    for (let list of expert.pendingReviews) {
       currentList = list;
       const review = document.createElement("li");
       review.classList.add("card");
@@ -131,6 +133,7 @@ document.addEventListener("DOMContentLoaded", () => {
           "estimate-value-label"
         ).innerHTML = `Estimated Value (listed for $${list.price})`;
         overlay.style.display = "block";
+        // todo
         const condition = document.getElementById("condition");
         const value = document.getElementById("estimateValue");
         const valueError = document.getElementById("estimateValueError");
@@ -152,6 +155,21 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       });
     }
+  }
+  for (let list of expert.pastReviews) {
+    currentList = list;
+    const review = document.createElement("li");
+    review.classList.add("card");
+    review.classList.add("p-2");
+    review.setAttribute("role", "button");
+    review.addEventListener("click", () => {
+      window.location.href = `/listings/${list._id}`;
+    });
+    review.innerHTML = `
+        <div class='d-flex justify-content-between'>
+        <p class='fs-5 m-0'>${list.title}</p><p class='m-1'>status: ${list.status}</p></div>
+        <img src=${list.image} class='img-thumbnail'/>`;
+    reviewedList.appendChild(review);
   }
   expertHireButton.addEventListener("click", () => {
     document.location.href = `/expert/hire?id=${expert._id}`;

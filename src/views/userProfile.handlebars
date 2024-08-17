@@ -24,8 +24,8 @@
         Purchases
       </h3>
     </div>
-    <div id="profile-page">
-      <div class="d-flex justify-content-between">
+    <div id="profile-page" class="text-capitalize">
+      <div class="d-flex justify-content-between text-capitalize">
         <h2>Welcome back, {{ user.firstName }}</h2>
         <div>
           Edit
@@ -40,7 +40,7 @@
       </div>
       <div class="d-flex justify-content-between">
         <p>First name:</p>
-        <p>{{ user.firstName }}</p>
+        <p class="text-capitalize">{{ user.firstName }}</p>
       </div>
       <div class="d-flex justify-content-between">
         <p>Last name:</p>
@@ -56,7 +56,7 @@
       </div>
       <hr />
     </div>
-    <div id="purchase-page">
+    <div id="purchase-page" class="text-capitalize">
       <h3 id="ordered-number" class="fs-4"></h3>
       <ul id="ordered-list"></ul>
       <hr />

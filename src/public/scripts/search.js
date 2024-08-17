@@ -1,7 +1,11 @@
 const searchGrid = document.getElementById("search-grid");
 
 const filteredListings = listings.filter((li) => li.status === "open");
-
+if (filteredListings.length === 0) {
+  const searchNotFound = document.getElementById("search-not-found");
+  searchNotFound.style.display = "block";
+  searchGrid.style.display = "none";
+}
 for (let item of filteredListings) {
   const list = document.createElement("div");
   list.innerHTML = `
@@ -17,7 +21,9 @@ for (let item of filteredListings) {
           <h4 class="text-success">${currency(item.price)}</h4>
         </div>
 
-        <img src=${item.image} alt="" class="img-thumbnail" />
+        <div class='gallery-image'><img src=${
+          item.image
+        } alt="" class="img-thumbnail h-100" /></div>
       </li>
     </a>
   `;
