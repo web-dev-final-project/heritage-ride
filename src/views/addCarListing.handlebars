@@ -1,0 +1,61 @@
+<div class="w-100">
+  <h1 class="text-center">Add a New Car Listing</h1>
+  <div class="d-flex justify-content-between page-width m-auto px-5 py-3 gap-3">
+    <form
+      action="/api/listings/create"
+      method="POST"
+      class="d-flex flex-column gap-3"
+    >
+      <div class="form-group w-100">
+        <label for="car" class="fs-5">Select Car:</label>
+        <select id="car" name="carId" class="p-1 fs-5" required>
+          {{#each cars}}
+          <option value="{{ this._id }}">
+            {{ this.make }} {{ this.model }} ({{ this.year }})
+          </option>
+          {{/each}}
+        </select>
+      </div>
+      <div class="form-group w-100">
+        <label for="price" class="fs-5">Price:</label>
+        <input
+          class="w-100 py-1 px-2"
+          type="number"
+          id="price"
+          name="price"
+          required
+        />
+      </div>
+      <div class="form-group w-100 d-flex justify-content-between">
+        <label for="image" class="fs-5">Image Upload</label>
+        {{> uploadWidget id="upload-widget" cloudName=cloudinary.cloudName uploadPreset=cloudinary.presetName uploadValue="image-upload"}}
+        <input hidden="true" id="image-upload" name="image-upload" />
+      </div>
+      <div class="form-group w-100">
+        <label for="description" class="fs-5">Description:</label>
+        <textarea
+          class="w-100 py-1 px-2"
+          rows="7"
+          id="description"
+          name="description"
+        ></textarea>
+      </div>
+      <input type="hidden" name="itemType" value="{{ itemType }}" />
+
+      <div id="errorContainer" style="color: red">
+        {{#if errorMessage}}
+        <p>{{ errorMessage }}</p>
+        {{/if}}
+      </div>
+
+      <button type="submit" class="btn btn-primary">Submit Listing</button>
+      <button type="button" class="btn btn-danger" id="cancel">Cancel</button>
+    </form>
+    <div id="car-preview" class="p-3 w-100"></div>
+  </div>
+</div>
+
+<script>
+  const cars = {{{json cars}}}
+</script>
+<script src="/scripts/createListing.js"></script>

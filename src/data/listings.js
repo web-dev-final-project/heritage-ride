@@ -9,6 +9,7 @@ import Validator from "../utils/validator.js";
 import { cars, listings, transactions } from "./init.js";
 import { getCarById } from "./cars.js";
 import { handleUpdateError } from "../utils/databaseUtil.js";
+import { addRole, findUser, updateUser } from "./users.js";
 
 const getListingByUser = async (userId) => {
   const validId = Validator.validateId(userId);
@@ -63,49 +64,62 @@ const getListingByBuyer = async (userId) => {
 };
 
 const createListing = async (sellerId, item) => {
-  const validSellerId = Validator.validateId(sellerId);
-  const validItem = Validator.validateListing(item);
-
   try {
-    const db = await listings();
-    const res = await db.insertOne({
-      ...validItem,
-      status: "open",
-      itemId: new ObjectId(validItem.itemId),
-      sellerId: new ObjectId(validSellerId),
-      mechanicReviews: [],
-      createdAt: new Date().toUTCString(),
-      updatedAt: new Date().toUTCString(),
-    });
+    const validSellerId = Validator.validateId(sellerId);
+    const validItem = Validator.validateCreateListing(item);
 
-    if (!res || !res.acknowledged || !res.insertedId) {
-      throw new DataBaseException("Insert listing failed");
+    if (validItem.itemType === 'car') { // check if car or part
+      const { carId, price, image } = validItem;
+      
+      const car = await getCarById(carId) 
+      const db = await listings();
+      const res = await db.insertOne({
+        itemId: new ObjectId(carId),
+        title: `${car.make} ${car.model}`,
+        description: car.description,
+        price: price,
+        status: "open",
+        sellerId: new ObjectId(validSellerId),
+        mechanicReviews: [],
+        createdAt: new Date().toUTCString(),
+        updatedAt: new Date().toUTCString(),
+        image: image,
+        itemType: validItem.itemType
+      });
+
+      if (!res || !res.acknowledged || !res.insertedId) {
+        throw new DataBaseException("Insert listing failed");
+      }
+
+      return {
+        ...item,
+        _id: res.insertedId,
+      };
     }
-    return {
-      ...item,
-      _id: res.insertedId,
-    };
+    else {
+      // code for inserting part
+    }
   } catch (e) {
-    throw new DataBaseException(e.message);
+    databaseExceptionHandler(e)
   }
 };
 
-const getAll = async (query) => {
+const getAll = async (query) => { // for cars
   // this will fire after a user enters search terms and clicks search
-  // Add: validate each query field
   try {
+    const valQuery = Validator.validateQuery(query)
     const listingCollection = await listings();
     // Build the query object
     const matchConditions = {};
 
-    if (query.make)
-      matchConditions["car.make"] = { $regex: new RegExp(query.make, "i") };
-    if (query.model)
-      matchConditions["car.model"] = { $regex: new RegExp(query.model, "i") };
-    if (query.year) matchConditions["car.year"] = query.year;
-    if (query.category)
+    if (valQuery.make)
+      matchConditions["car.make"] = { $regex: new RegExp(valQuery.make, "i") };
+    if (valQuery.model)
+      matchConditions["car.model"] = { $regex: new RegExp(valQuery.model, "i") };
+    if (valQuery.year) matchConditions["car.year"] = valQuery.year;
+    if (valQuery.category)
       matchConditions["car.category"] = {
-        $regex: new RegExp(query.category, "i"),
+        $regex: new RegExp(valQuery.category, "i"),
       };
 
     const aggregation = [
