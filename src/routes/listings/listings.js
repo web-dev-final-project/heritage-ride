@@ -40,10 +40,8 @@ router.post("/create", auth, async (req, res, next) => {
       });
     }
     res.status(201).send(new HttpResponse(listing, HttpStatus.SUCCESS));
-    //res.redirect("/seller");
   } catch (e) {
-    res.status(400).send(new HttpResponse(e, HttpStatus.FAILED));
-    //next(e);
+    next(e);
   }
 });
 
