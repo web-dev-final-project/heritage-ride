@@ -1,4 +1,12 @@
 const sellerCentral = document.getElementById("seller-central-page");
+const activePage = document.getElementById("active-page");
+const reviewPage = document.getElementById("review-page");
+const selectList = document.getElementById("seller-list-filter");
+const soldPage = document.getElementById("sold-page");
+
+activePage.classList.add("border");
+reviewPage.classList.add("fw-light");
+soldPage.classList.add("fw-light");
 
 document.getElementById("add-listing").addEventListener("click", () => {
   sellerCentral.classList.add("d-none");
@@ -20,7 +28,7 @@ const generateList = (list, status) => {
   }
   return lists;
 };
-const addList = (listContainer, lists, status) => {
+function addList(listContainer, lists, status) {
   listContainer.innerHTML = "";
   for (let item of lists) {
     let element = document.createElement("li");
@@ -53,7 +61,7 @@ const addList = (listContainer, lists, status) => {
         document.location.href = `/listings/eidt/${item._id}`;
       });
   }
-};
+}
 
 if (sellerCentral) {
   const listContainer = document.getElementById("user-listings");
@@ -70,6 +78,70 @@ if (sellerCentral) {
       listingInfo.innerHTML = `You have 0 ${sellerListings.value} listing.`;
       listingInfo.style.display = "block";
     } else listingInfo.style.display = "none";
+  });
+
+  activePage.addEventListener("click", () => {
+    if (!activePage.classList.contains("border")) {
+      activePage.classList.add("border");
+    }
+    if (!reviewPage.classList.contains("fw-light")) {
+      reviewPage.classList.add("fw-light");
+    }
+    if (!soldPage.classList.contains("fw-light")) {
+      soldPage.classList.add("fw-light");
+    }
+    activePage.classList.remove("fw-light");
+    reviewPage.classList.remove("border");
+    soldPage.classList.remove("border");
+    selectList.style.display = "block";
+    addList(listContainer, list, "open");
+  });
+
+  reviewPage.addEventListener("click", () => {
+    if (!reviewPage.classList.contains("border")) {
+      reviewPage.classList.add("border");
+    }
+    if (!activePage.classList.contains("fw-light")) {
+      activePage.classList.add("fw-light");
+    }
+    if (!soldPage.classList.contains("fw-light")) {
+      soldPage.classList.add("fw-light");
+    }
+    selectList.style.display = "none";
+    reviewPage.classList.remove("fw-light");
+    activePage.classList.remove("border");
+    soldPage.classList.remove("border");
+    const filteredList = list.filter(
+      (li) =>
+        li.mechanicReviews.length > 0 &&
+        li.sellerId === user._id &&
+        li.mechanicReviews[0].review === null
+    );
+    addList(listContainer, filteredList, "open");
+  });
+
+  soldPage.addEventListener("click", () => {
+    if (!soldPage.classList.contains("border")) {
+      soldPage.classList.add("border");
+    }
+    if (!activePage.classList.contains("fw-light")) {
+      activePage.classList.add("fw-light");
+    }
+    if (!reviewPage.classList.contains("fw-light")) {
+      reviewPage.classList.add("fw-light");
+    }
+    selectList.style.display = "none";
+    soldPage.classList.remove("fw-light");
+    activePage.classList.remove("border");
+    reviewPage.classList.remove("border");
+    const filteredList = list.filter((li) => li.status === "sold");
+    addList(listContainer, filteredList, "open");
+    if (filteredList.length === 0) {
+      const message = document.createElement("p");
+      message.classList.add("fs-4");
+      message.innerHTML = "You have not sold any thing yet.";
+      listContainer.appendChild(message);
+    }
   });
 
   const reservedlist = generateList("car", "reserved");

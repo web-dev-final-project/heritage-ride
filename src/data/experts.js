@@ -40,15 +40,41 @@ const getExpertById = async (expertId) => {
   try {
     let validId = Validator.validateId(expertId);
     const expertDb = await experts();
-    const userDb = await users();
-    const expert = await expertDb.findOne({
-      _id: new ObjectId(validId),
-    });
-    if (!expert)
+    const expert = await expertDb
+      .aggregate([
+        {
+          $match: {
+            _id: new ObjectId(validId),
+          },
+        },
+        {
+          $lookup: {
+            from: "listings",
+            localField: "carReviewed",
+            foreignField: "_id",
+            as: "pastReviews",
+          },
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "userId",
+            foreignField: "_id",
+            as: "user",
+          },
+        },
+        {
+          $unwind: {
+            path: "$user",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+      ])
+      .toArray();
+    if (expert.length === 0)
       throw new NotFoundException(`Expert with ID ${validId} not found`);
-    const user = await userDb.findOne({ _id: new ObjectId(expert.userId) });
-    delete user.password;
-    return { ...expert, user };
+    delete expert[0].user.password;
+    return expert[0];
   } catch (e) {
     databaseExceptionHandler(e);
   }
@@ -58,12 +84,34 @@ const getExpertByUserId = async (userId) => {
   try {
     let validId = Validator.validateId(userId);
     const expertDb = await experts();
-    const expert = await expertDb.findOne({
-      userId: new ObjectId(validId),
-    });
-    if (!expert)
+    const expert = await expertDb
+      .aggregate([
+        {
+          $match: {
+            userId: new ObjectId(validId),
+          },
+        },
+        {
+          $lookup: {
+            from: "listings",
+            localField: "requests",
+            foreignField: "_id",
+            as: "pendingReviews",
+          },
+        },
+        {
+          $lookup: {
+            from: "listings",
+            localField: "carReviewed",
+            foreignField: "_id",
+            as: "pastReviews",
+          },
+        },
+      ])
+      .toArray();
+    if (expert.length === 0)
       throw new NotFoundException(`Expert with ID ${validId} not found`);
-    return { ...expert };
+    return expert[0];
   } catch (e) {
     databaseExceptionHandler(e);
   }
@@ -72,15 +120,44 @@ const getExpertByUserId = async (userId) => {
 const searchExpertsByName = async (name) => {
   try {
     const db = await users();
-    const experts = await db
-      .find({
-        $or: [
-          { firstName: { $regex: name, $options: "i" } },
-          { lastName: { $regex: name, $options: "i" } },
-        ],
-        role: { $in: ["expert"] },
-      })
+    const res = await db
+      .aggregate([
+        {
+          $lookup: {
+            from: "experts",
+            localField: "_id",
+            foreignField: "userId",
+            as: "expert",
+          },
+        },
+        {
+          $unwind: {
+            path: "$expert",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $match: {
+            $or: [
+              { firstName: { $regex: name, $options: "i" } },
+              { lastName: { $regex: name, $options: "i" } },
+              { userName: { $regex: name, $options: "i" } },
+              { "expert.skills": { $regex: name, $options: "i" } },
+              { "expert.location": { $regex: name, $options: "i" } },
+            ],
+          },
+        },
+      ])
       .toArray();
+    const experts = [];
+    for (let item of res) {
+      const expert = { ...item.expert };
+      delete item.expert;
+      delete item.password;
+      expert.user = item;
+      experts.push(expert);
+    }
+
     return experts;
   } catch (e) {
     throw new DataBaseException(e);
