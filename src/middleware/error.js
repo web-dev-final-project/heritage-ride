@@ -3,6 +3,7 @@ import {
   AccessException,
   AuthenticationException,
   NotFoundException,
+  PageNotFoundException,
   ValidationException,
 } from "../utils/exceptions.js";
 import logger from "../utils/logger.js";
@@ -12,6 +13,9 @@ function error(err, req, res, next) {
     return next(err);
   }
   logger.error(err.stack);
+  if (err instanceof PageNotFoundException) {
+    res.redirect("/");
+  }
   if (err instanceof AuthenticationException)
     res.status(400).send(new HttpResponse(err.message, HttpStatus.FAILED));
   else if (err instanceof ValidationException)

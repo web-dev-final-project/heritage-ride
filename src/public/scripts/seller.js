@@ -36,29 +36,77 @@ function addList(listContainer, lists, status) {
     element.classList.add("p-2");
     element.innerHTML = `
     <div class="d-flex justify-content-between">
-    <div>
-    <p class="fs-5 my-0">${item.title}</p>
+    <div class='overflow-hidden'>
+    <p class="fs-5 my-0 text-truncate">${item.title}</p>
     <p>current status: ${item.status}</p>
     </div>
     <div><button id="item-${
       item._id
     }" class="btn btn-warning">Edit</button></div>
     </div>
-    <img src=${
+    <a href='/listings/${
+      item._id
+    }'><div class='image-container mb-2'><img src=${
       item.image ||
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSReWLry0CkAtuYdDZGhY6iuy5I4gudfFxjdw&s"
-    } class="img-thumbnail"/>
+    } class="img-item"/></div></a>
     ${
       status === "reserved"
         ? `<a href='/seller/transaction/${item._id}'><button class='btn btn-info mt-1 text-white w-100'>View</button></a>`
         : ""
     }
+    ${
+      item.status === "sold"
+        ? "<button class='btn btn-secondary' disabled>Sold</button>"
+        : `<button class='btn btn-danger' id="delete-${item._id}">Delete</button>`
+    }
     `;
     listContainer.appendChild(element);
+    if (!(item.status === "sold")) {
+      document
+        .getElementById("delete-" + item._id)
+        .addEventListener("click", () => {
+          Swal.fire({
+            title: "Are you sure?",
+            text: `You will delete this listing, and this can't be recover`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Confirm",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              fetch("/api/listings/" + item._id, {
+                method: "DELETE",
+              })
+                .then((res) => {
+                  if (res.ok) {
+                    Swal.fire({
+                      title: "Sucess!",
+                      text: "Listing was successfully deleted",
+                      icon: "success",
+                    }).then((result) => {
+                      if (result.isConfirmed) {
+                        window.location.reload();
+                      }
+                    });
+                  } else {
+                    Swal.fire({
+                      title: "Error!",
+                      text: "Something failed.",
+                      icon: "error",
+                    });
+                  }
+                })
+                .catch();
+            }
+          });
+        });
+    }
     document
       .getElementById("item-" + item._id)
       .addEventListener("click", () => {
-        document.location.href = `/listings/eidt/${item._id}`;
+        document.location.href = `/listings/edit?type=${item.itemType}&id=${item._id}`;
       });
   }
 }
