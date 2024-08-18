@@ -76,8 +76,7 @@ const createListing = async (sellerId, item) => {
       const res = await db.insertOne({
         itemId: new ObjectId(carId),
         title: `${car.make} ${car.model}`,
-        description: car.description,
-        sellerNotes: validItem.sellerNotes,
+        description: validItem.description,
         price: price,
         status: "open",
         sellerId: new ObjectId(validSellerId),

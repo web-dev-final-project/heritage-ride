@@ -16,7 +16,6 @@
       <h2>Details</h2>
       <p><strong>Color:</strong> {{ car.color }}</p>
       <p><strong>Category:</strong> {{ car.category }}</p>
-      <p><strong>Description:</strong> {{ listing.description }}</p>
 
       <p><strong>Listed on:</strong> {{ listing.createdAt }}</p>
       <p><strong>Last Updated:</strong> {{ listing.updatedAt }}</p>
@@ -37,7 +36,7 @@
   <p><strong>Name:</strong> {{ seller.firstName }} {{ seller.lastName }}</p>
   <p><strong>Email:</strong> {{ seller.email }}</p>
   <hr class="my-4" />
-  <p><strong>Seller Notes:</strong> {{ listing.sellerNotes }}</p>
+  <p><strong>Description:</strong> {{ listing.description }}</p>
 
   <!-- Mechanic Reviews -->
   {{#if listing.mechanicReviews.length}}

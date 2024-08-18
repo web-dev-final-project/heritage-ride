@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const carId = formData.get("carId");
     const price = formData.get("price");
     const image = formData.get("image-upload");
-    const notes = formData.get("notes");
+    const description = formData.get("description");
 
     const urlParams = new URLSearchParams(window.location.search);
     const itemType = urlParams.get("itemtype");
@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ) {
         throw new Error("Image URL must be a valid URL.");
       }
-      if (notes.trim().length < 20 || notes.trim().length > 500)
+      if (description.trim().length < 20 || description.trim().length > 500)
         throw new Error("Description must be between 20 to 500 characters.");
 
       const response = await fetch("/api/listings/create", {
@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
         body: JSON.stringify({
           carId: filterXSS(carId),
           price: filterXSS(parsedPrice),
-          sellerNotes: filterXSS(notes),
+          description: filterXSS(description),
           image: filterXSS(image),
           itemType: filterXSS(itemType),
         }),

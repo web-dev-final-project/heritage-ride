@@ -60,12 +60,12 @@ class Validator {
       throw new Error("Price is too high")
     }
     const valImage = Validator.validateImageURL(obj.image)
-    if (obj.sellerNotes.trim().length < 20 || obj.sellerNotes.trim().length > 500) {
+    if (obj.description.trim().length < 20 || obj.description.trim().length > 500) {
       throw new Error("Description must be between 20 to 500 characters.");
     }
     let listingInfo = {
       ...obj,
-      sellerNotes: this.nullcheck(obj.sellerNotes),
+      description: this.nullcheck(obj.description),
       price: this.nullcheck(obj.price).checkNumber(), 
       image: valImage,
       itemType: this.nullcheck(obj.itemType)
