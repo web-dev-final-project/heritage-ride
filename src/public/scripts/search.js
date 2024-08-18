@@ -1,5 +1,15 @@
 const searchGrid = document.getElementById("search-grid");
 
+if (
+  window.location.search.trim() === "?type=cars&make=&model=&category=" ||
+  window.location.search.trim() === "?type=parts&car=&part=&partCategory="
+) {
+  document.getElementById("searchbar-error").classList.remove("d-none");
+  setTimeout(() => {
+    document.getElementById("searchbar-error").classList.add("d-none");
+  }, 1500);
+}
+
 const filteredListings = (() =>
   listings.filter(
     (li) =>

@@ -20,7 +20,9 @@
       {{ seller.email }}
     </p>
     <p class="fs-5 text-capitalize">
-      <span class="fw-semi-bold">Address: </span>{{#if seller.address
+      <span class="fw-semi-bold">Address: </span
+      >{{#if seller.address
+
       }}{{ seller.address }}{{else}}No record{{/if}}
     </p>
   </div>
@@ -36,7 +38,9 @@
         {{ user.email }}
       </p>
       <p class="fs-5 text-capitalize">
-        <span class="fw-semi-bold">Address: </span>{{#if user.address
+        <span class="fw-semi-bold">Address: </span
+        >{{#if user.address
+
         }}{{ user.address }}{{else}}No record{{/if}}
       </p>
     </div>
@@ -46,10 +50,6 @@
 </div>
 
 <script>
-  console.log({{{json user}}})
-  {{!-- listing: listingDetails,
-      user: req.user,
-      seller: sellerDetails, --}}
   document.getElementById("check-out").addEventListener("click", () => {
     fetch("/api/listings/checkout", {
       method: "POST",

@@ -5,7 +5,7 @@
 </div>
 <div class="search-main">
   {{#if error}}
-  <p style="color: red">{{ error }}</p>
+  <p class="text-danger">{{ error }}</p>
   {{/if}}
   {{#if results.length}}
   <ul class="list-group container card p-3 search-grid" id="search-grid"></ul>
@@ -19,7 +19,7 @@
 <a href="/">Return to Homepage</a>
 
 <script>
-  const listings = {{{json results}}}
+  let listings = {{{json results}}}
   {{#if user}}
     const user = {{{json user}}};
   {{else}}

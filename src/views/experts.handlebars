@@ -1,7 +1,7 @@
 <div class="expert-box">
   <h1 hidden>Experts</h1>
 
-  <div class="search-expert">
+  <div class="search-expert my-2">
     <div class="d-flex align-items-center gap-3">
       <label for="expert-name" class="text-nowrap fs-3">Search Expert</label>
       <div class="input-group">
@@ -19,10 +19,12 @@
       </div>
     </div>
   </div>
-  <p class="error-message" id="error">{{ error }}</p>
+  <p class="text-center fs-4 m-2" id="search-error" hidden>
+    {{#if error}}{{ error }}{{/if}}
+  </p>
   {{#if experts}}
   {{#each experts}}
-  <ul id="experts-list" class="p-0 d-flex gap-3">
+  <ul id="experts-list" class="p-0 d-flex gap-3 my-4">
     <li class="expert card shadow p-4" id="{{ this._id }}">
       <p class="text-capitalize">
         <strong>Name:</strong> {{ this.user.firstName }}

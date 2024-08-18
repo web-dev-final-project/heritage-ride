@@ -24,7 +24,6 @@ const router = Router();
 
 router.get("/search", authSafe, async (req, res, next) => {
   // car listings search, displays cars
-  let result;
   try {
     const valQuery = Validator.validateQuery(req.query);
     const result = await getAll(valQuery);

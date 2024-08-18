@@ -6,7 +6,10 @@ document.addEventListener("DOMContentLoaded", () => {
   expert.classList.remove("nav-select");
   seller.classList.remove("nav-select");
 
-  if (document.location.href.includes("search"))
+  if (
+    document.location.href.includes("search") &&
+    !document.location.href.includes("expert")
+  )
     search.classList.add("nav-select");
   else if (
     document.location.href.includes("expert/all") ||
