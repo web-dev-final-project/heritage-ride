@@ -18,6 +18,13 @@ const emailError = document.getElementById("email-upload-error");
 const addressError = document.getElementById("address-upload-error");
 const avatarError = document.getElementById("avatar-upload-error");
 
+const lastVisitedUrl = localStorage.getItem("lastVisitedUrl");
+signupCancel.addEventListener("click", () => {
+  if (!lastVisitedUrl) {
+    document.location.href = "/";
+  } else window.history.back();
+});
+
 const validation = {
   [firstName.id]: false,
   [lastName.id]: false,
@@ -219,9 +226,5 @@ document.addEventListener("DOMContentLoaded", () => {
       address.style.borderColor = "red";
       addressError.style.display = "block";
     }
-  });
-
-  signupCancel.addEventListener("click", () => {
-    window.location.href = getCurrentRoute();
   });
 });

@@ -123,7 +123,7 @@
     orderButton.innerHTML = 'Edit'
     orderButton.classList.remove("btn-primary")
     orderButton.classList.add("btn-warning")
-    orderLink.href = '/listings/edit/66b79b319d873645ee2076e4'
+    orderLink.href = `/listings/edit?type=${listing.itemType}&id=${listing._id}`
     orderLink.insertAdjacentHTML('afterend', "<p class='pt-3 fs-5'> You are the owner of this listing. </p>")
   }
   if (listing.price > 999999) {
