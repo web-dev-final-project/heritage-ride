@@ -37,7 +37,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const expertGallery = document.getElementById("expert-gallery");
   const reviewForm = document.getElementById("review-modal");
   const overlay = document.getElementById("overlay-2");
-  let currentList = reviewForm.addEventListener("submit", (e) => {
+  let currentList = {};
+
+  reviewForm.addEventListener("submit", (e) => {
     e.preventDefault();
     let valid = true;
 
@@ -118,7 +120,6 @@ document.addEventListener("DOMContentLoaded", () => {
     expertEditButton.classList.remove("d-none");
     expertGallery.classList.add("d-none");
     for (let list of expert.pendingReviews) {
-      currentList = list;
       const review = document.createElement("li");
       review.classList.add("card");
       review.classList.add("p-2");
@@ -129,6 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <button class='btn btn-info m-1'>Add Review</button>`;
       reviewRequests.appendChild(review);
       review.addEventListener("click", () => {
+        currentList = list;
         document.getElementById(
           "estimate-value-label"
         ).innerHTML = `Estimated Value (listed for $${list.price})`;
