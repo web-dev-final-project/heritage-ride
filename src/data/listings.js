@@ -225,7 +225,7 @@ const getAll = async (query) => {
       const listingsWithParts = await listingCollection
         .aggregate(aggregation)
         .toArray();
-      console.log(listingsWithParts);
+
       return listingsWithParts;
     }
   } catch (e) {

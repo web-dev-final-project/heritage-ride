@@ -99,13 +99,10 @@
 
 <script>
   const listing = {{{json listing}}}
-  const part = {{{json part}}}
-  console.log(part)
   const type = {{{json type}}} || 'car'
   const orderButton = document.getElementById("order-button")
   const orderLink = document.getElementById("order-button-link")
   const user = {{{json user}}}
-  console.log(listing)
   if (listing.status === "reserved") {
     orderButton.disabled = true
     orderButton.classList.add("disabled")
