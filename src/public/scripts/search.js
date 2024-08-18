@@ -7,7 +7,7 @@ if (
   document.getElementById("searchbar-error").classList.remove("d-none");
   setTimeout(() => {
     document.getElementById("searchbar-error").classList.add("d-none");
-  }, 1500);
+  }, 3000);
 }
 
 const filteredListings = (() =>

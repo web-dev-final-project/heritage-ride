@@ -67,19 +67,20 @@ class Validator {
     if (!obj || typeof obj !== "object") {
       throw new InvalidInputException("Provided listing must be an object.");
     }
-    let valImage = "";
-    if (obj.image) {
-      // image is optional
-      valImage = Validator.validateImageURL(obj.image);
+    let listing = {};
+    listing.title = xss(this.nullcheck(obj.title).checkString(5, 50, "title"));
+    listing.description = xss(
+      this.nullcheck(obj.description).checkString(20, 500, "description")
+    );
+    listing.price = this.nullcheck(obj.price).checkNumber(0, 1000000000, "price");
+    if (obj.itemType !== 'car' && obj.itemType !== 'part') {
+      throw new Error("Invalid item type");
     }
-    let listingInfo = {
-      ...obj,
-      price: this.nullcheck(obj.price).checkNumber(),
-      image: xss(valImage),
-      itemType: this.nullcheck(obj.itemType),
-    };
-    return listingInfo;
+    listing.itemType = xss(this.nullcheck(obj.itemType))
+    listing.image = xss(this.nullcheck(obj.image).checkString().checkUrl());
+    return listing
   }
+  
   static validatePartialListing(obj) {
     if (!obj || typeof obj !== "object") {
       throw new InvalidInputException(

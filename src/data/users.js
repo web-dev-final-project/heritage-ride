@@ -1,4 +1,4 @@
-import { generateToken } from "../utils/auth.js";
+import { generateToken, hashPassword } from "../utils/auth.js";
 import { DataBaseException, NotFoundException } from "../utils/exceptions.js";
 import Validator from "../utils/validator.js";
 import { users } from "./init.js";
@@ -9,6 +9,8 @@ const createUser = async (user) => {
   valUser.email = valUser.email.toLowerCase();
   try {
     const db = await users();
+    const hashedPassword = await hashPassword(user.password);
+    valUser.password = hashedPassword;
     const res = await db.insertOne(
       {
         ...valUser,
