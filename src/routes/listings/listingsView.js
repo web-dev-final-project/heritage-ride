@@ -17,7 +17,7 @@ import { findUser } from "../../data/users.js";
 import Stripe from "stripe";
 import { createTransaction } from "../../data/transaction.js";
 import { cloudinary } from "../../utils/class.js";
-import { getPartById } from "../../data/parts.js";
+import { getPartById, getParts } from "../../data/parts.js";
 
 const stripe = new Stripe(process.env.STRIPE_KEY);
 const router = Router();
@@ -106,7 +106,9 @@ router.get("/edit", auth, async (req, res, next) => {
     }
     const validId = Validator.validateId(id);
     const listing = await getListingById(validId);
-    const cars = await getCars();
+    let cars = await getCars();
+    if (type !== "car") cars = await getParts();
+
     return res.render("addCarListing", {
       listing,
       cars: cars,
@@ -124,9 +126,9 @@ router.get("/create", auth, async (req, res, next) => {
   if (!itemType || (itemType !== "car" && itemType !== "part")) {
     throw new InvalidInputException("Invalid item type");
   }
-
   try {
-    const cars = await getCars();
+    let cars = await getCars();
+    if (itemType !== "car") cars = await getParts();
     return res.render("addCarListing", {
       cars: cars,
       itemType: itemType,

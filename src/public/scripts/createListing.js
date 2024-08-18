@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   if (listing) {
+    // editing
     carSelect.value = listing.itemId;
     price.value = listing.price;
     title.value = listing.title;
@@ -32,6 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
     carSelect.disabled = true;
   }
 
+  // handle back button
   const cancelButton = document.getElementById("cancel");
   const lastVisitedUrl = localStorage.getItem("lastVisitedUrl");
   cancelButton.addEventListener("click", () => {
@@ -41,21 +43,40 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   const car = cars.find((c) => c._id === carSelect.value);
-  carPreview.innerHTML = `
-    <div>
-      <h3>${car.year} ${car.make} ${car.model}</h3>
-      <img class='w-100' src=${car.image || "/images/no-image.jpeg"}/>
-    </div>
-  `;
-  carSelect.addEventListener("change", () => {
-    const car = cars.find((c) => c._id === carSelect.value);
+
+  if (itemType === "car") {
     carPreview.innerHTML = `
       <div>
         <h3>${car.year} ${car.make} ${car.model}</h3>
         <img class='w-100' src=${car.image || "/images/no-image.jpeg"}/>
       </div>
     `;
-  });
+    carSelect.addEventListener("change", () => {
+      const car = cars.find((c) => c._id === carSelect.value);
+      carPreview.innerHTML = `
+        <div>
+          <h3>${car.year} ${car.make} ${car.model}</h3>
+          <img class='w-100' src=${car.image || "/images/no-image.jpeg"}/>
+        </div>
+      `;
+    });
+  } else {
+    carPreview.innerHTML = `
+    <div>
+      <h3>${car.name} ${car.manufacturer} ${car.part}</h3>
+      <img class='w-100' src=${car.image || "/images/no-image.jpeg"}/>
+    </div>
+  `;
+    carSelect.addEventListener("change", () => {
+      const car = cars.find((c) => c._id === carSelect.value);
+      carPreview.innerHTML = `
+      <div>
+        <h3>${car.name} ${car.manufacturer} ${car.part}</h3>
+        <img class='w-100' src=${car.image || "/images/no-image.jpeg"}/>
+      </div>
+    `;
+    });
+  }
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -126,7 +147,11 @@ document.addEventListener("DOMContentLoaded", () => {
             icon: "success",
           }).then((result) => {
             if (result.isConfirmed) {
-              document.location.replace(`/listings/${listing._id}`);
+              document.location.replace(
+                `/listings/${listing.itemType === "part" ? "part/" : ""}${
+                  listing._id
+                }`
+              );
             }
           });
         } else {

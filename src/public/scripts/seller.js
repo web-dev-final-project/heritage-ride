@@ -44,7 +44,7 @@ function addList(listContainer, lists, status) {
       item._id
     }" class="btn btn-warning">Edit</button></div>
     </div>
-    <a href='/listings/${
+    <a href='/listings/${item.itemType === "part" ? "part/" : ""}${
       item._id
     }'><div class='image-container mb-2'><img src=${
       item.image ||

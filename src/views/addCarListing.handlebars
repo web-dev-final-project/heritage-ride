@@ -1,5 +1,9 @@
 <div class="w-100">
-  <h1 class="text-center">Add a New Car Listing</h1>
+  {{#if listing}}
+  <h1 class="text-center">Edit Listing</h1>
+  {{else}}
+  <h1 class="text-center">Add a New Listing</h1>
+  {{/if}}
   <div class="d-flex justify-content-between page-width m-auto px-5 py-3 gap-3">
     <form
       action="/api/listings/create"
@@ -68,5 +72,16 @@
 <script>
   const cars = {{{json cars}}}
   const listing = {{{json listing}}}
+  const carContainer = document.getElementById('car')
+  const itemType = {{{json itemType}}}
+  if (itemType === 'part') {
+    carContainer.innerHTML = ""
+    for (let car of cars) {
+      const li = document.createElement("option")
+      li.value = car._id
+      li.innerHTML = ` ${ car.name } ${ car.manufacturer } (${ car.part })`
+      carContainer.appendChild(li)
+    }
+  }
 </script>
 <script src="/scripts/createListing.js"></script>
