@@ -15,11 +15,17 @@ Object.prototype.checkNull = function (name = "input") {
   return this;
 };
 
-Object.prototype.checkString = function () {
+Object.prototype.checkString = function (
+  min = 0,
+  max = Number.POSITIVE_INFINITY,
+  name = "input"
+) {
   if (typeof this !== "string") throw new TypeException();
   const st = xss(this.trim());
-  if (st.length === 0)
-    throw new InvalidValueException("Input can not be an empty string");
+  if (st.length < min || st.length > max)
+    throw new InvalidValueException(
+      `length of ${name} can not be an less than ${min} or longer than ${max}`
+    );
   return st;
 };
 Object.prototype.checkBoolean = function () {
@@ -40,18 +46,29 @@ Object.prototype.checkArray = function () {
   return this;
 };
 
-String.prototype.checkEmpty = function (name = "string") {
+String.prototype.checkEmpty = function (input = "string") {
   if (typeof this === "string" && this.trim().length === 0) {
-    throw new EmptyStringException(`${name} can't not be empty`);
+    throw new EmptyStringException(`${input} can't not be empty`);
   }
   return this.trim();
 };
-String.prototype.checkObjectId = function (name = "value") {
+String.prototype.checkObjectId = function (input = "value") {
   let str = this.valueOf();
   if (!ObjectId.isValid(str)) {
-    throw new InvalidValueException(`Invalid Id ${name}.`);
+    throw new InvalidValueException(`Invalid Id ${input}.`);
   }
   return str;
+};
+String.prototype.checkSpace = function (input = "input") {
+  if (this.valueOf().includes(" ")) {
+    throw new InvalidValueException(`${input} should not contain space`);
+  }
+  return this.valueOf();
+};
+String.prototype.checkCharacter = function (input = "input") {
+  if (!/^[A-Za-z]+$/.test(this.valueOf()))
+    throw new InvalidValueException(`${input} should only contains letters`);
+  return this.valueOf();
 };
 String.prototype.checkUrl = function () {
   try {
@@ -64,14 +81,6 @@ String.prototype.checkUrl = function () {
   } catch (e) {
     throw new InvalidValueException(e.message);
   }
-};
-
-String.prototype.checkStringLength = function (min, max, name = "value") {
-  if (this.valueOf() < min || this.valueOf() > max)
-    throw new ValidationException(
-      `${name} can not be shorter than ${min} or longer than ${max}`
-    );
-  return this;
 };
 
 String.prototype.checkEmail = function () {

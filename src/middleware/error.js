@@ -16,10 +16,12 @@ function error(err, req, res, next) {
   if (err instanceof PageNotFoundException) {
     res.redirect("/");
   }
-  if (err instanceof AuthenticationException)
-    res.status(400).send(new HttpResponse(err.message, HttpStatus.FAILED));
-  else if (err instanceof ValidationException)
-    res.status(400).send(new HttpResponse(err.message, HttpStatus.FAILED));
+  if (err instanceof AuthenticationException) {
+    res.status(401).send(new HttpResponse(err.message, HttpStatus.FAILED));
+  } else if (err instanceof ValidationException)
+    if (req.originalUrl.includes("/api/")) {
+      res.status(400).send(new HttpResponse(err.message, HttpStatus.FAILED));
+    } else res.redirect("/404");
   else if (err instanceof AccessException)
     res.status(403).send(new HttpResponse(err.message, HttpStatus.FAILED));
   else if (err instanceof NotFoundException)

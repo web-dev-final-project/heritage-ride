@@ -1,9 +1,55 @@
-<div>
-  <h1>Purchase</h1>
-  <p>Let's finalize your order</p>
-  <button class="btn btn-primary px-4" id="check-out">Pay Now</button>
+<h1 class="fs-2">Purchase</h1>
+<h5 class="fs-5 fw-normal">Let's finalize your order</h5>
+<div class="d-flex page-width justify-content-between">
+  <div class="w-65">
+    <h4>Order Summary</h4>
+    <div class="d-flex justify-content-between">
+      <div class="image-container">
+        <img class="image-item w-100" src="{{ listing.image }}" alt="" />
+      </div>
+      <p class="text-nowrap">{{ listing.title }}</p>
+    </div>
+    <hr class="my-4" />
+    <h5>Seller</h5>
+    <p class="fs-5 text-capitalize">
+      <span class="fw-semi-bold">Seller Name: </span>
+      {{ seller.firstName }} {{ seller.lastName }}
+    </p>
+    <p class="fs-5 text-capitalize">
+      <span class="fw-semi-bold">Email: </span>
+      {{ seller.email }}
+    </p>
+    <p class="fs-5 text-capitalize">
+      <span class="fw-semi-bold">Address: </span>{{#if seller.address
+      }}{{ seller.address }}{{else}}No record{{/if}}
+    </p>
+  </div>
+  <div class="d-flex flex-column justify-content-between card p-3">
+    <div class="mb-5">
+      <h4 class="mb-2">Customer Information</h4>
+      <p class="fs-5 text-capitalize">
+        <span class="fw-semi-bold">Name: </span>
+        {{ user.firstName }} {{ user.lastName }}
+      </p>
+      <p class="fs-5 text-capitalize">
+        <span class="fw-semi-bold">Email: </span>
+        {{ user.email }}
+      </p>
+      <p class="fs-5 text-capitalize">
+        <span class="fw-semi-bold">Address: </span>{{#if user.address
+        }}{{ user.address }}{{else}}No record{{/if}}
+      </p>
+    </div>
+    <p class="fs-4 fw-bold">Price: {{currency listing.price}}</p>
+    <button class="btn btn-primary px-4" id="check-out">Pay Now</button>
+  </div>
 </div>
+
 <script>
+  console.log({{{json user}}})
+  {{!-- listing: listingDetails,
+      user: req.user,
+      seller: sellerDetails, --}}
   document.getElementById("check-out").addEventListener("click", () => {
     fetch("/api/listings/checkout", {
       method: "POST",

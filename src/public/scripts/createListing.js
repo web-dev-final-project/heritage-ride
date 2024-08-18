@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
     carPreview.innerHTML = `
       <div>
         <h3>${car.year} ${car.make} ${car.model}</h3>
-        <img class='w-100' src=${car.image || "/images/no-image.jpeg"}/>
+        <img  src=${car.image || "/images/no-image.jpeg"} class='w-100'/>
       </div>
     `;
     carSelect.addEventListener("change", () => {
@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
       carPreview.innerHTML = `
         <div>
           <h3>${car.year} ${car.make} ${car.model}</h3>
-          <img class='w-100' src=${car.image || "/images/no-image.jpeg"}/>
+          <img src=${car.image || "/images/no-image.jpeg"} class='w-100'/>
         </div>
       `;
     });
@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
     carPreview.innerHTML = `
     <div>
       <h3>${car.name} ${car.manufacturer} ${car.part}</h3>
-      <img class='w-100' src=${car.image || "/images/no-image.jpeg"}/>
+      <img class='w-100' src=${car.image || "/images/no-image.jpeg"}>
     </div>
   `;
     carSelect.addEventListener("change", () => {
@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
       carPreview.innerHTML = `
       <div>
         <h3>${car.name} ${car.manufacturer} ${car.part}</h3>
-        <img class='w-100' src=${car.image || "/images/no-image.jpeg"}/>
+        <img class='w-100' src=${car.image || "/images/no-image.jpeg"}>
       </div>
     `;
     });
@@ -97,8 +97,10 @@ document.addEventListener("DOMContentLoaded", () => {
         throw new Error("Car ID cannot be empty.");
       }
       const parsedPrice = Number(price);
-      if (isNaN(parsedPrice) || parsedPrice <= 0) {
-        throw new Error("Price must be a valid positive number.");
+      if (isNaN(parsedPrice) || parsedPrice <= 0 || parsedPrice > 1000000000) {
+        throw new Error(
+          "Price must be a valid number and not exceed 1 billion."
+        );
       }
       if (
         typeof image !== "string" ||
@@ -107,8 +109,8 @@ document.addEventListener("DOMContentLoaded", () => {
       ) {
         throw new Error("Image URL must be a valid URL.");
       }
-      if (title.trim().length < 5 || title.trim().length > 30)
-        throw new Error("title must be between 5 to 30 characters.");
+      if (title.trim().length < 5 || title.trim().length > 50)
+        throw new Error("title must be between 5 to 50 characters.");
       if (description.trim().length < 20 || description.trim().length > 500)
         throw new Error("Description must be between 20 to 500 characters.");
 

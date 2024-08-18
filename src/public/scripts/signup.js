@@ -40,6 +40,7 @@ if (window.location.pathname === "/user/edit" && user) {
   lastName.value = user.lastName;
   userName.value = user.userName;
   email.value = user.email.toLowerCase();
+  email.setAttribute("disabled", "true");
   address.value = user.address;
   avatar.value = user.avatar;
   validation[firstName.id] = true;
@@ -121,19 +122,22 @@ document.addEventListener("DOMContentLoaded", () => {
       handleInputChange();
     });
   };
+  function checkname(str) {
+    return /^[A-Za-z]+$/.test(str);
+  }
   handleInputValidation(
     firstName,
     () =>
-      !firstName.value.trim().includes(" ") &&
       firstName.value.trim().length >= 2 &&
-      firstName.value.trim().length <= 20
+      firstName.value.trim().length <= 20 &&
+      checkname(firstName.value.trim())
   );
   handleInputValidation(
     lastName,
     () =>
-      !lastName.value.trim().includes(" ") &&
       lastName.value.trim().length >= 2 &&
-      lastName.value.trim().length <= 20
+      lastName.value.trim().length <= 20 &&
+      checkname(lastName.value.trim())
   );
   handleInputValidation(
     userName,
@@ -167,7 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (
       firstName.value.trim().length < 2 ||
       firstName.value.trim().length > 20 ||
-      firstName.value.trim().includes(" ")
+      !checkname(firstName.value.trim())
     ) {
       firstName.style.borderColor = "red";
       firstNameError.style.display = "block";
@@ -178,7 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (
       lastName.value.trim().length < 2 ||
       lastName.value.trim().length > 20 ||
-      lastName.value.trim().includes(" ")
+      !checkname(lastName.value.trim())
     ) {
       lastName.style.borderColor = "red";
       lastNameError.style.display = "block";

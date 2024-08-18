@@ -6,6 +6,7 @@ import {
   ValidationException,
 } from "./exceptions.js";
 import { Role } from "./extend.js";
+import xss from "xss";
 
 class Validator {
   static validateQuery(query) {
@@ -23,14 +24,10 @@ class Validator {
         "Invalid query type, only allowed cars or parts"
       );
     }
-
-    // Validate make
-
     if (type === "cars") {
       if (make && typeof make !== "string") {
         throw new NotFoundException("Make must be a string");
       }
-      // Validate model
       if (model && typeof model !== "string") {
         throw new NotFoundException("Model must be a string");
       }
@@ -45,17 +42,14 @@ class Validator {
         throw new NotFoundException("tag must be a string");
       }
     }
-
-    // Validate year
-    // if (year) {
-    //   const yearNum = parseInt(year, 10);
-    //   if (isNaN(yearNum) || yearNum > new Date().getFullYear()) {
-    //     errors.push("Year must be a valid number less than the current year");
-    //   } else {
-    //     query.year = yearNum;
-    //   }
-    // }
-    return { type, make, model, car, part, partCategory };
+    return {
+      type: xss(type),
+      make: xss(make),
+      model: xss(model),
+      car: xss(car),
+      part: xss(part),
+      partCategory: xss(partCategory),
+    };
   }
 
   static validateImageURL(image) {
@@ -66,7 +60,7 @@ class Validator {
     ) {
       throw new InvalidInputException("Image URL must be a valid URL.");
     }
-    return image;
+    return xss(image);
   }
 
   static validateCreateListing(obj) {
@@ -81,7 +75,7 @@ class Validator {
     let listingInfo = {
       ...obj,
       price: this.nullcheck(obj.price).checkNumber(),
-      image: valImage,
+      image: xss(valImage),
       itemType: this.nullcheck(obj.itemType),
     };
     return listingInfo;
@@ -94,13 +88,15 @@ class Validator {
     }
     let listing = {};
     if (obj.title) {
-      listing.title = obj.title.checkString();
+      listing.title = xss(obj.title.checkString(5, 50, "title"));
     }
     if (obj.description) {
-      listing.description = obj.description.checkString();
+      listing.description = xss(
+        obj.description.checkString(20, 500, "description")
+      );
     }
     if (obj.price) {
-      listing.price = obj.price.checkNumber();
+      listing.price = obj.price.checkNumber(0, 1000000000, "price");
     }
     if (obj.status) {
       const stats = ["open", "reserved", "sold", "delisted"];
@@ -124,7 +120,7 @@ class Validator {
       })();
     }
     if (obj.image) {
-      listing.image = obj.image.checkString();
+      listing.image = xss(obj.image.checkString().checkUrl());
     }
     if (obj.gallery) {
       listing.image = obj.image.checkStringArray();
@@ -132,21 +128,33 @@ class Validator {
     return listing;
   }
 
-  static validateCar(obj) {
-    return obj;
-  }
-
   static validateUser(obj) {
     if (!obj || obj === undefined)
       throw new InvalidInputException("Input must not be empty");
     let user = {
       ...obj,
-      firstName: this.nullcheck(obj.firstName).checkString(),
-      lastName: this.nullcheck(obj.lastName).checkString(),
-      userName: this.nullcheck(obj.userName).checkString(),
-      password: this.nullcheck(obj.password).checkString(),
-      avatar: this.nullcheck(obj.avatar).checkString().checkUrl(),
-      email: this.nullcheck(obj.email).checkString().checkEmail(),
+      firstName: this.nullcheck(obj.firstName)
+        .checkString(2, 20, "first name")
+        .checkCharacter("first name")
+        .checkSpace("first name"),
+      lastName: this.nullcheck(obj.lastName)
+        .checkString(2, 20, "last name")
+        .checkCharacter("last name")
+        .checkSpace("last name"),
+      userName: this.nullcheck(obj.userName)
+        .checkString(5, 20, "user name")
+        .checkSpace("userName"),
+      password: this.nullcheck(obj.password)
+        .checkString(10, 30, "password")
+        .checkSpace("password"),
+      avatar: this.nullcheck(obj.avatar)
+        .checkString()
+        .checkUrl()
+        .checkSpace("avatar"),
+      email: this.nullcheck(obj.email)
+        .checkString()
+        .checkEmail()
+        .checkSpace("avatar"),
       address: obj.address ? obj.address.checkString() : obj.address,
     };
     return user;
@@ -168,20 +176,21 @@ class Validator {
     return arr;
   }
 
-  static validatePart(obj) {
-    if (!obj || obj === undefined)
-      throw new InvalidInputException("Input must not be empty");
+  // Future update
+  // static validatePart(obj) {
+  //   if (!obj || obj === undefined)
+  //     throw new InvalidInputException("Input must not be empty");
 
-    let part = {
-      ...obj,
-      name: Validator.nullcheck(obj.name).checkString(),
-      price: Validator.nullcheck(obj.price).checkNumber(),
-      manufacturer: Validator.nullcheck(obj.manufacturer).checkString(),
-      sellerId: Validator.nullcheck(obj.sellerId).checkId(),
-      carIds: Validator.nullcheck(obj.carIds).checkArray().checkObjectIds(),
-    };
-    return part;
-  }
+  //   let part = {
+  //     ...obj,
+  //     name: Validator.nullcheck(obj.name).checkString(),
+  //     price: Validator.nullcheck(obj.price).checkNumber(),
+  //     manufacturer: Validator.nullcheck(obj.manufacturer).checkString(),
+  //     sellerId: Validator.nullcheck(obj.sellerId).checkId(),
+  //     carIds: Validator.nullcheck(obj.carIds).checkArray().checkObjectIds(),
+  //   };
+  //   return part;
+  // }
 
   static nullcheck(obj) {
     if (!obj) throw new InvalidInputException("Some inputs are missing");
@@ -194,13 +203,11 @@ class Validator {
     let expert = {
       ...obj,
       userId: Validator.nullcheck(obj.userId).checkString().checkObjectId(),
-      bio: Validator.nullcheck(obj.bio)
-        .checkString()
-        .checkStringLength(10, 500, "Bio"),
+      bio: xss(Validator.nullcheck(obj.bio).checkString(10, 500, "Bio")),
       skills: Validator.nullcheck(obj.skills).checkStringArray(),
-      location: Validator.nullcheck(obj.location)
-        .checkString()
-        .checkStringLength(5, 50, "location"),
+      location: xss(
+        Validator.nullcheck(obj.location).checkString(5, 50, "location")
+      ),
       images: Validator.nullcheck(obj.images).checkStringArray(),
     };
     return expert;
