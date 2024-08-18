@@ -1,6 +1,14 @@
 const searchGrid = document.getElementById("search-grid");
 
-const filteredListings = listings.filter((li) => li.status === "open");
+const filteredListings = (() =>
+  listings.filter(
+    (li) =>
+      li.status === "open" &&
+      (currentSearch.value === "search-parts"
+        ? li.itemType === "part"
+        : li.itemType === "car")
+  ))();
+
 if (filteredListings.length === 0) {
   const searchNotFound = document.getElementById("search-not-found");
   searchNotFound.style.display = "block";

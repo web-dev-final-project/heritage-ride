@@ -42,7 +42,12 @@ class AccessException extends Error {
 }
 class NotFoundException extends Error {
   constructor(message) {
-    super(message || `Page not found`);
+    super(message || `Result not found`);
+  }
+}
+class PageNotFoundException extends Error {
+  constructor() {
+    super(`Page not found`);
   }
 }
 class DataBaseException extends Error {
@@ -79,5 +84,6 @@ export {
   NotFoundException,
   AccessException,
   DataBaseException,
+  PageNotFoundException,
   databaseExceptionHandler,
 };

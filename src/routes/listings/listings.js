@@ -1,7 +1,15 @@
-import { getAll, getListingById } from "../../data/listings.js";
+import {
+  delistListing,
+  getAll,
+  getListingById,
+  updateListingById,
+} from "../../data/listings.js";
 import { getCarById } from "../../data/cars.js";
 import { createListing } from "../../data/listings.js";
-import { DataBaseException, ValidationException } from "../../utils/exceptions.js";
+import {
+  DataBaseException,
+  ValidationException,
+} from "../../utils/exceptions.js";
 import auth, { authSafe } from "../../middleware/auth.js";
 import Validator from "../../utils/validator.js";
 import { Router } from "express";
@@ -23,8 +31,7 @@ router.post("/create", auth, async (req, res, next) => {
 
     const listing = await createListing(req.user._id, validListing);
 
-    if (!req.user.role.includes("seller")){
-      // Add 'seller' role to the user in the db
+    if (!req.user.role.includes("seller")) {
       const result = await addRole(req.user._id, "seller");
       if (result.modifiedCount === 0) {
         throw new DataBaseException("Failed to add role");
@@ -40,6 +47,31 @@ router.post("/create", auth, async (req, res, next) => {
       });
     }
     res.status(201).send(new HttpResponse(listing, HttpStatus.SUCCESS));
+  } catch (e) {
+    next(e);
+  }
+});
+
+router.delete("/:id", auth, async (req, res, next) => {
+  try {
+    const validId = Validator.validateId(req.params.id);
+    await delistListing(validId);
+    res.status(200).send(new HttpResponse("success", HttpStatus.SUCCESS));
+  } catch (e) {
+    next(e);
+  }
+});
+
+router.put("/edit", auth, async (req, res, next) => {
+  try {
+    req.body.price = Number(req.body.price);
+    if (isNaN(req.body.price)) {
+      throw new ValidationException("Price must be a valid number");
+    }
+    const validId = Validator.validateId(req.body.listingId);
+    const validListing = Validator.validateCreateListing(req.body);
+    await updateListingById(validId, validListing);
+    res.status(200).send(new HttpResponse("success", HttpStatus.SUCCESS));
   } catch (e) {
     next(e);
   }

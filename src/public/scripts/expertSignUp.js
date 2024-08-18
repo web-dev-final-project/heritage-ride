@@ -104,7 +104,7 @@ addButton.addEventListener("click", () => {
     if (expert.skills.includes(curVal)) {
       throw new Error("Skill has already exist");
     }
-    expert.skills.push(curVal);
+    expert.skills.push(filterXSS(curVal));
     skillsBadges.appendChild(newSkillBadge(curVal));
   } catch (e) {
     skillError.innerHTML = e.message;
@@ -126,12 +126,13 @@ expertAdress.addEventListener("input", () => {
 });
 
 const checkXSS = (expert) => {
+  const varifiedImages = expert.images.map((img) => filterXSS(img));
   return {
     userId: filterXSS(expert.userId),
     bio: filterXSS(expert.bio),
-    skills: filterXSS(expert.skills),
+    skills: expert.skills,
     location: filterXSS(expert.location),
-    images: filterXSS(expert.images),
+    images: varifiedImages,
   };
 };
 

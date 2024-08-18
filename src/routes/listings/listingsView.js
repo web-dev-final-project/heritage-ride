@@ -7,6 +7,7 @@ import {
 import {
   InvalidInputException,
   NotFoundException,
+  PageNotFoundException,
   ValidationException,
 } from "../../utils/exceptions.js";
 import auth, { authSafe } from "../../middleware/auth.js";
@@ -28,7 +29,7 @@ router.get("/search", authSafe, async (req, res, next) => {
     const valQuery = Validator.validateQuery(req.query);
     const result = await getAll(valQuery);
     res.render("carSearch", {
-      results: result,
+      results: result.filter((li) => li.status !== "delisted"),
       user: req.user,
     });
   } catch (e) {
@@ -97,6 +98,27 @@ router.get("/order/:id", auth, async (req, res, next) => {
   }
 });
 
+router.get("/edit", auth, async (req, res, next) => {
+  try {
+    const { type, id } = req.query;
+    if (type !== "car" && type !== "part") {
+      throw new PageNotFoundException();
+    }
+    const validId = Validator.validateId(id);
+    const listing = await getListingById(validId);
+    const cars = await getCars();
+    return res.render("addCarListing", {
+      listing,
+      cars: cars,
+      itemType: type,
+      user: req.user,
+      cloudinary: cloudinary,
+    });
+  } catch (e) {
+    next(e);
+  }
+});
+
 router.get("/create", auth, async (req, res, next) => {
   const itemType = req.query.itemtype;
   if (!itemType || (itemType !== "car" && itemType !== "part")) {
@@ -110,6 +132,7 @@ router.get("/create", auth, async (req, res, next) => {
       itemType: itemType,
       user: req.user,
       cloudinary: cloudinary,
+      listing: null,
     });
   } catch (e) {
     next(e);

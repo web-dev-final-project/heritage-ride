@@ -18,7 +18,9 @@ const getListingByUser = async (userId) => {
   let result;
   try {
     db = await listings();
-    result = await db.find({ sellerId: new ObjectId(validId) }).toArray();
+    result = await db
+      .find({ sellerId: new ObjectId(validId), status: { $ne: "delisted" } })
+      .toArray();
   } catch (e) {
     throw new DataBaseException("Error fetching listings");
   }
@@ -32,7 +34,10 @@ const getListingByBuyer = async (userId) => {
     const result = await transDb
       .aggregate([
         {
-          $match: { buyerId: new ObjectId(validId) },
+          $match: {
+            buyerId: new ObjectId(validId),
+            status: { $ne: "delisted" },
+          },
         },
         {
           $lookup: {
@@ -247,6 +252,20 @@ const getListingById = async (listingId) => {
   }
 };
 
+const delistListing = async (id) => {
+  try {
+    const listingsCollection = await listings();
+    const valListingId = Validator.validateId(id);
+    const res = await listingsCollection.updateOne(
+      { _id: new ObjectId(valListingId) },
+      { $set: { status: "delisted" } }
+    );
+    handleUpdateError(res);
+  } catch (e) {
+    databaseExceptionHandler(e);
+  }
+};
+
 const updateListingById = async (id, updates) => {
   try {
     const listingsCollection = await listings();
@@ -269,4 +288,5 @@ export {
   getListingById,
   updateListingById,
   getListingByBuyer,
+  delistListing,
 };

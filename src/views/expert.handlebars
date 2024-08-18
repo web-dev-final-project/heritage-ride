@@ -32,7 +32,7 @@
     </div>
     <div class="card shadow p-5">
       <h4>About Me</h4>
-      <p>{{ expert.bio }}</p>
+      <p class="fs-5">{{ expert.bio }}</p>
       <h4>What I Can Offer</h4>
       <ul class="p-0 d-flex gap-3">
         {{#each expert.skills}}
@@ -70,25 +70,6 @@
     class="search-grid container w-100"
   ></section>
   <hr class="m-3" />
-  <section>
-    <h3 class="m-2 fs-4 p-1">Customer Reviews</h3>
-    <ul>
-      {{#each expert.reviews}}
-      <li class="w-100">
-        <div>
-          <p>{{ reviewer }}</p>
-          {{!--
-          <p>{{> stars}}</p>
-          --}}
-          <p>date: {{ createdAt }}</p>
-          <p>{{ comment }}</p>
-        </div>
-      </li>
-      {{else}}
-      <li>No review found</li>
-      {{/each}}
-    </ul>
-  </section>
 </div>
 
 <div id="overlay" class="overlay" onclick="closeImage()">
