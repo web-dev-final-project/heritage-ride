@@ -1,70 +1,65 @@
-import { Router } from "express";
-import {
-  createPart,
-  getPartById,
-  searchPartsByName,
-  getPartByCarId,
-} from "../../data/parts.js";
-import { getAllExperts } from "../../data/experts.js";
-import auth, { authSafe } from "../../middleware/auth.js";
-import { InvalidInputException } from "../../utils/exceptions.js";
-import Validator from "../../utils/validator.js";
+import express from 'express';
+import { createPart, getPartById, getParts, searchPartsByName } from '../../data/parts.js';
+import auth from "../../middleware/auth.js";
+import authSafe from "../../middleware/auth.js";
 
-const router = Router();
+const router = express.Router();
 
-router
-  .get("/", async (req, res, next) => {
-    try {
-      const experts = await getAllExperts();
-      res.status(200).send(experts);
-    } catch (e) {
-      next(e);
-    }
-  })
-  .post("/", auth, async (req, res, next) => {
-    try {
-      const { name, price, manufacturer, sellerId, carIds } = req.body;
-      const newPart = await createPart(
-        name,
-        price,
-        manufacturer,
-        sellerId,
-        carIds
-      );
-      res.status(201).json(newPart);
-    } catch (e) {
-      next(e);
-    }
-  });
-
-router.get("/:partId", authSafe, async (req, res, next) => {
+router.get("/", auth, async (req, res, next) => {
   try {
-    let partId = req.params.partId;
-    if (!partId) throw new InvalidInputException("Part ID can't be null.");
-    partId = Validator.validateId(partId);
+    const parts = await getParts();
+    res.status(200).send(parts);
+  } catch (e) {
+    next(e);
+  }
+});
+
+router.post('/parts', async (req, res) => {
+  try {
+    const { name, description, tag, sellerId, carIds } = req.body;
+    const newPart = await createPart(name, description, tag, sellerId, carIds);
+    res.status(201).json(newPart);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+router.get('/parts/:id', async (req, res) => {
+  try {
+    const partId = req.params.id;
     const part = await getPartById(partId);
-    res.status(200).json(part);
+    if (!part) {
+      return res.status(404).json({ error: 'Part not found' });
+    }
+    res.json(part);
   } catch (e) {
-    next(e);
+    res.status(500).json({ error: e.message });
   }
 });
 
-router.get("/search", auth, async (req, res, next) => {
-  try {
-    const { query } = req.query;
-    const parts = await searchPartsByName(query);
-    res.render("partSearch", { results: parts, user: req.user });
-  } catch (e) {
-    next(e);
-  }
-});
+router.get('/parts/search', authSafe, async (req, res) => {
+  const query = req.query.query || '';
+  const tag = req.query.tag || '';
 
-router.get("/:partId/cars", auth, async (req, res, next) => {
   try {
-    const carsList = await getPartByCarId(req.params.partId);
-    res.status(200).json(carsList);
-  } catch (e) {
-    next(e);
+    let results = [];
+    if (query || tag) {
+      results = await searchPartsByName({ query, tag });
+    } else {
+      results = await getParts();
+    }
+
+    res.render('partSearch', {
+      results: results,
+      searchQuery: query
+    });
+  } catch (error) {
+    console.error('Error:', error);
+    res.render('partSearch', {
+      results: [],
+      searchQuery: query,
+      error: 'An error occurred while fetching parts.'
+    });
   }
 });
 

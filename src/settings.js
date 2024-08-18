@@ -32,5 +32,8 @@ export const handlebarsInstance = exphbs.create({
       });
       return formatter.format(amount);
     },
+    eq: (x, y) => {
+      return x === y;
+    },
   },
 });

@@ -30,3 +30,12 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
+.select-box {
+  border: 1px solid #ccc;
+  padding: 3px 6px;
+  font-weight: 500;
+  color: #474747;
+}
+.search-bar {
+  max-width: 700px;
+}

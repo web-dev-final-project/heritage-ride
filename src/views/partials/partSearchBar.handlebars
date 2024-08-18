@@ -1,0 +1,93 @@
+<!-- Part Search Form -->
+<form
+  id="searchForm"
+  action="/parts/search"
+  method="GET"
+  class="container p-0 m-0 mb-4"
+>
+  <div class="input-group mb-3">
+    <input
+      type="text"
+      class="form-control"
+      id="searchQuery"
+      name="query"
+      placeholder="Enter part name"
+    />
+    <select class="form-control" id="tagSelect" name="tag">
+      <option value="">Select part</option>
+      <option value="engine">Engine</option>
+      <option value="belt">Belt</option>
+      <option value="wipers">Wipers</option>
+      <option value="brake">Brake</option>
+      <option value="filter">Filter</option>
+      <option value="battery">Battery</option>
+      <option value="alternator">Alternator</option>
+      <option value="starter">Starter</option>
+      <option value="transmission">Transmission</option>
+      <option value="radiator">Radiator</option>
+      <option value="spark plugs">Spark Plugs</option>
+      <option value="fuel pump">Fuel Pump</option>
+      <option value="air filter">Air Filter</option>
+      <option value="muffler">Muffler</option>
+      <option value="headlights">Headlights</option>
+      <option value="tail lights">Tail Lights</option>
+      <option value="suspension">Suspension</option>
+      <option value="timing belt">Timing Belt</option>
+      <option value="power steering pump">Power Steering Pump</option>
+      <option value="clutch">Clutch</option>
+      <option value="hoses">Hoses</option>
+      <option value="catalytic converter">Catalytic Converter</option>
+      <option value="oil filter">Oil Filter</option>
+      <option value="wheel bearing">Wheel Bearing</option>
+      <option value="shocks">Shocks</option>
+      <option value="ignition coil">Ignition Coil</option>
+      <option value="fuel injector">Fuel Injector</option>
+      <option value="radiator hose">Radiator Hose</option>
+      <option value="thermostat">Thermostat</option>
+      <option value="alternator belt">Alternator Belt</option>
+      <option value="water pump">Water Pump</option>
+      <option value="valve cover gasket">Valve Cover Gasket</option>
+      <option value="starter motor">Starter Motor</option>
+      <option value="rearview mirror">Rearview Mirror</option>
+      <option value="fog lights">Fog Lights</option>
+      <option value="window regulator">Window Regulator</option>
+      <option value="sunroof">Sunroof</option>
+      <option value="door handle">Door Handle</option>
+      <option value="seatbelt">Seatbelt</option>
+    </select>
+    <button type="submit" class="btn btn-primary">Search</button>
+  </div>
+</form>
+
+<div class="container mb-4">
+  <a href="/parts/search" class="btn btn-secondary">Show All Parts</a>
+</div>
+
+<script>
+  function handleInputChange() {
+    const searchQuery = document.getElementById('searchQuery').value.trim();
+    const tagSelect = document.getElementById('tagSelect');
+
+    if (searchQuery) {
+      tagSelect.value = ''; 
+      tagSelect.disabled = true; 
+    } else {
+      tagSelect.disabled = false; 
+    }
+  }
+
+  function handleTagChange() {
+    const tagSelect = document.getElementById('tagSelect').value;
+    const searchQuery = document.getElementById('searchQuery');
+
+    if (tagSelect) {
+      searchQuery.value = ''; 
+      searchQuery.disabled = true; 
+    } else {
+      searchQuery.disabled = false; 
+    }
+  }
+
+  document.getElementById('searchQuery').addEventListener('input', handleInputChange);
+  document.getElementById('tagSelect').addEventListener('change', handleTagChange);
+</script>

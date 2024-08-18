@@ -1,112 +1,103 @@
-import { parts, cars } from "./init.js";
+import { parts, listings } from "./init.js";
 import { ObjectId } from "mongodb";
-import Validator from "../utils/validator.js";
-import {
-  DataBaseException,
-  databaseExceptionHandler,
-  NotFoundException,
-} from "../utils/exceptions.js";
+import { DataBaseException, NotFoundException } from "../utils/exceptions.js";
+import { createListing } from "./listings.js";
+import Validator from "../utils/validator.js"; // Ensure this import is correct
 
-const createPart = async (name, price, manufacturer, sellerId, carIds) => {
-  const partData = Validator.validatePart({
+const createPart = async (name, description, tag, sellerId, carIds) => {
+  const newPart = {
     name,
-    price,
-    manufacturer,
-    sellerId,
-    carIds,
-  });
-
-  let newPart = {
-    name: partData.name,
-    price: partData.price,
-    manufacturer: partData.manufacturer,
-    sellerId: new ObjectId(partData.sellerId),
-    carIds: partData.carIds.map((id) => new ObjectId(id)),
+    description,
+    tag,
+    sellerId: new ObjectId(sellerId),
+    carIds: carIds.map((id) => new ObjectId(id)),
     createdAt: new Date().toUTCString(),
     updatedAt: new Date().toUTCString(),
   };
 
   try {
     const partsCollection = await parts();
-    const insertInfo = await partsCollection.insertOne(newPart);
-    if (!insertInfo.acknowledged || !insertInfo.insertedId) {
-      throw new Error("Could not add part");
+    const { acknowledged, insertedId } = await partsCollection.insertOne(
+      newPart
+    );
+
+    if (!acknowledged || !insertedId) {
+      throw new Error("Could not add Part");
     }
-    return {
-      ...newPart,
-      _id: insertInfo.insertedId,
-    };
+
+    await createListing(sellerId, {
+      itemId: insertedId.toString(),
+      title: name,
+    });
+
+    return await getPartById(insertedId.toString());
   } catch (e) {
     throw new DataBaseException(e);
   }
 };
 
 const getPartById = async (partId) => {
-  const validPartId = Validator.validateId(partId);
   try {
+    const validId = Validator.validateId(partId);
     const partsCollection = await parts();
-    const part = await partsCollection.findOne({
-      _id: new ObjectId(validPartId),
-    });
-    if (!part) throw new NotFoundException("Part not found");
-    return part;
-  } catch (e) {
-    databaseExceptionHandler(e);
-  }
-};
-
-const searchPartsByName = async (searchQuery) => {
-  searchQuery = searchQuery.checkString();
-  try {
-    const partsCollection = await parts();
-    const results = await partsCollection
+    const part = await partsCollection
       .aggregate([
+        {
+          $match: { _id: new ObjectId(validId) },
+        },
         {
           $lookup: {
             from: "cars",
-            localField: "manufacturer",
-            foreignField: "make",
-            as: "carDetails",
-          },
-        },
-        {
-          $unwind: {
-            path: "$carDetails",
-            preserveNullAndEmptyArrays: true,
-          },
-        },
-        {
-          $match: {
-            $or: [
-              { name: { $regex: searchQuery, $options: "i" } },
-              { manufacturer: { $regex: searchQuery, $options: "i" } },
-              { "carDetails.make": { $regex: searchQuery, $options: "i" } },
-              { "carDetails.model": { $regex: searchQuery, $options: "i" } },
+            let: { carIds: "$carId" },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $in: ["$_id", "$$carIds"],
+                  },
+                },
+              },
             ],
+            as: "car",
           },
         },
       ])
       .toArray();
-    return results;
+    if (!part) {
+      throw new NotFoundException("Part not found");
+    }
+    return part[0];
   } catch (e) {
     throw new DataBaseException(e);
   }
 };
 
-const getPartByCarId = async (carId) => {
-  const validCarId = Validator.validateId(carId);
+const getParts = async () => {
   try {
     const partsCollection = await parts();
-    const partsList = await partsCollection
-      .find({ carIds: new ObjectId(validCarId) })
-      .toArray();
-    if (partsList.length === 0) {
-      throw new NotFoundException("No parts found");
-    }
-    return partsList;
+    return await partsCollection.find({}).toArray();
   } catch (e) {
     throw new DataBaseException(e);
   }
 };
 
-export { createPart, getPartById, searchPartsByName, getPartByCarId };
+const searchPartsByName = async ({ query, tag }) => {
+  try {
+    const partsCollection = await parts();
+    const matchConditions = {};
+
+    if (query) {
+      matchConditions["name"] = { $regex: new RegExp(query, "i") };
+    }
+    if (tag) {
+      matchConditions["tag"] = tag;
+    }
+
+    const result = await partsCollection.find(matchConditions).toArray();
+    return result;
+  } catch (e) {
+    throw new DataBaseException(e);
+  }
+};
+
+export { createPart, getPartById, getParts, searchPartsByName };

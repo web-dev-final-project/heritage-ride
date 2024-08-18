@@ -1,38 +1,288 @@
-<!-- Search Form -->
-<form
-  class="container p-0 m-0"
-  id="searchForm"
-  action="/listings/search"
-  method="GET"
-  class="mb-4"
->
-  <div class="input-group">
-    <input
-      type="text"
-      class="form-control"
-      name="make"
-      placeholder="Enter car make"
-    />
-    <input
-      type="text"
-      class="form-control"
-      name="model"
-      placeholder="Enter car model"
-    />
-    <!--
-    <input
-      type="number"
-      class="form-control"
-      name="year"
-      placeholder="Enter car year"
-    />
-    -->
-    <select class="form-control" name="category">
-      <option value="">Select category</option>
-      <option value="Convertible">Convertible</option>
-      <option value="Sedan">Sedan</option>
-      <option value="SUV">SUV</option>
-    </select>
-    <button type="submit" class="btn btn-primary">Search</button>
-  </div>
-</form>
+<div class="d-flex search-bar">
+  <form
+    class="container p-0 m-0 w-100"
+    id="searchForm"
+    {{!--
+    action="/listings/search"
+    method="GET"
+    --}}
+    class="mb-4"
+  >
+    <div class="input-group w-100">
+      <input
+        type="text"
+        class="form-control"
+        name="make"
+        placeholder="Enter car make"
+        id="car-make"
+      />
+      <input
+        type="text"
+        class="form-control"
+        name="model"
+        placeholder="Enter car model"
+        id="car-model"
+      />
+      <select class="form-control" id="cat-select" name="category">
+        <option value="">Select category</option>
+        <option value="Convertible">Convertible</option>
+        <option value="Sedan">Sedan</option>
+        <option value="SUV">SUV</option>
+      </select>
+
+      <input
+        type="text"
+        class="form-control d-none"
+        name="carForParts"
+        placeholder="Car or make"
+        id="car-parts"
+      />
+      <input
+        type="text"
+        class="form-control d-none"
+        id="parts-search-query"
+        name="partName"
+        placeholder="Enter part name"
+      />
+      <select
+        class="form-control d-none"
+        id="parts-tag-select"
+        name="partCategory"
+      >
+        <option value="">Select part</option>
+        <option value="engine">Engine</option>
+        <option value="belt">Belt</option>
+        <option value="wipers">Wipers</option>
+        <option value="brake">Brake</option>
+        <option value="filter">Filter</option>
+        <option value="battery">Battery</option>
+        <option value="alternator">Alternator</option>
+        <option value="starter">Starter</option>
+        <option value="transmission">Transmission</option>
+        <option value="radiator">Radiator</option>
+        <option value="spark plugs">Spark Plugs</option>
+        <option value="fuel pump">Fuel Pump</option>
+        <option value="air filter">Air Filter</option>
+        <option value="muffler">Muffler</option>
+        <option value="headlights">Headlights</option>
+        <option value="tail lights">Tail Lights</option>
+        <option value="suspension">Suspension</option>
+        <option value="timing belt">Timing Belt</option>
+        <option value="power steering pump">Power Steering Pump</option>
+        <option value="clutch">Clutch</option>
+        <option value="hoses">Hoses</option>
+        <option value="catalytic converter">Catalytic Converter</option>
+        <option value="oil filter">Oil Filter</option>
+        <option value="wheel bearing">Wheel Bearing</option>
+        <option value="shocks">Shocks</option>
+        <option value="ignition coil">Ignition Coil</option>
+        <option value="fuel injector">Fuel Injector</option>
+        <option value="radiator hose">Radiator Hose</option>
+        <option value="thermostat">Thermostat</option>
+        <option value="alternator belt">Alternator Belt</option>
+        <option value="water pump">Water Pump</option>
+        <option value="valve cover gasket">Valve Cover Gasket</option>
+        <option value="starter motor">Starter Motor</option>
+        <option value="rearview mirror">Rearview Mirror</option>
+        <option value="fog lights">Fog Lights</option>
+        <option value="window regulator">Window Regulator</option>
+        <option value="sunroof">Sunroof</option>
+        <option value="door handle">Door Handle</option>
+        <option value="seatbelt">Seatbelt</option>
+      </select>
+
+      <select class="select-box no-outline" id="current-search">
+        <option value="search-cars" selected>Cars</option>
+        <option value="search-parts">Parts</option>
+      </select>
+      <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+  </form>
+  {{!--
+  <form
+    id="searchForm-parts"
+    action="/parts/search"
+    method="GET"
+    class="container p-0 m-0 mb-4"
+  >
+    <div class="input-group mb-3">
+      <input
+        type="text"
+        class="form-control"
+        id="searchQuery"
+        name="query"
+        placeholder="Enter part name"
+      />
+      <select class="form-control" id="tagSelect" name="tag">
+        <option value="">Select part</option>
+        <option value="engine">Engine</option>
+        <option value="belt">Belt</option>
+        <option value="wipers">Wipers</option>
+        <option value="brake">Brake</option>
+        <option value="filter">Filter</option>
+        <option value="battery">Battery</option>
+        <option value="alternator">Alternator</option>
+        <option value="starter">Starter</option>
+        <option value="transmission">Transmission</option>
+        <option value="radiator">Radiator</option>
+        <option value="spark plugs">Spark Plugs</option>
+        <option value="fuel pump">Fuel Pump</option>
+        <option value="air filter">Air Filter</option>
+        <option value="muffler">Muffler</option>
+        <option value="headlights">Headlights</option>
+        <option value="tail lights">Tail Lights</option>
+        <option value="suspension">Suspension</option>
+        <option value="timing belt">Timing Belt</option>
+        <option value="power steering pump">Power Steering Pump</option>
+        <option value="clutch">Clutch</option>
+        <option value="hoses">Hoses</option>
+        <option value="catalytic converter">Catalytic Converter</option>
+        <option value="oil filter">Oil Filter</option>
+        <option value="wheel bearing">Wheel Bearing</option>
+        <option value="shocks">Shocks</option>
+        <option value="ignition coil">Ignition Coil</option>
+        <option value="fuel injector">Fuel Injector</option>
+        <option value="radiator hose">Radiator Hose</option>
+        <option value="thermostat">Thermostat</option>
+        <option value="alternator belt">Alternator Belt</option>
+        <option value="water pump">Water Pump</option>
+        <option value="valve cover gasket">Valve Cover Gasket</option>
+        <option value="starter motor">Starter Motor</option>
+        <option value="rearview mirror">Rearview Mirror</option>
+        <option value="fog lights">Fog Lights</option>
+        <option value="window regulator">Window Regulator</option>
+        <option value="sunroof">Sunroof</option>
+        <option value="door handle">Door Handle</option>
+        <option value="seatbelt">Seatbelt</option>
+      </select>
+      <select class="select-box no-outline" id="current-search">
+        <option value="search-carts">Cars</option>
+        <option value="search-parts" selected>Parts</option>
+      </select>
+      <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+  </form>
+  --}}
+</div>
+
+{{!--
+<div class="container mb-4">
+  <a href="/parts/search" class="btn btn-secondary">Show All Parts</a>
+</div>
+--}}
+
+<script>
+  const currentSearch = document.getElementById("current-search");
+  const carForm = document.getElementById("searchForm");
+  const partsSelect = document.getElementById("parts-tag-select");
+  const partsQuery = document.getElementById("parts-search-query");
+  const carParts = document.getElementById("car-parts");
+  const carMake = document.getElementById("car-make");
+  const carModel = document.getElementById("car-model");
+  const carSelect = document.getElementById("cat-select");
+  if (window.location.href.includes("parts")) {
+    currentSearch.value = "search-parts";
+    carMake.classList.add("d-none");
+    carModel.classList.add("d-none");
+    carSelect.classList.add("d-none");
+    partsSelect.classList.remove("d-none");
+    partsQuery.classList.remove("d-none");
+    carParts.classList.remove("d-none");
+  } else if (!window.location.href.includes("search")) {
+    currentSearch.style.display = "none";
+  } else {
+    currentSearch.value = "search-cars";
+  }
+
+  const search = document
+    .getElementById("searchForm")
+    .addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (currentSearch.value === "search-cars") {
+        if (
+          typeof carMake.value !== "string" ||
+          typeof carModel.value !== "string" ||
+          typeof carSelect.value !== "string"
+        ) {
+          window.location.href = "/listings/search";
+        } else {
+          window.location.href = `/listings/search?type=cars&make=${filterXSS(
+            carMake.value
+          )}&model=${filterXSS(carModel.value)}&category=${filterXSS(
+            carSelect.value
+          )}`;
+        }
+      } else {
+        if (
+          typeof carParts.value !== "string" ||
+          typeof partsQuery.value !== "string" ||
+          typeof partsSelect.value !== "string"
+        ) {
+          window.location.href = "/listings/search";
+        } else {
+          window.location.href = `/listings/search?type=parts&car=${filterXSS(
+            carParts.value
+          )}&part=${filterXSS(partsQuery.value)}&partCategory=${filterXSS(
+            partsSelect.value
+          )}`;
+        }
+      }
+    });
+
+  currentSearch.addEventListener("change", () => {
+    if (currentSearch.value === "search-cars") {
+      if (!partsSelect.classList.contains("d-none")) {
+        partsSelect.classList.add("d-none");
+      }
+      if (!partsQuery.classList.contains("d-none")) {
+        partsQuery.classList.add("d-none");
+      }
+      if (!carParts.classList.contains("d-none")) {
+        carParts.classList.add("d-none");
+      }
+      carMake.classList.remove("d-none");
+      carModel.classList.remove("d-none");
+      carSelect.classList.remove("d-none");
+    } else {
+      partsSelect.classList.remove("d-none");
+      partsQuery.classList.remove("d-none");
+      carParts.classList.remove("d-none");
+      carMake.classList.add("d-none");
+      carModel.classList.add("d-none");
+      carSelect.classList.add("d-none");
+    }
+  });
+
+  function handleInputChange() {
+    const searchQuery = document
+      .getElementById("parts-search-query")
+      .value.trim();
+    const tagSelect = document.getElementById("parts-tag-select");
+
+    if (searchQuery) {
+      tagSelect.value = "";
+      tagSelect.disabled = true;
+    } else {
+      tagSelect.disabled = false;
+    }
+  }
+
+  function handleTagChange() {
+    const tagSelect = document.getElementById("parts-tag-select").value;
+    const searchQuery = document.getElementById("parts-search-query");
+
+    if (tagSelect) {
+      searchQuery.value = "";
+      searchQuery.disabled = true;
+    } else {
+      searchQuery.disabled = false;
+    }
+  }
+
+  document
+    .getElementById("parts-search-query")
+    .addEventListener("input", handleInputChange);
+  document
+    .getElementById("parts-tag-select")
+    .addEventListener("change", handleTagChange);
+</script>
