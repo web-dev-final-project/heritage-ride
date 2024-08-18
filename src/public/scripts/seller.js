@@ -50,16 +50,10 @@ function addList(listContainer, lists, status) {
       item.image ||
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSReWLry0CkAtuYdDZGhY6iuy5I4gudfFxjdw&s"
     } class="img-item"/></div></a>
-    } class="img-item"/></div></a>
     ${
       status === "reserved"
         ? `<a href='/seller/transaction/${item._id}'><button class='btn btn-info mt-1 text-white w-100'>View</button></a>`
         : ""
-    }
-    ${
-      item.status === "sold"
-        ? "<button class='btn btn-secondary' disabled>Sold</button>"
-        : `<button class='btn btn-danger' id="delete-${item._id}">Delete</button>`
     }
     ${
       item.status === "sold"
