@@ -2,62 +2,87 @@ import { ObjectId } from "mongodb";
 import {
   InvalidInputException,
   InvalidValueException,
+  NotFoundException,
   ValidationException,
 } from "./exceptions.js";
 import { Role } from "./extend.js";
 
 class Validator {
   static validateQuery(query) {
-    const { make, model, year, category } = query;
-    const errors = [];
+    const {
+      type = "cars",
+      make = "",
+      model = "",
+      car = "",
+      part = "",
+      partCategory = "",
+    } = query;
+
+    if (typeof type !== "string" || (type !== "cars" && type !== "parts")) {
+      throw new NotFoundException(
+        "Invalid query type, only allowed cars or parts"
+      );
+    }
+
     // Validate make
-    if (make && typeof make !== "string") {
-      errors.push("Make must be a string");
+
+    if (type === "cars") {
+      if (make && typeof make !== "string") {
+        throw new NotFoundException("Make must be a string");
+      }
+      // Validate model
+      if (model && typeof model !== "string") {
+        throw new NotFoundException("Model must be a string");
+      }
+    } else if (type === "parts") {
+      if (model && typeof car !== "string") {
+        throw new NotFoundException("Car or model must be a string");
+      }
+      if (model && typeof part !== "string") {
+        throw new NotFoundException("part must be a string");
+      }
+      if (model && typeof partCategory !== "string") {
+        throw new NotFoundException("tag must be a string");
+      }
     }
-    // Validate model
-    if (model && typeof model !== "string") {
-      errors.push("Model must be a string");
-    }
+
     // Validate year
-    if (year) {
-      const yearNum = parseInt(year, 10);
-      if (isNaN(yearNum) || yearNum > new Date().getFullYear()) {
-        errors.push("Year must be a valid number less than the current year");
-      }
-      else {
-        query.year = yearNum
-      }
-    }
-    if (errors.length > 0) {
-      throw new InvalidInputException(errors);
-    }
-    else {
-      return query
-    }
+    // if (year) {
+    //   const yearNum = parseInt(year, 10);
+    //   if (isNaN(yearNum) || yearNum > new Date().getFullYear()) {
+    //     errors.push("Year must be a valid number less than the current year");
+    //   } else {
+    //     query.year = yearNum;
+    //   }
+    // }
+    return { type, make, model, car, part, partCategory };
   }
 
   static validateImageURL(image) {
-    if (typeof image !== 'string' || image.trim() === '' || !/^https?:\/\/.+/.test(image)) {
-      throw new InvalidInputException('Image URL must be a valid URL.');
+    if (
+      typeof image !== "string" ||
+      image.trim() === "" ||
+      !/^https?:\/\/.+/.test(image)
+    ) {
+      throw new InvalidInputException("Image URL must be a valid URL.");
     }
     return image;
   }
 
   static validateCreateListing(obj) {
     if (!obj || typeof obj !== "object") {
-      throw new InvalidInputException(
-        "Provided listing must be an object."
-      );
+      throw new InvalidInputException("Provided listing must be an object.");
     }
-    let valImage = ""
-    if (obj.image) { // image is optional
-      valImage = Validator.validateImageURL(obj.image)
+    let valImage = "";
+    if (obj.image) {
+      // image is optional
+      valImage = Validator.validateImageURL(obj.image);
     }
     let listingInfo = {
       ...obj,
-      price: this.nullcheck(obj.price).checkNumber(), 
+      price: this.nullcheck(obj.price).checkNumber(),
       image: valImage,
-      itemType: this.nullcheck(obj.itemType)
+      itemType: this.nullcheck(obj.itemType),
     };
     return listingInfo;
   }

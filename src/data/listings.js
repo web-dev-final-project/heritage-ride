@@ -68,10 +68,11 @@ const createListing = async (sellerId, item) => {
     const validSellerId = Validator.validateId(sellerId);
     const validItem = Validator.validateCreateListing(item);
 
-    if (validItem.itemType === 'car') { // check if car or part
+    if (validItem.itemType === "car") {
+      // check if car or part
       const { carId, price, image } = validItem;
-      
-      const car = await getCarById(carId) 
+
+      const car = await getCarById(carId);
       const db = await listings();
       const res = await db.insertOne({
         itemId: new ObjectId(carId),
@@ -84,7 +85,7 @@ const createListing = async (sellerId, item) => {
         createdAt: new Date().toUTCString(),
         updatedAt: new Date().toUTCString(),
         image: image,
-        itemType: validItem.itemType
+        itemType: validItem.itemType,
       });
 
       if (!res || !res.acknowledged || !res.insertedId) {
@@ -95,54 +96,138 @@ const createListing = async (sellerId, item) => {
         ...item,
         _id: res.insertedId,
       };
-    }
-    else {
+    } else {
       // code for inserting part
     }
   } catch (e) {
-    databaseExceptionHandler(e)
+    databaseExceptionHandler(e);
   }
 };
 
-const getAll = async (query) => { // for cars
-  // this will fire after a user enters search terms and clicks search
+const getAll = async (query) => {
   try {
-    const valQuery = Validator.validateQuery(query)
+    let valQuery = Validator.validateQuery(query);
     const listingCollection = await listings();
-    // Build the query object
-    const matchConditions = {};
 
-    if (valQuery.make)
-      matchConditions["car.make"] = { $regex: new RegExp(valQuery.make, "i") };
-    if (valQuery.model)
-      matchConditions["car.model"] = { $regex: new RegExp(valQuery.model, "i") };
-    if (valQuery.year) matchConditions["car.year"] = valQuery.year;
-    if (valQuery.category)
-      matchConditions["car.category"] = {
-        $regex: new RegExp(valQuery.category, "i"),
-      };
+    if (valQuery.type === "cars") {
+      // return all cars if the input is empty
+      const matchConditions = {};
+      if (valQuery.make)
+        matchConditions["car.make"] = {
+          $regex: new RegExp(valQuery.make, "i"),
+        };
+      if (valQuery.model)
+        matchConditions["car.model"] = {
+          $regex: new RegExp(valQuery.model, "i"),
+        };
+      if (valQuery.year) matchConditions["car.year"] = valQuery.year;
+      if (valQuery.category)
+        matchConditions["car.category"] = {
+          $regex: new RegExp(valQuery.category, "i"),
+        };
 
-    const aggregation = [
-      {
-        $lookup: {
-          from: "cars",
-          localField: "itemId",
-          foreignField: "_id",
-          as: "car",
+      const aggregation = [
+        {
+          $lookup: {
+            from: "cars",
+            localField: "itemId",
+            foreignField: "_id",
+            as: "car",
+          },
         },
-      },
-      {
-        $addFields: { car: { $arrayElemAt: ["$car", 0] } },
-      },
-      {
-        $match: matchConditions, // Match based on the provided query object
-      },
-    ];
+        {
+          $addFields: { car: { $arrayElemAt: ["$car", 0] } },
+        },
+        {
+          $match: matchConditions,
+        },
+      ];
 
-    const listingsWithCars = await listingCollection
-      .aggregate(aggregation)
-      .toArray();
-    return listingsWithCars;
+      const listingsWithCars = await listingCollection
+        .aggregate(aggregation)
+        .toArray();
+      return listingsWithCars;
+    } else {
+      const partDetails = [];
+
+      if (valQuery.part) {
+        partDetails.push({
+          "part.name": { $regex: valQuery.part, $options: "i" },
+        });
+        partDetails.push({
+          "part.manufacturer": {
+            $regex: valQuery.part,
+            $options: "i",
+          },
+        });
+      }
+      if (valQuery.partCategory) {
+        partDetails.push({
+          "part.part": {
+            $regex: valQuery.partCategory,
+            $options: "i",
+          },
+        });
+      }
+      const partOr = partDetails.length > 0 ? { $or: partDetails } : {};
+
+      const aggregation = [
+        {
+          $lookup: {
+            from: "users",
+            localField: "sellerId",
+            foreignField: "_id",
+            as: "seller",
+          },
+        },
+        {
+          $unwind: "$seller",
+        },
+        {
+          $lookup: {
+            from: "parts",
+            localField: "itemId",
+            foreignField: "_id",
+            as: "part",
+          },
+        },
+        {
+          $unwind: {
+            path: "$part",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $match: partOr,
+        },
+        {
+          $lookup: {
+            from: "cars",
+            localField: "part.carId",
+            foreignField: "_id",
+            as: "car",
+          },
+        },
+        {
+          $match: {
+            $or: [
+              {
+                "car.make": { $regex: valQuery.car, $options: "i" },
+              },
+              {
+                "car.model": { $regex: valQuery.car, $options: "i" },
+              },
+            ],
+          },
+        },
+      ];
+
+      const listingsWithParts = await listingCollection
+        .aggregate(aggregation)
+        .toArray();
+      console.log(listingsWithParts);
+      return listingsWithParts;
+    }
   } catch (e) {
     throw new DataBaseException(e);
   }

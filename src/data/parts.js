@@ -17,7 +17,9 @@ const createPart = async (name, description, tag, sellerId, carIds) => {
 
   try {
     const partsCollection = await parts();
-    const { acknowledged, insertedId } = await partsCollection.insertOne(newPart);
+    const { acknowledged, insertedId } = await partsCollection.insertOne(
+      newPart
+    );
 
     if (!acknowledged || !insertedId) {
       throw new Error("Could not add Part");
@@ -36,13 +38,35 @@ const createPart = async (name, description, tag, sellerId, carIds) => {
 
 const getPartById = async (partId) => {
   try {
+    const validId = Validator.validateId(partId);
     const partsCollection = await parts();
-    const part = await partsCollection.findOne({ _id: new ObjectId(partId) });
-
+    const part = await partsCollection
+      .aggregate([
+        {
+          $match: { _id: new ObjectId(validId) },
+        },
+        {
+          $lookup: {
+            from: "cars",
+            let: { carIds: "$carId" },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $in: ["$_id", "$$carIds"],
+                  },
+                },
+              },
+            ],
+            as: "car",
+          },
+        },
+      ])
+      .toArray();
     if (!part) {
       throw new NotFoundException("Part not found");
     }
-    return part;
+    return part[0];
   } catch (e) {
     throw new DataBaseException(e);
   }
@@ -63,10 +87,10 @@ const searchPartsByName = async ({ query, tag }) => {
     const matchConditions = {};
 
     if (query) {
-      matchConditions["name"] = { $regex: new RegExp(query, "i") }; 
+      matchConditions["name"] = { $regex: new RegExp(query, "i") };
     }
     if (tag) {
-      matchConditions["tag"] = tag; 
+      matchConditions["tag"] = tag;
     }
 
     const result = await partsCollection.find(matchConditions).toArray();
@@ -75,8 +99,5 @@ const searchPartsByName = async ({ query, tag }) => {
     throw new DataBaseException(e);
   }
 };
-
-  
-
 
 export { createPart, getPartById, getParts, searchPartsByName };

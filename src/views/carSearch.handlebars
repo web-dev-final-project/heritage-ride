@@ -7,31 +7,13 @@
   {{#if error}}
   <p style="color: red">{{ error }}</p>
   {{/if}}
-
+  {{#if results.length}}
   <ul class="list-group container card p-3 search-grid" id="search-grid"></ul>
-  <p id="search-not-found" class="fs-4">
-    No cars found matching your criteria.
-  </p>
-  {{!-- {{#if results.length}}
-  <ul class="list-group container card p-3 search-grid">
-    {{#each results}}
-    <a href="/listings/{{ _id }}" class="text-decoration-none text-dark">
-      <li class="card shadow p-2">
-        <div class="d-flex justify-content-between">
-          <div>
-            <h2 class="fs-5">{{ car.make }} {{ car.model }}</h2>
-            <h3 class="fs-6 text-secondary">{{ car.year }} {{ car.color }}</h3>
-          </div>
-          <h4 class="text-success">{{currency price }}</h4>
-        </div>
-
-        <img src="{{ image }}" alt="" class="img-thumbnail" />
-      </li>
-    </a>
-    {{/each}}
-  </ul>
   {{else}}
-  {{/if}} --}}
+  <p id="search-not-found" class="fs-4">
+    No Item Found Matching Your Criteria.
+  </p>
+  {{/if}}
 </div>
 
 <a href="/">Return to Homepage</a>

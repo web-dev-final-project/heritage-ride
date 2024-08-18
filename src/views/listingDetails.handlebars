@@ -4,7 +4,11 @@
   <!-- Car Details -->
   <h1>{{ listing.title }}</h1>
   <h1 class="fs-3 text-secondary">
+    {{#if (eq type 'car')}}
     {{ car.make }} {{ car.model }} ({{ car.year }})
+    {{else}}
+    {{ part.manufacturer }}
+    {{/if}}
   </h1>
   <img
     src="{{ listing.image }}"
@@ -12,16 +16,28 @@
     class="listing-display-image w-100"
   />
   <div class="d-flex justify-space-between">
+    {{#if (eq type 'car')}}
     <div class="d-flex flex-column mt-4 me-3 w-75">
       <h2>Details</h2>
-      <p><strong>Color:</strong> {{ car.color }}</p>
-      <p><strong>Category:</strong> {{ car.category }}</p>
+      <p><span class="fw-bold">Color:</span> {{ car.color }}</p>
+      <p><span class="fw-bold">Category:</span> {{ car.category }}</p>
 
-      <p><strong>Listed on:</strong> {{ listing.createdAt }}</p>
-      <p><strong>Last Updated:</strong> {{ listing.updatedAt }}</p>
+      <p><span class="fw-bold">Listed on:</span> {{ listing.createdAt }}</p>
+      <p><span class="fw-bold">Last Updated:</span> {{ listing.updatedAt }}</p>
     </div>
+    {{else}}
+    <div class="d-flex flex-column mt-4 me-3 w-75">
+      <h2>Details</h2>
+      <p><span class="fw-bold">Category:</span> {{ part.part }}</p>
+      <p><span class="fw-bold">Listed on:</span> {{ part.createdAt }}</p>
+      <p class="fw-bold">Compatible With:</p>
+      {{#each part.car}}
+      {{ make }} {{ model }} {{ year }}
+      {{/each}}
+    </div>
+    {{/if}}
     <div class="d-flex flex-column mt-4 card p-3">
-      <p><strong>Status:</strong> {{ listing.status }}</p>
+      <p><span class="fw-bold">Status:</span> {{ listing.status }}</p>
       <h2 class="text-success my-4">Price: {{currency listing.price }}</h2>
       <a href="/listings/order/{{ listing._id }}" id="order-button-link"
         ><button class="btn btn-primary btn-lg my-3 w-100" id="order-button">
@@ -33,10 +49,15 @@
   <hr class="my-4" />
   <!-- Seller Information -->
   <h2>Seller Information</h2>
-  <p><strong>Name:</strong> {{ seller.firstName }} {{ seller.lastName }}</p>
-  <p><strong>Email:</strong> {{ seller.email }}</p>
+  <p>
+    <span class="fw-bold">Name:</span> {{ seller.firstName }}
+    {{ seller.lastName }}
+  </p>
+  <p><span class="fw-bold">Email:</span> {{ seller.email }}</p>
   <hr class="my-4" />
-  <p><strong>Listing Description:</strong> {{ listing.description }}</p>
+  <p>
+    <span class="fw-bold">Listing Description:</span> {{ listing.description }}
+  </p>
 
   <!-- Mechanic Reviews -->
   {{#if listing.mechanicReviews.length}}
@@ -76,64 +97,15 @@
   {{/if}}
 </div>
 
-<!-- Parts Details -->
-<div class="container listing-detail">
-  <a href="/">Return to Homepage</a>
-  <h1>{{ listing.title }}</h1>
-  <h2 class="fs-3 text-secondary">{{ part.name }}</h2>
-  <img
-    src="{{ listing.image }}"
-    alt="Image of {{ part.name }}"
-    class="listing-display-image w-100"
-  />
-  <div class="d-flex justify-content-between">
-    <div class="d-flex flex-column mt-4 me-3 w-75">
-      <h2>Part Details</h2>
-      <p><strong>Part Name:</strong> {{ part.name }}</p>
-      <p><strong>Part Number:</strong> {{ part.partNumber }}</p>
-      <p><strong>Category:</strong> {{ part.category }}</p>
-      <p><strong>Description:</strong> {{ part.description }}</p>
-      <p><strong>Listed on:</strong> {{ listing.createdAt }}</p>
-      <p><strong>Last Updated:</strong> {{ listing.updatedAt }}</p>
-
-      <!-- Tags Section -->
-      <div class="mt-4">
-        <h3>Tags:</h3>
-        <ul class="list-inline">
-          {{#each part.tags}}
-            <li class="list-inline-item badge bg-secondary">{{ this }}</li>
-          {{/each}}
-        </ul>
-      </div>
-    </div>
-    <div class="d-flex flex-column mt-4 card p-3">
-      <p><strong>Status:</strong> {{ listing.status }}</p>
-      <h2 class="text-success my-4">Price: {{currency listing.price }}</h2>
-      <a href="/parts/order/{{ listing._id }}" id="order-button-link">
-        <button class="btn btn-primary btn-lg my-3 w-100" id="order-button">
-          Order Now
-        </button>
-      </a>
-    </div>
-  </div>
-  <hr class="my-4" />
-</div>
-
-
-  <!-- Seller Information -->
-  <h2>Seller Information</h2>
-  <p><strong>Name:</strong> {{ seller.firstName }} {{ seller.lastName }}</p>
-  <p><strong>Email:</strong> {{ seller.email }}</p>
-  <hr class="my-4" />
-  <p><strong>Listing Description:</strong> {{ listing.description }}</p>
-
-
-
 <script>
   const listing = {{{json listing}}}
+  const part = {{{json part}}}
+  console.log(part)
+  const type = {{{json type}}} || 'car'
   const orderButton = document.getElementById("order-button")
   const orderLink = document.getElementById("order-button-link")
   const user = {{{json user}}}
+  console.log(listing)
   if (listing.status === "reserved") {
     orderButton.disabled = true
     orderButton.classList.add("disabled")
@@ -157,7 +129,7 @@
     orderLink.href = '/listings/edit/66b79b319d873645ee2076e4'
     orderLink.insertAdjacentHTML('afterend', "<p class='pt-3 fs-5'> You are the owner of this listing. </p>")
   }
-  else if (listing.price > 999999) {
+  if (listing.price > 999999) {
     orderButton.disabled = true
     orderButton.classList.add("disabled")
     orderLink.addEventListener("click", (e) =>{

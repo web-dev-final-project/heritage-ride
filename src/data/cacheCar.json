@@ -300,3 +300,5 @@
     "tag": ["sedan", "german", "luxury"]
   }
 ]
+
+{"_id":{"$oid":"66b79b319d873645ee2076e0"},"itemId":{"$oid":"66b796129d873645ee0fff53"},"title":"Jaguar E-Type","description":"The Jaguar E-Type is often hailed as one of the most beautiful cars ever made, with stunning performance to match.","price":{"$numberInt":"120000"},"status":"sold","sellerId":{"$oid":"669b276998d40c37d3475478"},"mechanicReviews":[],"createdAt":"Wed, 07 Aug 2024 01:22:18 GMT","updatedAt":"Mon, 12 Aug 2024 22:31:20 GMT","image":"https://jlr.scene7.com/is/image/jlr/X152_21MY_111_US","gallery":[],"itemType":"car"}

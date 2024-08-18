@@ -16,18 +16,17 @@ import { findUser } from "../../data/users.js";
 import Stripe from "stripe";
 import { createTransaction } from "../../data/transaction.js";
 import { cloudinary } from "../../utils/class.js";
+import { getPartById } from "../../data/parts.js";
 
 const stripe = new Stripe(process.env.STRIPE_KEY);
 const router = Router();
 
 router.get("/search", authSafe, async (req, res, next) => {
   // car listings search, displays cars
+  let result;
   try {
-    // Error check
     const valQuery = Validator.validateQuery(req.query);
-
     const result = await getAll(valQuery);
-    if (!result) throw new NotFoundException(`listing not found`);
     res.render("carSearch", {
       results: result,
       user: req.user,
@@ -117,6 +116,33 @@ router.get("/create", auth, async (req, res, next) => {
   }
 });
 
+router.get("/part/:listingId", authSafe, async (req, res, next) => {
+  const listingId = req.params.listingId;
+  try {
+    const listingDetails = await getListingById(listingId);
+    const partDetails = await getPartById(listingDetails.itemId.toString());
+    const sellerDetails = await findUser(listingDetails.sellerId.toString());
+
+    if (sellerDetails && sellerDetails.password) {
+      delete sellerDetails.password;
+    }
+    if (!partDetails || !listingDetails) {
+      return res
+        .status(404)
+        .render("404", { message: "Car or listing not found", user: req.user });
+    }
+    res.render("listingDetails", {
+      part: partDetails,
+      listing: listingDetails,
+      user: req.user,
+      seller: sellerDetails,
+      type: "part",
+    });
+  } catch (e) {
+    next(e);
+  }
+});
+
 router.get("/:listingId", authSafe, async (req, res, next) => {
   const listingId = req.params.listingId;
   try {
@@ -125,7 +151,7 @@ router.get("/:listingId", authSafe, async (req, res, next) => {
     const sellerDetails = await findUser(listingDetails.sellerId.toString());
 
     if (sellerDetails && sellerDetails.password) {
-      delete sellerDetails.password; // delete password field from current object to protect user
+      delete sellerDetails.password;
     }
     if (!carDetails || !listingDetails) {
       return res
@@ -137,6 +163,7 @@ router.get("/:listingId", authSafe, async (req, res, next) => {
       listing: listingDetails,
       user: req.user,
       seller: sellerDetails,
+      type: "car",
     });
   } catch (e) {
     next(e);

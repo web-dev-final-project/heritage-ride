@@ -119,6 +119,11 @@ hr {
   font-weight: 600;
   text-shadow: -1px -1px 0 white;
 }
+
+.no-outline:focus {
+  outline: none;
+  box-shadow: none;
+}
 @keyframes l13 {
   100% {
     transform: rotate(1turn);
