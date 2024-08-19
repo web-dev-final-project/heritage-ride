@@ -1,0 +1,14 @@
+{{#extend "main"}}
+{{#content "body"}}
+    <h1>All Blog Posts</h1>
+    <ul>
+        {{#each blogs}}
+            <li>
+                <a href="/blogs/{{this._id}}">{{this.title}}</a> by {{this.author}} ({{this.authorRole}})
+                <p>{{this.date}}</p>
+            </li>
+        {{/each}}
+    </ul>
+    <a href="/blogs/new" class="btn btn-primary">Create New Blog Post</a>
+{{/content}}
+{{/extend}}
