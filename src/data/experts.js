@@ -172,8 +172,6 @@ const createExpert = async (expert) => {
     validatedExpert.requests = [];
     validatedExpert.carReviewed = 0;
     validatedExpert.userId = new ObjectId(validatedExpert.userId);
-    if (expert.role.includes("expert"))
-      throw new ValidationException("User is already an expert");
     await addRole(expert.userId, "expert");
     const res = await db.insertOne({
       ...validatedExpert,

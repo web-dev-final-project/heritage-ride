@@ -23,7 +23,6 @@ document
   .addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    let token;
     const res = await fetch(getCurrentRoute() + "/api/user/login", {
       method: "POST",
       headers: {
