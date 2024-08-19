@@ -43,8 +43,10 @@
   border-radius: 100px;
   overflow: hidden;
   width: 50px;
+  height: 100%;
 }
 .nav-user-avatar {
+  object-fit: cover;
   width: 100%;
 }
 .nav-user-name {

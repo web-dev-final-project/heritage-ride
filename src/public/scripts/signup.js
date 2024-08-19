@@ -51,6 +51,12 @@ if (window.location.pathname === "/user/edit" && user) {
   document.getElementById("signup-title").innerHTML = "Edit Profile";
 } else document.getElementById("signup-title").innerHTML = "Sign Up";
 
+const validatePass = (password) => {
+  const regex =
+    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{10,}$/;
+  return regex.test(password);
+};
+
 document.addEventListener("DOMContentLoaded", () => {
   const isEditing = window.location.pathname === "/user/edit";
   document
@@ -151,7 +157,8 @@ document.addEventListener("DOMContentLoaded", () => {
     () =>
       !password.value.trim().includes(" ") &&
       password.value.length >= 10 &&
-      password.value.trim().length <= 30
+      password.value.trim().length <= 30 &&
+      validatePass(password.value.trim())
   );
   handleInputValidation(
     passwordReenter,
@@ -202,7 +209,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (
       password.value.trim().length < 10 ||
       password.value.trim().length > 30 ||
-      password.value.trim().includes(" ")
+      password.value.trim().includes(" ") ||
+      !validatePass(password.value.trim())
     ) {
       password.style.borderColor = "red";
       passwordError.style.display = "block";

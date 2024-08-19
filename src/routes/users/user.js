@@ -29,8 +29,6 @@ router.post("/signup", async (req, res, next) => {
     );
     if (exist) throw new InvalidInputException("User has already exist");
 
-    const hashedPassword = await hashPassword(user.password);
-    user.password = hashedPassword;
     const resp = await users.createUser(user);
     res.status(201).send(new HttpResponse(user));
   } catch (e) {

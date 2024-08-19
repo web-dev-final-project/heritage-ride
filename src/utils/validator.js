@@ -14,6 +14,7 @@ class Validator {
       type = "cars",
       make = "",
       model = "",
+      category = "",
       car = "",
       part = "",
       partCategory = "",
@@ -31,6 +32,9 @@ class Validator {
       if (model && typeof model !== "string") {
         throw new NotFoundException("Model must be a string");
       }
+      if (make && typeof category !== "string") {
+        throw new NotFoundException("Make must be a string");
+      }
     } else if (type === "parts") {
       if (model && typeof car !== "string") {
         throw new NotFoundException("Car or model must be a string");
@@ -46,6 +50,7 @@ class Validator {
       type: xss(type),
       make: xss(make),
       model: xss(model),
+      category: xss(category),
       car: xss(car),
       part: xss(part),
       partCategory: xss(partCategory),
@@ -67,19 +72,24 @@ class Validator {
     if (!obj || typeof obj !== "object") {
       throw new InvalidInputException("Provided listing must be an object.");
     }
-    let valImage = "";
-    if (obj.image) {
-      // image is optional
-      valImage = Validator.validateImageURL(obj.image);
+    let listing = { ...obj };
+    listing.title = xss(this.nullcheck(obj.title).checkString(5, 50, "title"));
+    listing.description = xss(
+      this.nullcheck(obj.description).checkString(20, 500, "description")
+    );
+    listing.price = this.nullcheck(obj.price).checkNumber(
+      0,
+      1000000000,
+      "price"
+    );
+    if (obj.itemType !== "car" && obj.itemType !== "part") {
+      throw new Error("Invalid item type");
     }
-    let listingInfo = {
-      ...obj,
-      price: this.nullcheck(obj.price).checkNumber(),
-      image: xss(valImage),
-      itemType: this.nullcheck(obj.itemType),
-    };
-    return listingInfo;
+    listing.itemType = xss(this.nullcheck(obj.itemType));
+    listing.image = xss(this.nullcheck(obj.image).checkString().checkUrl());
+    return listing;
   }
+
   static validatePartialListing(obj) {
     if (!obj || typeof obj !== "object") {
       throw new InvalidInputException(
