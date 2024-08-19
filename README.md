@@ -5,6 +5,7 @@
   <h3 align="center">Group project for summer 2024 class CS-546wn.</h3>
   <p align="center">
   </p>
+  <p>https://github.com/web-dev-final-project/heritage-ride.git</p>
 </div>
 
 <details>
@@ -40,7 +41,7 @@
 ### Installation
 
 1. Get required secrets from the developer team
-2. Clone the repo
+2. Clone the repo (recommanded)
    ```sh
    git clone https://github.com/web-dev-final-project/heritage-ride.git
    ```
