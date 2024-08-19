@@ -168,6 +168,7 @@ const getAll = async (query) => {
           },
         });
       }
+
       const partOr = partDetails.length > 0 ? { $or: partDetails } : {};
 
       const aggregation = [
@@ -224,7 +225,6 @@ const getAll = async (query) => {
       const listingsWithParts = await listingCollection
         .aggregate(aggregation)
         .toArray();
-
       return listingsWithParts;
     }
   } catch (e) {

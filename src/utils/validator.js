@@ -72,7 +72,7 @@ class Validator {
     if (!obj || typeof obj !== "object") {
       throw new InvalidInputException("Provided listing must be an object.");
     }
-    let listing = {};
+    let listing = { ...obj };
     listing.title = xss(this.nullcheck(obj.title).checkString(5, 50, "title"));
     listing.description = xss(
       this.nullcheck(obj.description).checkString(20, 500, "description")

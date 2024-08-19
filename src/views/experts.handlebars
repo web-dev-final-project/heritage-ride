@@ -23,8 +23,9 @@
     {{#if error}}{{ error }}{{/if}}
   </p>
   {{#if experts}}
-  {{#each experts}}
-  <ul id="experts-list" class="p-0 d-flex gap-3 my-4">
+
+  <ul id="experts-list" class="p-0 grid-3 gap-3 my-4">
+    {{#each experts}}
     <li class="expert card shadow p-4" id="{{ this._id }}">
       <p class="text-capitalize">
         <strong>Name:</strong> {{ this.user.firstName }}
@@ -36,10 +37,17 @@
         <strong>Address:</strong> {{#if this.user.address }}
         {{ this.user.address }} {{else}} No record {{/if}}
       </p>
-      <img src="{{ this.user.avatar }}" alt="{{ this.user.userName }}" />
+      <div class="profile-image-container">
+        <img
+          src="{{ this.user.avatar }}"
+          alt="{{ this.user.userName }}"
+          class="profile-image"
+        />
+      </div>
     </li>
+    {{/each}}
   </ul>
-  {{/each}}
+
   {{else}}
   <p class="text-center fs-3">No experts found.</p>
   {{/if}}
