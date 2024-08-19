@@ -24,7 +24,6 @@ router.post("/", auth, async (req, res, next) => {
     const ex = await expertDb.createExpert(validExpr);
     const role = req.user.role;
     role.push("expert");
-    console.log(req.user, role);
     req.refreshToken({ ...req.user, role });
     res.status(201).send(new HttpResponse(ex, HttpStatus.SUCCESS));
   } catch (e) {

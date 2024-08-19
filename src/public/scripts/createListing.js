@@ -161,8 +161,6 @@ document.addEventListener("DOMContentLoaded", () => {
           throw new Error(json.content || "An error occurred");
         }
       } else {
-        console.log(carId);
-
         const response = await fetch("/api/listings/create", {
           method: "POST",
           headers: {
